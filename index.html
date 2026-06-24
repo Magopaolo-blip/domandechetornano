@@ -4,26 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le Domande che Tornano | Archivio Vivente</title>
+  <meta name="description" content="Le Domande che Tornano è un archivio vivente delle domande umane. Affida una domanda all'Archivista o riconosciti in una domanda che continua a tornare." />
   <style>
     :root{
       --paper:#f4efe6;
       --ink:#171717;
       --brick:#9b4f19;
+      --muted:rgba(23,23,23,.68);
+      --soft:rgba(244,239,230,.82);
       --line:#171717;
-      --soft:rgba(23,23,23,.06);
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
-
     html,body{width:100%;height:100%;}
-
     body{
       background:var(--paper);
       color:var(--ink);
       font-family:"Courier New", Courier, monospace;
       overflow:hidden;
     }
-
     body::before{
       content:"";
       position:fixed;
@@ -33,7 +32,7 @@
         linear-gradient(to right, rgba(0,0,0,.025) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(0,0,0,.025) 1px, transparent 1px);
       background-size:18px 18px;
-      opacity:.65;
+      opacity:.75;
       z-index:0;
     }
 
@@ -42,141 +41,227 @@
       z-index:1;
       width:100vw;
       height:100vh;
-      padding:clamp(14px,2.4vw,36px);
+      padding:clamp(10px,1.8vw,24px);
       display:grid;
       grid-template-rows:auto 1fr auto auto;
-      gap:clamp(10px,1.4vh,18px);
-      background:var(--paper);
+      gap:clamp(8px,1.15vh,14px);
     }
 
     .topbar{
       display:grid;
       grid-template-columns:1fr auto 1fr;
       align-items:center;
+      gap:16px;
       border-bottom:2px dashed var(--line);
-      padding-bottom:12px;
-      font-size:clamp(12px,1.1vw,17px);
+      padding-bottom:9px;
+      font-size:clamp(11px,.9vw,14px);
       font-weight:700;
-      letter-spacing:.14em;
+      letter-spacing:.13em;
       text-transform:uppercase;
       white-space:nowrap;
     }
-
-    .topbar .center{text-align:center;}
-    .topbar .right{text-align:right;font-weight:400;}
+    .topbar .center{text-align:center;color:var(--brick)}
+    .topbar .right{text-align:right;font-weight:400;color:var(--muted)}
 
     .main{
       min-height:0;
       display:grid;
-      grid-template-columns:minmax(190px,260px) minmax(0,1fr) minmax(190px,260px);
-      grid-template-rows:1fr;
-      gap:clamp(18px,3vw,42px);
-      align-items:center;
+      grid-template-columns:minmax(210px,270px) minmax(0,1fr) minmax(210px,270px);
+      gap:clamp(12px,1.8vw,26px);
+      align-items:stretch;
     }
 
-    .sidebox{
+    .panel{
       border:2px dashed var(--line);
-      padding:clamp(14px,1.7vw,26px);
-      min-height:210px;
-      max-height:38vh;
-      overflow:auto;
-      background:rgba(244,239,230,.72);
+      background:rgba(244,239,230,.74);
+      min-height:0;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
     }
+    .panel-inner{
+      padding:clamp(12px,1.25vw,18px);
+      min-height:0;
+      overflow:auto;
+    }
+    .panel-inner::-webkit-scrollbar{width:5px}
+    .panel-inner::-webkit-scrollbar-thumb{background:var(--ink)}
 
-    .side-title,
-    .label,
-    .archive-note,
-    .place-note{
+    .side-title,.label,.mini-label{
       color:var(--brick);
       font-weight:700;
-      letter-spacing:.34em;
+      letter-spacing:.24em;
       text-transform:uppercase;
     }
-
     .side-title{
-      font-size:clamp(11px,.95vw,14px);
+      font-size:clamp(10px,.82vw,12px);
       text-align:center;
-      margin-bottom:18px;
+      padding-bottom:10px;
+      border-bottom:1px dashed var(--line);
+      margin-bottom:12px;
     }
+    .mini-label{font-size:clamp(10px,.78vw,11px);margin:12px 0 5px;}
+    .label{font-size:clamp(10px,.84vw,12px);margin-bottom:8px;}
 
-    .sep{
-      color:var(--brick);
+    p{font-size:clamp(12px,.95vw,14px);line-height:1.45;}
+    .muted{color:var(--muted)}
+    .brick{color:var(--brick);font-weight:700}
+
+    .user-name{
+      font-size:clamp(20px,2.2vw,30px);
+      font-weight:900;
+      line-height:1;
+      margin:4px 0 12px;
+      text-transform:uppercase;
+    }
+    .metric-row{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      border-top:1px dashed var(--line);
+      padding:9px 0;
+      font-size:clamp(12px,.95vw,14px);
+    }
+    .small-actions{display:grid;grid-template-columns:1fr;gap:8px;margin:12px 0 16px;}
+
+    button,a.buttonlike{
+      font:inherit;
+      background:transparent;
+      color:var(--ink);
+      border:2px solid var(--line);
+      cursor:pointer;
+      text-transform:uppercase;
+      letter-spacing:.11em;
+      text-decoration:none;
       text-align:center;
-      margin-bottom:18px;
+      padding:9px 10px;
+      font-size:clamp(11px,.82vw,13px);
       font-weight:700;
     }
+    button:hover,a.buttonlike:hover{background:var(--ink);color:var(--paper)}
+    .linkish{border:0;padding:0;color:var(--brick);text-align:left;}
+    .linkish:hover{background:transparent;color:var(--ink);text-decoration:underline}
 
-    .sidebox p{
-      font-size:clamp(12px,1vw,15px);
-      line-height:1.55;
-      margin:.55rem 0 1rem;
+    .archivist-card{
+      border-top:2px dashed var(--line);
+      margin-top:14px;
+      padding-top:14px;
     }
-
-    .sidebox strong{
-      display:block;
-      margin-top:1rem;
-      font-size:clamp(12px,1vw,15px);
-      letter-spacing:.12em;
-    }
-
-    .count{
-      font-size:clamp(52px,6vw,88px);
+    .archivist-icon{
+      font-size:30px;
       line-height:1;
-      text-align:center;
-      font-weight:400;
-      letter-spacing:.08em;
-      margin:10px 0 20px;
+      margin-bottom:8px;
+      filter:grayscale(1);
     }
 
     .centerstage{
-      min-width:0;
-      height:100%;
+      min-height:0;
+      border-top:2px dashed var(--line);
+      border-bottom:2px dashed var(--line);
+      display:grid;
+      grid-template-rows:auto minmax(0,1fr) auto;
+      padding:clamp(12px,1.8vw,24px);
+      text-align:center;
+      overflow:hidden;
+    }
+    .manifesto{
+      color:var(--brick);
+      font-weight:700;
+      font-size:clamp(12px,1vw,15px);
+      line-height:1.35;
+      letter-spacing:.08em;
+      margin-bottom:clamp(8px,1vh,14px);
+    }
+    .question-core{
+      min-height:0;
       display:flex;
       flex-direction:column;
       justify-content:center;
       align-items:center;
-      text-align:center;
-      padding:0 clamp(8px,1.5vw,24px);
+      overflow:hidden;
     }
-
-    .label{
-      font-size:clamp(11px,.95vw,14px);
-      margin-bottom:clamp(10px,1.4vh,18px);
-    }
-
     .question{
-      max-width:920px;
-      font-size:clamp(36px,5.8vw,78px);
+      max-width:840px;
+      font-size:clamp(28px,4.15vw,58px);
       line-height:1.08;
       font-weight:900;
       letter-spacing:.035em;
       text-transform:uppercase;
-      margin:0 auto clamp(20px,3vh,34px);
+      margin:0 auto clamp(12px,1.6vh,20px);
     }
-
-    .dash{
-      color:var(--brick);
-      letter-spacing:.55em;
-      font-weight:700;
-      margin-bottom:clamp(16px,2.4vh,30px);
-    }
-
-    .trace-label{
-      margin-bottom:clamp(8px,1vh,14px);
-    }
-
     .trace{
-      max-width:720px;
-      font-size:clamp(18px,2.05vw,30px);
-      line-height:1.32;
+      max-width:760px;
+      font-size:clamp(16px,1.55vw,24px);
+      line-height:1.35;
       font-weight:700;
-      margin-bottom:clamp(12px,1.8vh,24px);
+      margin:0 auto clamp(10px,1.2vh,18px);
     }
+    .archive-data{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:8px 18px;
+      margin:8px auto 0;
+      color:var(--muted);
+      font-size:clamp(11px,.86vw,13px);
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+    .related{
+      border-top:1px dashed var(--line);
+      margin-top:clamp(10px,1.4vh,18px);
+      padding-top:10px;
+      width:min(760px,100%);
+      font-size:clamp(11px,.9vw,13px);
+      text-align:left;
+    }
+    .related ul{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
+    .related li{border:1px dashed var(--line);padding:8px;text-align:center;}
 
-    .archive-note{
-      font-size:clamp(11px,.95vw,14px);
-      letter-spacing:.22em;
+    .center-buttons{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:clamp(8px,1vh,12px);
     }
+    .center-buttons button{min-width:190px;color:var(--brick)}
+
+    .right-count{
+      text-align:center;
+      border-bottom:2px dashed var(--line);
+      padding-bottom:14px;
+      margin-bottom:14px;
+    }
+    .anchio-title{
+      color:var(--brick);
+      font-weight:900;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      font-size:clamp(14px,1.1vw,18px);
+    }
+    .count{
+      font-size:clamp(46px,5.3vw,78px);
+      line-height:1;
+      font-weight:400;
+      margin:9px 0;
+      letter-spacing:.06em;
+    }
+    .recognize-btn{width:100%;margin-top:10px;color:var(--brick)}
+
+    .resonance-feed{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+      padding-bottom:4px;
+    }
+    .resonance-item{
+      border-top:1px dashed var(--line);
+      padding-top:9px;
+      font-size:clamp(12px,.95vw,14px);
+      line-height:1.35;
+    }
+    .timestamp{display:block;color:var(--brick);font-weight:700;margin-bottom:3px;}
 
     .navline{
       display:grid;
@@ -184,73 +269,50 @@
       align-items:center;
       border-top:2px dashed var(--line);
       border-bottom:2px dashed var(--line);
-      padding:10px 0;
-      font-size:clamp(12px,1vw,15px);
-      letter-spacing:.12em;
+      padding:9px 0;
+      font-size:clamp(11px,.86vw,13px);
+      letter-spacing:.1em;
       text-transform:uppercase;
     }
-
-    button{
-      font:inherit;
-      background:transparent;
-      color:var(--ink);
-      border:0;
-      cursor:pointer;
-      text-transform:uppercase;
-      letter-spacing:.14em;
-    }
-
-    button:hover{color:var(--brick);}
-
-    .navline .prev{text-align:left;}
-    .navline .next{text-align:right;}
+    .navline .prev{text-align:left;border:0;padding:0;}
+    .navline .next{text-align:right;border:0;padding:0;}
     .navline .current{color:var(--brick);font-weight:700;}
 
     .doors{
       display:grid;
       grid-template-columns:1fr 1fr;
       border-bottom:2px dashed var(--line);
-      min-height:54px;
+      min-height:48px;
     }
-
     .door{
-      padding:14px 18px;
-      border-right:2px dashed var(--line);
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:10px;
       color:var(--brick);
-      font-weight:700;
+      font-weight:900;
+      border:0;
+      border-right:2px dashed var(--line);
+      text-decoration:none;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-size:clamp(12px,.95vw,15px);
+      padding:12px;
     }
-
-    .door:last-child{border-right:0;}
+    .door:last-child{border-right:0}
+    .door:hover{background:var(--ink);color:var(--paper)}
 
     .foot{
       display:grid;
       grid-template-columns:1fr auto 1fr;
       align-items:center;
-      font-size:clamp(11px,.95vw,14px);
-      letter-spacing:.14em;
+      gap:14px;
+      font-size:clamp(10px,.82vw,12px);
+      letter-spacing:.12em;
       text-transform:uppercase;
+      color:var(--muted);
     }
-    .foot .center{color:var(--brick);text-align:center;}
+    .foot .center{color:var(--brick);font-weight:700;text-align:center;}
     .foot .right{text-align:right;}
-
-    .recognize-btn{
-      width:100%;
-      border:2px solid var(--line);
-      padding:12px 10px;
-      margin-top:14px;
-      color:var(--brick);
-      font-weight:700;
-      background:rgba(244,239,230,.78);
-    }
-
-    .recognize-btn:hover{
-      background:var(--ink);
-      color:var(--paper);
-    }
 
     .modal{
       position:fixed;
@@ -258,136 +320,69 @@
       display:none;
       align-items:center;
       justify-content:center;
-      background:rgba(244,239,230,.82);
+      background:rgba(244,239,230,.88);
       z-index:10;
-      padding:24px;
+      padding:20px;
     }
-
     .modal:target{display:flex;}
-
     .modal-panel{
-      width:min(560px,92vw);
-      max-height:82vh;
+      width:min(620px,94vw);
+      max-height:84vh;
       overflow:auto;
       border:2px dashed var(--line);
       background:var(--paper);
-      padding:28px;
+      padding:26px;
       text-align:center;
+      box-shadow:0 18px 60px rgba(0,0,0,.10);
     }
-
     .modal-panel h2{
-      font-size:clamp(18px,2vw,28px);
-      margin-bottom:18px;
       color:var(--brick);
+      font-size:clamp(18px,2vw,28px);
       letter-spacing:.16em;
       text-transform:uppercase;
+      margin-bottom:14px;
     }
-
-    .modal-panel p{
-      line-height:1.6;
-      margin-bottom:18px;
-    }
-
-    .modal-panel textarea{
-      width:100%;
-      min-height:150px;
-      resize:vertical;
-      border:2px dashed var(--line);
-      background:transparent;
-      font:inherit;
-      padding:14px;
-      margin:12px 0 18px;
-    }
-
-    .modal-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
-
-    .solid-btn{
-      border:2px solid var(--line);
-      padding:11px 16px;
-      color:var(--brick);
-      font-weight:700;
-      text-decoration:none;
-    }
-
-    a.solid-btn{display:inline-block;}
-    .solid-btn:hover{background:var(--ink);color:var(--paper);}
-
-
-
-    .access-box{
-      border-top:1px dashed var(--line);
-      border-bottom:1px dashed var(--line);
-      padding:10px 0;
-      margin:14px 0 16px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      font-size:clamp(11px,.92vw,13px);
-      letter-spacing:.14em;
-    }
-
-    .mini-link{
-      color:var(--brick);
-      text-decoration:none;
-      font-weight:700;
-      text-transform:uppercase;
-    }
-
-    .mini-link:hover{text-decoration:underline;}
-
-    .mini-dot{color:var(--brick);font-weight:700;}
-
-    .field{
+    .modal-panel p{margin:0 auto 14px;max-width:520px;}
+    .modal-panel input,.modal-panel textarea{
       width:100%;
       border:2px dashed var(--line);
       background:transparent;
+      color:var(--ink);
       font:inherit;
       padding:12px;
-      margin:8px 0 14px;
-      color:var(--ink);
+      margin:7px 0;
     }
-
-    .field-label{
-      display:block;
-      color:var(--brick);
-      font-weight:700;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-      font-size:12px;
-      text-align:left;
-      margin-top:10px;
-    }
-
-    .hint{
-      font-size:12px;
-      opacity:.78;
-      margin-top:4px;
-    }
+    .modal-panel textarea{min-height:132px;resize:vertical;}
+    .modal-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:12px;}
 
     @media (max-height:760px){
-      .screen{gap:8px;padding:12px 28px;}
-      .sidebox{min-height:150px;max-height:32vh;padding:14px;}
-      .question{font-size:clamp(34px,4.8vw,62px);margin-bottom:14px;}
-      .trace{font-size:clamp(17px,1.7vw,23px);}
-      .dash{margin-bottom:12px;}
-      .doors{min-height:44px;}
-      .door{padding:10px 14px;}
+      .screen{padding:10px 18px;gap:7px;}
+      .question{font-size:clamp(25px,3.6vw,48px);margin-bottom:9px;}
+      .trace{font-size:clamp(15px,1.28vw,20px);}
+      .centerstage{padding:10px 18px;}
+      .related{display:none;}
+      .panel-inner{padding:10px;}
+      .count{font-size:clamp(38px,4.4vw,60px);}
+      .doors{min-height:42px;}
+      .door{padding:9px;}
     }
 
-    @media (max-width:900px){
+    @media (max-width:920px){
       body{overflow:auto;}
-      .screen{height:auto;min-height:100vh;grid-template-rows:auto auto auto auto;}
-      .topbar,.foot{grid-template-columns:1fr;gap:8px;text-align:center;}
+      .screen{height:auto;min-height:100vh;display:block;padding:14px;}
+      .topbar,.foot{grid-template-columns:1fr;text-align:center;gap:8px;}
       .topbar .right,.foot .right{text-align:center;}
-      .main{grid-template-columns:1fr;gap:18px;}
-      .centerstage{order:1;min-height:40vh;}
-      .box-left{order:2;}
-      .box-right{order:3;}
-      .sidebox{max-height:none;min-height:auto;}
-      .doors{grid-template-columns:1fr;}
+      .main{display:flex;flex-direction:column;gap:14px;margin:14px 0;}
+      .centerstage{min-height:56vh;}
+      .question{font-size:clamp(30px,10vw,56px);}
+      .trace{font-size:clamp(17px,5vw,22px);}
+      .related ul{grid-template-columns:1fr;}
+      .doors{grid-template-columns:1fr;margin-top:10px;}
       .door{border-right:0;border-bottom:2px dashed var(--line);}
       .door:last-child{border-bottom:0;}
+      .navline{grid-template-columns:1fr;gap:8px;text-align:center;}
+      .navline .prev,.navline .next{text-align:center;}
+      .panel{max-height:none;}
     }
   </style>
 </head>
@@ -396,51 +391,92 @@
     <header class="topbar" aria-label="Intestazione Archivio">
       <div>LE DOMANDE CHE TORNANO</div>
       <div class="center">ARCHIVIO VIVENTE</div>
-      <div class="right" id="clock">24/06/2026 07:15</div>
+      <div class="right" id="clock">--/--/---- --:--</div>
     </header>
 
     <main class="main">
-      <aside class="sidebox box-left" aria-label="Il tuo spazio">
-        <div class="side-title">IL TUO SPAZIO</div>
-        <div class="sep">—</div>
+      <aside class="panel" aria-label="Il tuo spazio">
+        <div class="panel-inner">
+          <div class="side-title">IL TUO SPAZIO</div>
+          <div class="mini-label">Nome utente</div>
+          <div class="user-name" id="usernameLabel">OSPITE</div>
+          <p class="muted">Uno spazio minimo per riconoscere le domande che tornano.</p>
 
-        <strong>NOME UTENTE</strong>
-        <p id="username-view">VISITATORE</p>
+          <div class="metric-row"><span>Domande riconosciute</span><strong id="recognizedCount">0</strong></div>
+          <div class="metric-row"><span>Domande affidate</span><strong>0</strong></div>
+          <div class="metric-row"><span>Ultima visita</span><strong id="lastVisit">oggi</strong></div>
 
-        <div class="access-box" aria-label="Accesso e iscrizione">
-          <a href="#accesso" class="mini-link">ACCESSO</a>
-          <span class="mini-dot">•</span>
-          <a href="#iscrizione" class="mini-link">ISCRIZIONE</a>
+          <div class="small-actions">
+            <a class="buttonlike" href="#accesso">ENTRA NELL'ARCHIVIO</a>
+            <a class="buttonlike" href="#iscrizione">CREA IL TUO SPAZIO</a>
+          </div>
+
+          <div class="archivist-card">
+            <div class="side-title">L'ARCHIVISTA</div>
+            <div class="archivist-icon" aria-hidden="true">▣</div>
+            <p><strong>Custode delle domande.</strong></p>
+            <p>Ascolta una domanda alla volta.</p>
+            <div class="metric-row"><span>Oggi accolte</span><strong>17</strong></div>
+            <div class="metric-row"><span>Ultima affidata</span><strong>2 ore fa</strong></div>
+          </div>
         </div>
-
-        <strong>HAI RICONOSCIUTO</strong>
-        <p><span id="recognized-count">0</span> domande.</p>
-        <strong>HAI AFFIDATO</strong>
-        <p><span id="entrusted-count">0</span> domande.</p>
       </aside>
 
       <section class="centerstage" aria-label="Domanda centrale">
-        <div class="label">LA DOMANDA CHE CHIAMA</div>
-        <h1 class="question">È troppo tardi<br>per cambiare vita?</h1>
-        <div class="dash">-----</div>
-        <div class="label trace-label">LA TRACCIA</div>
-        <p class="trace">Quale parte di te sta aspettando un permesso che nessuno può concederti?</p>
-        <p class="archive-note">COMPARSA 618 VOLTE NELL'ARCHIVIO.</p>
+        <p class="manifesto">L'anima si fa domande per riconoscere se stessa.</p>
+        <div class="question-core">
+          <div class="label">LA DOMANDA CHE CHIAMA</div>
+          <h1 class="question" id="questionText">È troppo tardi<br>per cambiare vita?</h1>
+
+          <div class="label">LA TRACCIA</div>
+          <p class="trace" id="traceText">Quale parte di te sta aspettando un permesso che nessuno può concederti?</p>
+
+          <div class="archive-data" aria-label="Dati archivio">
+            <span><strong>Comparsa:</strong> 618 volte</span>
+            <span><strong>Prima volta:</strong> 2019</span>
+            <span><strong>Ultima volta:</strong> 2 ore fa</span>
+          </div>
+
+          <div class="related" aria-label="Domande correlate">
+            <div class="mini-label">Potrebbe chiamarti anche</div>
+            <ul>
+              <li>Ho paura di ricominciare.</li>
+              <li>Non so se restare o andare.</li>
+              <li>Sto tradendo me stesso?</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="center-buttons">
+          <button type="button" id="recognizeMain">ANCH'IO</button>
+          <a class="buttonlike" href="#affida">SCRIVI LA TUA DOMANDA</a>
+        </div>
       </section>
 
-      <aside class="sidebox box-right" aria-label="Persone riconosciute">
-        <div class="side-title">PERSONE RICONOSCIUTE</div>
-        <div class="sep">—</div>
-        <div class="count">618</div>
-        <p style="text-align:center">persone si sono riconosciute in questa domanda.</p>
-        <button class="recognize-btn" type="button">ANCH'IO</button>
+      <aside class="panel" aria-label="Anch'io e risonanze">
+        <div class="panel-inner">
+          <div class="right-count">
+            <div class="anchio-title">ANCH'IO</div>
+            <div class="count" id="anchioCount">618</div>
+            <p>si riconoscono in questa domanda.</p>
+            <button class="recognize-btn" type="button" id="recognizeSide">MI RICONOSCO</button>
+          </div>
+
+          <div class="side-title">ULTIME RISONANZE</div>
+          <div class="resonance-feed">
+            <div class="resonance-item"><span class="timestamp">09:21</span>"Sto vivendo questo adesso."</div>
+            <div class="resonance-item"><span class="timestamp">08:47</span>"Mi riguarda più di quanto voglia ammettere."</div>
+            <div class="resonance-item"><span class="timestamp">08:13</span>"Da anni sento questa voce."</div>
+            <div class="resonance-item"><span class="timestamp">07:38</span>"Non l'avevo mai detto."</div>
+          </div>
+        </div>
       </aside>
     </main>
 
     <nav class="navline" aria-label="Navigazione domande">
-      <button class="prev" type="button">← PRECEDENTE</button>
-      <span class="current">DOMANDA N. 1849</span>
-      <button class="next" type="button">SUCCESSIVA →</button>
+      <button class="prev" type="button" id="prevQuestion">← PRECEDENTE</button>
+      <span class="current" id="questionNumber">DOMANDA N. 1849</span>
+      <button class="next" type="button" id="nextQuestion">SUCCESSIVA →</button>
     </nav>
 
     <section class="doors" aria-label="Azioni principali">
@@ -449,20 +485,22 @@
     </section>
 
     <footer class="foot">
-      <div>12.483 DOMANDE RACCOLTE</div>
-      <div class="center">QUESTO ARCHIVIO CRESCE UNA DOMANDA ALLA VOLTA.</div>
-      <div class="right">GRAZIE.</div>
+      <div>Scrivi la tua domanda.</div>
+      <div class="center">L'Archivio la accoglie.</div>
+      <div class="right">Una domanda alla volta.</div>
     </footer>
   </div>
 
   <div id="affida" class="modal" role="dialog" aria-modal="true" aria-labelledby="affida-title">
     <div class="modal-panel">
       <h2 id="affida-title">Affida una domanda</h2>
-      <p>Scrivila in modo semplice. Non serve spiegare tutto. L'Archivista la custodirà.</p>
-      <textarea placeholder="La domanda che continua a tornare..."></textarea>
+      <p>C'è una domanda che continua a tornare? Scrivila in modo semplice. Se vuoi, racconta anche la storia che la accompagna.</p>
+      <input type="text" placeholder="Nome (facoltativo)" />
+      <input type="email" placeholder="Email (facoltativa)" />
+      <textarea placeholder="La domanda o la storia che continua a tornare..."></textarea>
       <div class="modal-actions">
-        <button class="solid-btn" type="button">INVIA ALL'ARCHIVISTA</button>
-        <a class="solid-btn" href="#">CHIUDI</a>
+        <button type="button">INVIA ALL'ARCHIVISTA</button>
+        <a class="buttonlike" href="#">CHIUDI</a>
       </div>
     </div>
   </div>
@@ -470,78 +508,88 @@
   <div id="archivista" class="modal" role="dialog" aria-modal="true" aria-labelledby="archivista-title">
     <div class="modal-panel">
       <h2 id="archivista-title">Incontra l'Archivista</h2>
-      <p>Una domanda può diventare una Traccia personale. Un incontro serve a darle forma, direzione e prossimo passo.</p>
+      <p>Un incontro con l'Archivista aiuta una domanda a trovare la sua forma. Non cerca risposte: restituisce una Traccia personale e una domanda migliore.</p>
       <div class="modal-actions">
-        <a class="solid-btn" href="mailto:archivista@domandechetornano.it">SCRIVI ALL'ARCHIVISTA</a>
-        <a class="solid-btn" href="#">CHIUDI</a>
+        <a class="buttonlike" href="mailto:archivista@domandechetornano.it">SCRIVI ALL'ARCHIVISTA</a>
+        <a class="buttonlike" href="#">CHIUDI</a>
       </div>
     </div>
   </div>
 
-
-
   <div id="accesso" class="modal" role="dialog" aria-modal="true" aria-labelledby="accesso-title">
     <div class="modal-panel">
-      <h2 id="accesso-title">Accesso</h2>
-      <p>Entra nel tuo spazio per ritrovare le domande che hai riconosciuto e quelle che hai affidato all'Archivista.</p>
-      <label class="field-label" for="login-name">Nome utente</label>
-      <input id="login-name" class="field" type="text" placeholder="Il tuo nome o pseudonimo">
+      <h2 id="accesso-title">Entra nell'Archivio</h2>
+      <p>Per ora l'accesso è un prototipo locale. Inserisci il tuo nome: resterà salvato su questo dispositivo.</p>
+      <input id="loginName" type="text" placeholder="Il tuo nome" />
       <div class="modal-actions">
-        <button class="solid-btn" type="button" onclick="saveUser('login-name')">ENTRA</button>
-        <a class="solid-btn" href="#">CHIUDI</a>
+        <button type="button" id="saveLogin">ENTRA</button>
+        <a class="buttonlike" href="#">CHIUDI</a>
       </div>
-      <p class="hint">Versione prototipo: il nome viene salvato solo su questo dispositivo.</p>
     </div>
   </div>
 
   <div id="iscrizione" class="modal" role="dialog" aria-modal="true" aria-labelledby="iscrizione-title">
     <div class="modal-panel">
-      <h2 id="iscrizione-title">Iscrizione</h2>
-      <p>Crea un piccolo spazio personale nell'Archivio. Non serve molto: basta un nome con cui tornare.</p>
-      <label class="field-label" for="signup-name">Nome utente</label>
-      <input id="signup-name" class="field" type="text" placeholder="Scegli un nome">
-      <label class="field-label" for="signup-email">Email</label>
-      <input id="signup-email" class="field" type="email" placeholder="nome@email.it">
+      <h2 id="iscrizione-title">Crea il tuo spazio</h2>
+      <p>Uno spazio per ritrovare le domande in cui ti sei riconosciuto e quelle che hai affidato.</p>
+      <input id="signupName" type="text" placeholder="Nome" />
+      <input type="email" placeholder="Email" />
       <div class="modal-actions">
-        <button class="solid-btn" type="button" onclick="saveUser('signup-name')">CREA IL TUO SPAZIO</button>
-        <a class="solid-btn" href="#">CHIUDI</a>
+        <button type="button" id="saveSignup">CREA SPAZIO</button>
+        <a class="buttonlike" href="#">CHIUDI</a>
       </div>
-      <p class="hint">Versione prototipo: l'iscrizione non invia ancora dati a un database.</p>
     </div>
   </div>
 
   <script>
     const pad=n=>String(n).padStart(2,'0');
     const clock=document.getElementById('clock');
-    const usernameView=document.getElementById('username-view');
-
     function updateClock(){
       const d=new Date();
       clock.textContent=`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
     }
-
-    function loadUser(){
-      const savedName=localStorage.getItem('ldt_nome_utente');
-      if(savedName){
-        usernameView.textContent=savedName.toUpperCase();
-      }
-    }
-
-    function saveUser(inputId){
-      const field=document.getElementById(inputId);
-      const name=(field?.value || '').trim();
-      if(!name){
-        field?.focus();
-        return;
-      }
-      localStorage.setItem('ldt_nome_utente', name);
-      usernameView.textContent=name.toUpperCase();
-      window.location.hash='';
-    }
-
     updateClock();
-    loadUser();
     setInterval(updateClock,30000);
+
+    const usernameLabel=document.getElementById('usernameLabel');
+    const lastVisit=document.getElementById('lastVisit');
+    const storedName=localStorage.getItem('ldt_name');
+    if(storedName) usernameLabel.textContent=storedName;
+    const previousVisit=localStorage.getItem('ldt_last_visit');
+    if(previousVisit) lastVisit.textContent=previousVisit;
+    localStorage.setItem('ldt_last_visit','oggi');
+
+    function saveName(inputId){
+      const el=document.getElementById(inputId);
+      const name=(el.value||'').trim();
+      if(name){
+        localStorage.setItem('ldt_name',name);
+        usernameLabel.textContent=name;
+        location.hash='';
+      }
+    }
+    document.getElementById('saveLogin').addEventListener('click',()=>saveName('loginName'));
+    document.getElementById('saveSignup').addEventListener('click',()=>saveName('signupName'));
+
+    let recognized=Number(localStorage.getItem('ldt_recognized')||0);
+    let anchio=618;
+    const recognizedCount=document.getElementById('recognizedCount');
+    const anchioCount=document.getElementById('anchioCount');
+    function updateRecognized(){
+      recognizedCount.textContent=recognized;
+      anchioCount.textContent=anchio;
+    }
+    updateRecognized();
+    function recognize(){
+      if(localStorage.getItem('ldt_q1849_recognized')) return;
+      recognized+=1;
+      anchio+=1;
+      localStorage.setItem('ldt_recognized',recognized);
+      localStorage.setItem('ldt_q1849_recognized','1');
+      updateRecognized();
+    }
+    document.getElementById('recognizeMain').addEventListener('click',recognize);
+    document.getElementById('recognizeSide').addEventListener('click',recognize);
   </script>
 </body>
 </html>
