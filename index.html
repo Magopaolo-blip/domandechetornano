@@ -13,6 +13,7 @@
       --paper-2:#fbf7ed;
       --line:#1e1d1a;
       --warm:#9b5d22;
+      --brick:#8b3f24;
       --soft:#ded3c0;
       --black:#0e0e0e;
       --danger:#7e3e23;
@@ -87,13 +88,22 @@
       overflow:auto;
       scrollbar-width:thin;
     }
-    .sidebox h2,
-    .question-label,
-    .trace-label{
+    .sidebox h2{
       margin:0 0 18px;
       color:var(--warm);
       font-size:clamp(.72rem,.95vw,.92rem);
       font-weight:400;
+      letter-spacing:.38em;
+      text-transform:uppercase;
+      text-align:center;
+    }
+
+    .question-label,
+    .trace-label{
+      margin:0 0 18px;
+      color:var(--brick);
+      font-size:clamp(.72rem,.95vw,.92rem);
+      font-weight:700;
       letter-spacing:.38em;
       text-transform:uppercase;
       text-align:center;
@@ -151,15 +161,18 @@
     .trace-label{margin-bottom:12px;}
     .trace{
       margin:0;
+      color:var(--ink);
       font-size:clamp(1.15rem,1.75vw,1.65rem);
       line-height:1.45;
       letter-spacing:.035em;
+      font-weight:700;
       text-wrap:balance;
     }
     .archive-note{
       margin:clamp(14px,2vh,20px) 0 0;
-      color:var(--warm);
+      color:var(--brick);
       font-size:clamp(.74rem,.9vw,.9rem);
+      font-weight:700;
       letter-spacing:.22em;
       text-transform:uppercase;
     }
