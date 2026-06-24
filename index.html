@@ -3,179 +3,427 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Le Domande che Tornano — Archivio Vivente delle Domande Umane." />
   <title>Le Domande che Tornano | Archivio Vivente</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    :root{
+      --paper:#f4efe6;
+      --ink:#171717;
+      --brick:#9b4f19;
+      --line:#171717;
+      --soft:rgba(23,23,23,.06);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    html,body{width:100%;height:100%;}
+
+    body{
+      background:var(--paper);
+      color:var(--ink);
+      font-family:"Courier New", Courier, monospace;
+      overflow:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(to right, rgba(0,0,0,.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0,0,0,.025) 1px, transparent 1px);
+      background-size:18px 18px;
+      opacity:.65;
+      z-index:0;
+    }
+
+    .screen{
+      position:relative;
+      z-index:1;
+      width:100vw;
+      height:100vh;
+      padding:clamp(14px,2.4vw,36px);
+      display:grid;
+      grid-template-rows:auto 1fr auto auto;
+      gap:clamp(10px,1.4vh,18px);
+      background:var(--paper);
+    }
+
+    .topbar{
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      border-bottom:2px dashed var(--line);
+      padding-bottom:12px;
+      font-size:clamp(12px,1.1vw,17px);
+      font-weight:700;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+
+    .topbar .center{text-align:center;}
+    .topbar .right{text-align:right;font-weight:400;}
+
+    .main{
+      min-height:0;
+      display:grid;
+      grid-template-columns:minmax(190px,260px) minmax(0,1fr) minmax(190px,260px);
+      grid-template-rows:1fr;
+      gap:clamp(18px,3vw,42px);
+      align-items:center;
+    }
+
+    .sidebox{
+      border:2px dashed var(--line);
+      padding:clamp(14px,1.7vw,26px);
+      min-height:210px;
+      max-height:38vh;
+      overflow:auto;
+      background:rgba(244,239,230,.72);
+    }
+
+    .side-title,
+    .label,
+    .archive-note,
+    .place-note{
+      color:var(--brick);
+      font-weight:700;
+      letter-spacing:.34em;
+      text-transform:uppercase;
+    }
+
+    .side-title{
+      font-size:clamp(11px,.95vw,14px);
+      text-align:center;
+      margin-bottom:18px;
+    }
+
+    .sep{
+      color:var(--brick);
+      text-align:center;
+      margin-bottom:18px;
+      font-weight:700;
+    }
+
+    .sidebox p{
+      font-size:clamp(12px,1vw,15px);
+      line-height:1.55;
+      margin:.55rem 0 1rem;
+    }
+
+    .sidebox strong{
+      display:block;
+      margin-top:1rem;
+      font-size:clamp(12px,1vw,15px);
+      letter-spacing:.12em;
+    }
+
+    .count{
+      font-size:clamp(52px,6vw,88px);
+      line-height:1;
+      text-align:center;
+      font-weight:400;
+      letter-spacing:.08em;
+      margin:10px 0 20px;
+    }
+
+    .centerstage{
+      min-width:0;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      padding:0 clamp(8px,1.5vw,24px);
+    }
+
+    .label{
+      font-size:clamp(11px,.95vw,14px);
+      margin-bottom:clamp(10px,1.4vh,18px);
+    }
+
+    .question{
+      max-width:920px;
+      font-size:clamp(36px,5.8vw,78px);
+      line-height:1.08;
+      font-weight:900;
+      letter-spacing:.035em;
+      text-transform:uppercase;
+      margin:0 auto clamp(20px,3vh,34px);
+    }
+
+    .dash{
+      color:var(--brick);
+      letter-spacing:.55em;
+      font-weight:700;
+      margin-bottom:clamp(16px,2.4vh,30px);
+    }
+
+    .trace-label{
+      margin-bottom:clamp(8px,1vh,14px);
+    }
+
+    .trace{
+      max-width:720px;
+      font-size:clamp(18px,2.05vw,30px);
+      line-height:1.32;
+      font-weight:700;
+      margin-bottom:clamp(12px,1.8vh,24px);
+    }
+
+    .archive-note{
+      font-size:clamp(11px,.95vw,14px);
+      letter-spacing:.22em;
+    }
+
+    .navline{
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      border-top:2px dashed var(--line);
+      border-bottom:2px dashed var(--line);
+      padding:10px 0;
+      font-size:clamp(12px,1vw,15px);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    button{
+      font:inherit;
+      background:transparent;
+      color:var(--ink);
+      border:0;
+      cursor:pointer;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+    }
+
+    button:hover{color:var(--brick);}
+
+    .navline .prev{text-align:left;}
+    .navline .next{text-align:right;}
+    .navline .current{color:var(--brick);font-weight:700;}
+
+    .doors{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      border-bottom:2px dashed var(--line);
+      min-height:54px;
+    }
+
+    .door{
+      padding:14px 18px;
+      border-right:2px dashed var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      color:var(--brick);
+      font-weight:700;
+    }
+
+    .door:last-child{border-right:0;}
+
+    .foot{
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      font-size:clamp(11px,.95vw,14px);
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+    .foot .center{color:var(--brick);text-align:center;}
+    .foot .right{text-align:right;}
+
+    .recognize-btn{
+      width:100%;
+      border:2px solid var(--line);
+      padding:12px 10px;
+      margin-top:14px;
+      color:var(--brick);
+      font-weight:700;
+      background:rgba(244,239,230,.78);
+    }
+
+    .recognize-btn:hover{
+      background:var(--ink);
+      color:var(--paper);
+    }
+
+    .modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(244,239,230,.82);
+      z-index:10;
+      padding:24px;
+    }
+
+    .modal:target{display:flex;}
+
+    .modal-panel{
+      width:min(560px,92vw);
+      max-height:82vh;
+      overflow:auto;
+      border:2px dashed var(--line);
+      background:var(--paper);
+      padding:28px;
+      text-align:center;
+    }
+
+    .modal-panel h2{
+      font-size:clamp(18px,2vw,28px);
+      margin-bottom:18px;
+      color:var(--brick);
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+
+    .modal-panel p{
+      line-height:1.6;
+      margin-bottom:18px;
+    }
+
+    .modal-panel textarea{
+      width:100%;
+      min-height:150px;
+      resize:vertical;
+      border:2px dashed var(--line);
+      background:transparent;
+      font:inherit;
+      padding:14px;
+      margin:12px 0 18px;
+    }
+
+    .modal-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+    .solid-btn{
+      border:2px solid var(--line);
+      padding:11px 16px;
+      color:var(--brick);
+      font-weight:700;
+      text-decoration:none;
+    }
+
+    a.solid-btn{display:inline-block;}
+    .solid-btn:hover{background:var(--ink);color:var(--paper);}
+
+    @media (max-height:760px){
+      .screen{gap:8px;padding:12px 28px;}
+      .sidebox{min-height:150px;max-height:32vh;padding:14px;}
+      .question{font-size:clamp(34px,4.8vw,62px);margin-bottom:14px;}
+      .trace{font-size:clamp(17px,1.7vw,23px);}
+      .dash{margin-bottom:12px;}
+      .doors{min-height:44px;}
+      .door{padding:10px 14px;}
+    }
+
+    @media (max-width:900px){
+      body{overflow:auto;}
+      .screen{height:auto;min-height:100vh;grid-template-rows:auto auto auto auto;}
+      .topbar,.foot{grid-template-columns:1fr;gap:8px;text-align:center;}
+      .topbar .right,.foot .right{text-align:center;}
+      .main{grid-template-columns:1fr;gap:18px;}
+      .centerstage{order:1;min-height:40vh;}
+      .box-left{order:2;}
+      .box-right{order:3;}
+      .sidebox{max-height:none;min-height:auto;}
+      .doors{grid-template-columns:1fr;}
+      .door{border-right:0;border-bottom:2px dashed var(--line);}
+      .door:last-child{border-bottom:0;}
+    }
+  </style>
 </head>
 <body>
-  <div class="archive-screen" aria-label="Archivio Vivente delle Domande Umane">
-    <header class="top-line">
+  <div class="screen">
+    <header class="topbar" aria-label="Intestazione Archivio">
       <div>LE DOMANDE CHE TORNANO</div>
-      <div>ARCHIVIO VIVENTE</div>
-      <time id="archiveTime" datetime="2026-06-24T07:10">24/06/2026&nbsp;&nbsp;07:10</time>
+      <div class="center">ARCHIVIO VIVENTE</div>
+      <div class="right" id="clock">24/06/2026 07:15</div>
     </header>
 
-    <main class="main-grid">
-      <aside class="side-box user-box" aria-label="Il tuo spazio">
-        <div class="box-kicker">IL TUO SPAZIO</div>
-        <div class="thin-mark"></div>
-        <div class="side-content">
-          <p class="side-label">HAI RICONOSCIUTO</p>
-          <p><span id="userRecognized">0</span> domande.</p>
-          <p class="side-label top-space">HAI AFFIDATO</p>
-          <p><span id="userEntrusted">0</span> domande.</p>
-        </div>
+    <main class="main">
+      <aside class="sidebox box-left" aria-label="Il tuo spazio">
+        <div class="side-title">IL TUO SPAZIO</div>
+        <div class="sep">—</div>
+        <strong>HAI RICONOSCIUTO</strong>
+        <p>0 domande.</p>
+        <strong>HAI AFFIDATO</strong>
+        <p>0 domande.</p>
       </aside>
 
-      <section class="question-stage" aria-live="polite">
-        <p class="brick-title">LA DOMANDA CHE CHIAMA</p>
-        <h1 id="mainQuestion" class="main-question">È TROPPO TARDI PER CAMBIARE VITA?</h1>
-        <div class="dash" aria-hidden="true">— — —</div>
-        <p class="brick-title trace-title">LA TRACCIA</p>
-        <p id="traceText" class="trace-text">Quale parte di te sta aspettando un permesso che nessuno può concederti?</p>
-        <p id="archiveCounter" class="archive-note">COMPARSA 618 VOLTE NELL'ARCHIVIO.</p>
+      <section class="centerstage" aria-label="Domanda centrale">
+        <div class="label">LA DOMANDA CHE CHIAMA</div>
+        <h1 class="question">È troppo tardi<br>per cambiare vita?</h1>
+        <div class="dash">-----</div>
+        <div class="label trace-label">LA TRACCIA</div>
+        <p class="trace">Quale parte di te sta aspettando un permesso che nessuno può concederti?</p>
+        <p class="archive-note">COMPARSA 618 VOLTE NELL'ARCHIVIO.</p>
       </section>
 
-      <aside class="side-box count-box" aria-label="Persone riconosciute">
-        <div class="box-kicker">PERSONE<br>RICONOSCIUTE</div>
-        <div class="thin-mark"></div>
-        <div id="recognitionCounter" class="big-number">618</div>
-        <p class="counter-copy">persone si sono riconosciute in questa domanda.</p>
-        <button id="recognizeButton" class="outline-button" type="button">ANCH'IO</button>
+      <aside class="sidebox box-right" aria-label="Persone riconosciute">
+        <div class="side-title">PERSONE RICONOSCIUTE</div>
+        <div class="sep">—</div>
+        <div class="count">618</div>
+        <p style="text-align:center">persone si sono riconosciute in questa domanda.</p>
+        <button class="recognize-btn" type="button">ANCH'IO</button>
       </aside>
     </main>
 
-    <nav class="command-area" aria-label="Comandi dell'Archivio">
-      <div class="question-nav">
-        <button id="prevQuestion" type="button">← PRECEDENTE</button>
-        <span id="questionNumber">DOMANDA N. 1849</span>
-        <button id="nextQuestion" type="button">SUCCESSIVA →</button>
-      </div>
-      <div class="door-row">
-        <button id="openEntrust" type="button">AFFIDA UNA DOMANDA</button>
-        <button id="openArchivist" type="button">INCONTRA L'ARCHIVISTA</button>
-      </div>
+    <nav class="navline" aria-label="Navigazione domande">
+      <button class="prev" type="button">← PRECEDENTE</button>
+      <span class="current">DOMANDA N. 1849</span>
+      <button class="next" type="button">SUCCESSIVA →</button>
     </nav>
 
-    <footer class="bottom-line">
+    <section class="doors" aria-label="Azioni principali">
+      <a class="door" href="#affida">AFFIDA UNA DOMANDA</a>
+      <a class="door" href="#archivista">INCONTRA L'ARCHIVISTA</a>
+    </section>
+
+    <footer class="foot">
       <div>12.483 DOMANDE RACCOLTE</div>
-      <div>QUESTO ARCHIVIO CRESCE UNA DOMANDA ALLA VOLTA.</div>
-      <div>GRAZIE.</div>
+      <div class="center">QUESTO ARCHIVIO CRESCE UNA DOMANDA ALLA VOLTA.</div>
+      <div class="right">GRAZIE.</div>
     </footer>
   </div>
 
-  <dialog id="entrustDialog" class="archive-dialog" aria-labelledby="entrustTitle">
-    <form method="dialog" class="dialog-card">
-      <button class="dialog-close" value="close" aria-label="Chiudi">×</button>
-      <h2 id="entrustTitle">AFFIDA UNA DOMANDA</h2>
-      <p>Scrivila qui, in modo anonimo. L'Archivista la custodirà.</p>
-      <textarea aria-label="La tua domanda" placeholder="La domanda che continua a tornare..."></textarea>
-      <div class="dialog-actions">
-        <button value="close" type="submit">CHIUDI</button>
-        <button id="entrustSubmit" value="close" type="submit">AFFIDA</button>
+  <div id="affida" class="modal" role="dialog" aria-modal="true" aria-labelledby="affida-title">
+    <div class="modal-panel">
+      <h2 id="affida-title">Affida una domanda</h2>
+      <p>Scrivila in modo semplice. Non serve spiegare tutto. L'Archivista la custodirà.</p>
+      <textarea placeholder="La domanda che continua a tornare..."></textarea>
+      <div class="modal-actions">
+        <button class="solid-btn" type="button">INVIA ALL'ARCHIVISTA</button>
+        <a class="solid-btn" href="#">CHIUDI</a>
       </div>
-    </form>
-  </dialog>
+    </div>
+  </div>
 
-  <dialog id="archivistDialog" class="archive-dialog" aria-labelledby="archivistTitle">
-    <form method="dialog" class="dialog-card">
-      <button class="dialog-close" value="close" aria-label="Chiudi">×</button>
-      <h2 id="archivistTitle">INCONTRA L'ARCHIVISTA</h2>
-      <p>Un incontro individuale per dare forma, significato e direzione alla domanda.</p>
-      <div class="dialog-actions">
-        <button value="close" type="submit">CHIUDI</button>
-        <a href="mailto:archivista@domandechetornano.it?subject=Incontro%20con%20l%27Archivista">SCRIVI</a>
+  <div id="archivista" class="modal" role="dialog" aria-modal="true" aria-labelledby="archivista-title">
+    <div class="modal-panel">
+      <h2 id="archivista-title">Incontra l'Archivista</h2>
+      <p>Una domanda può diventare una Traccia personale. Un incontro serve a darle forma, direzione e prossimo passo.</p>
+      <div class="modal-actions">
+        <a class="solid-btn" href="mailto:archivista@domandechetornano.it">SCRIVI ALL'ARCHIVISTA</a>
+        <a class="solid-btn" href="#">CHIUDI</a>
       </div>
-    </form>
-  </dialog>
+    </div>
+  </div>
 
   <script>
-    const questions = [
-      {
-        id: 1849,
-        question: "È TROPPO TARDI PER CAMBIARE VITA?",
-        trace: "Quale parte di te sta aspettando un permesso che nessuno può concederti?",
-        count: 618
-      },
-      {
-        id: 1850,
-        question: "NON SO SE RESTARE O ANDARE.",
-        trace: "Che cosa diventerebbe più vero se smettessi di trattenerti?",
-        count: 731
-      },
-      {
-        id: 1851,
-        question: "HO PAURA DI RICOMINCIARE.",
-        trace: "Quale parte di te merita di essere portata nel prossimo capitolo?",
-        count: 842
-      },
-      {
-        id: 1852,
-        question: "STO ANDANDO NELLA DIREZIONE GIUSTA?",
-        trace: "Quale segnale stai ignorando perché non assomiglia a una certezza?",
-        count: 489
-      }
-    ];
-
-    let currentIndex = 0;
-    let userRecognized = 0;
-    let userEntrusted = 0;
-
-    const mainQuestion = document.getElementById("mainQuestion");
-    const traceText = document.getElementById("traceText");
-    const archiveCounter = document.getElementById("archiveCounter");
-    const recognitionCounter = document.getElementById("recognitionCounter");
-    const questionNumber = document.getElementById("questionNumber");
-    const userRecognizedEl = document.getElementById("userRecognized");
-    const userEntrustedEl = document.getElementById("userEntrusted");
-
-    function renderQuestion() {
-      const item = questions[currentIndex];
-      mainQuestion.textContent = item.question;
-      traceText.textContent = item.trace;
-      archiveCounter.textContent = `COMPARSA ${item.count} VOLTE NELL'ARCHIVIO.`;
-      recognitionCounter.textContent = item.count;
-      questionNumber.textContent = `DOMANDA N. ${item.id}`;
+    const pad=n=>String(n).padStart(2,'0');
+    const clock=document.getElementById('clock');
+    function updateClock(){
+      const d=new Date();
+      clock.textContent=`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
     }
-
-    document.getElementById("prevQuestion").addEventListener("click", () => {
-      currentIndex = (currentIndex - 1 + questions.length) % questions.length;
-      renderQuestion();
-    });
-
-    document.getElementById("nextQuestion").addEventListener("click", () => {
-      currentIndex = (currentIndex + 1) % questions.length;
-      renderQuestion();
-    });
-
-    document.getElementById("recognizeButton").addEventListener("click", () => {
-      questions[currentIndex].count += 1;
-      userRecognized += 1;
-      userRecognizedEl.textContent = userRecognized;
-      renderQuestion();
-    });
-
-    const entrustDialog = document.getElementById("entrustDialog");
-    const archivistDialog = document.getElementById("archivistDialog");
-
-    document.getElementById("openEntrust").addEventListener("click", () => entrustDialog.showModal());
-    document.getElementById("openArchivist").addEventListener("click", () => archivistDialog.showModal());
-
-    document.getElementById("entrustSubmit").addEventListener("click", () => {
-      userEntrusted += 1;
-      userEntrustedEl.textContent = userEntrusted;
-    });
-
-    const archiveTime = document.getElementById("archiveTime");
-    function updateTime() {
-      const now = new Date();
-      const date = now.toLocaleDateString("it-IT", { day: "2-digit", month: "2-digit", year: "numeric" });
-      const time = now.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
-      archiveTime.textContent = `${date}  ${time}`;
-      archiveTime.setAttribute("datetime", now.toISOString());
-    }
-    updateTime();
-    setInterval(updateTime, 60000);
+    updateClock();
+    setInterval(updateClock,30000);
   </script>
 </body>
 </html>
