@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le Domande che Tornano | Archivio Vivente</title>
-  <!-- versione 24-06-finale-domanda-anima -->
+  <!-- versione 24-06-domande-random-archivio -->
   <style>
     :root{
       --paper:#f4efe6;
@@ -416,6 +416,125 @@ let featuredCount = Number(localStorage.getItem('dct_featured_count') || 618);
 let todayCount = Number(localStorage.getItem('dct_today') || 17);
 let lastQuestion = "";
 
+const archiveQuestions = [
+  {territorio:'Direzione', domanda:'Sto andando nella direzione giusta?', priorita:5},
+  {territorio:'Direzione', domanda:'E se stessi sbagliando strada?', priorita:5},
+  {territorio:'Direzione', domanda:'Quanto tempo posso restare dove non mi sento più vivo?', priorita:5},
+  {territorio:'Direzione', domanda:'Quale passo continuo a rimandare?', priorita:5},
+  {territorio:'Direzione', domanda:'Cosa mi trattiene dal procedere?', priorita:4},
+  {territorio:'Direzione', domanda:'Sto aspettando un segnale che non arriverà?', priorita:4},
+  {territorio:'Direzione', domanda:'Quale strada continua a chiamarmi?', priorita:4},
+  {territorio:'Direzione', domanda:'Dove sto consumando energia senza avanzare?', priorita:4},
+  {territorio:'Direzione', domanda:'Cosa accadrebbe se scegliessi?', priorita:4},
+  {territorio:'Direzione', domanda:'Quale bivio continua a tornare?', priorita:4},
+  {territorio:'Amore', domanda:'Amo questa persona o ciò che rappresenta?', priorita:5},
+  {territorio:'Amore', domanda:'Perché continuo a tornare qui?', priorita:5},
+  {territorio:'Amore', domanda:'Sto aspettando qualcuno che non arriverà?', priorita:5},
+  {territorio:'Amore', domanda:'Cosa non riesco a lasciare andare?', priorita:5},
+  {territorio:'Amore', domanda:'Mi sento amato o necessario?', priorita:4},
+  {territorio:'Amore', domanda:'Sto vedendo questa persona o il mio desiderio?', priorita:4},
+  {territorio:'Amore', domanda:"Cosa sto cercando attraverso l'altro?", priorita:4},
+  {territorio:'Amore', domanda:'Cosa continuo a sperare?', priorita:4},
+  {territorio:'Amore', domanda:'Quale assenza continua a parlare?', priorita:5},
+  {territorio:'Amore', domanda:'Cosa mi lega davvero?', priorita:4},
+  {territorio:'Identità', domanda:'Chi sarei senza questa storia?', priorita:5},
+  {territorio:'Identità', domanda:'Cosa sto cercando di dimostrare?', priorita:4},
+  {territorio:'Identità', domanda:'Quale ruolo mi sta diventando stretto?', priorita:4},
+  {territorio:'Identità', domanda:'Chi sono quando nessuno guarda?', priorita:5},
+  {territorio:'Identità', domanda:'Quale immagine di me sto difendendo?', priorita:4},
+  {territorio:'Identità', domanda:'Cosa non sto più riuscendo a fingere?', priorita:5},
+  {territorio:'Identità', domanda:'Dove mi tradisco?', priorita:4},
+  {territorio:'Identità', domanda:'Quale parte di me sta chiedendo spazio?', priorita:5},
+  {territorio:'Identità', domanda:'Chi sto diventando?', priorita:5},
+  {territorio:'Identità', domanda:'Cosa non mi rappresenta più?', priorita:4},
+  {territorio:'Tempo', domanda:'È troppo tardi?', priorita:5},
+  {territorio:'Tempo', domanda:'Cosa sto rimandando da anni?', priorita:5},
+  {territorio:'Tempo', domanda:'Se non fosse adesso, quando?', priorita:5},
+  {territorio:'Tempo', domanda:'Cosa continua ad aspettarmi?', priorita:4},
+  {territorio:'Tempo', domanda:'Quale stagione della mia vita sto vivendo?', priorita:4},
+  {territorio:'Tempo', domanda:'Cosa non può più essere rinviato?', priorita:5},
+  {territorio:'Tempo', domanda:'Quanto tempo voglio ancora aspettare?', priorita:4},
+  {territorio:'Tempo', domanda:'Cosa è arrivato il momento di vedere?', priorita:4},
+  {territorio:'Tempo', domanda:'Cosa sto lasciando passare?', priorita:4},
+  {territorio:'Tempo', domanda:'Quale tempo è maturo?', priorita:4},
+  {territorio:'Cambiamento', domanda:'Cosa deve finire?', priorita:5},
+  {territorio:'Cambiamento', domanda:'Cosa sta cercando di nascere?', priorita:5},
+  {territorio:'Cambiamento', domanda:'Sto lasciando andare o sto perdendo?', priorita:5},
+  {territorio:'Cambiamento', domanda:'Quale porta continua ad aprirsi?', priorita:4},
+  {territorio:'Cambiamento', domanda:'Cosa non può accompagnarmi oltre?', priorita:4},
+  {territorio:'Cambiamento', domanda:'Dove sto resistendo?', priorita:4},
+  {territorio:'Cambiamento', domanda:'Cosa sta cambiando anche se non lo voglio?', priorita:4},
+  {territorio:'Cambiamento', domanda:'Quale passaggio sto attraversando?', priorita:4},
+  {territorio:'Cambiamento', domanda:'Cosa chiede di essere trasformato?', priorita:4},
+  {territorio:'Cambiamento', domanda:'Quale pelle non mi appartiene più?', priorita:5},
+  {territorio:'Paura', domanda:'Cosa temo davvero?', priorita:5},
+  {territorio:'Paura', domanda:'Cosa sto proteggendo?', priorita:5},
+  {territorio:'Paura', domanda:'Quale rischio non voglio correre?', priorita:4},
+  {territorio:'Paura', domanda:'Cosa potrebbe accadere se smettessi di controllare?', priorita:4},
+  {territorio:'Paura', domanda:'Quale verità evito?', priorita:4},
+  {territorio:'Paura', domanda:'Cosa mi spaventa perché conta?', priorita:5},
+  {territorio:'Paura', domanda:'Di cosa ho paura di perdere il controllo?', priorita:4},
+  {territorio:'Paura', domanda:'Cosa continuo a evitare?', priorita:4},
+  {territorio:'Paura', domanda:'Quale paura si traveste da prudenza?', priorita:5},
+  {territorio:'Paura', domanda:'Cosa accadrebbe se andasse bene?', priorita:5},
+  {territorio:'Libertà', domanda:'Dove mi sento prigioniero?', priorita:5},
+  {territorio:'Libertà', domanda:'Chi ha deciso che deve essere così?', priorita:4},
+  {territorio:'Libertà', domanda:'Cosa mi impedisco?', priorita:4},
+  {territorio:'Libertà', domanda:'Quale permesso sto aspettando?', priorita:5},
+  {territorio:'Libertà', domanda:'A chi appartiene questa scelta?', priorita:4},
+  {territorio:'Libertà', domanda:'Dove rinuncio a me stesso?', priorita:5},
+  {territorio:'Libertà', domanda:'Cosa farei se non avessi paura del giudizio?', priorita:4},
+  {territorio:'Libertà', domanda:'Quale catena tengo stretta da solo?', priorita:4},
+  {territorio:'Libertà', domanda:'Dove potrei respirare di più?', priorita:4},
+  {territorio:'Libertà', domanda:'Cosa significa libertà per me?', priorita:4},
+  {territorio:'Appartenenza', domanda:'Dove mi sento a casa?', priorita:5},
+  {territorio:'Appartenenza', domanda:'Dove mi sento fuori posto?', priorita:5},
+  {territorio:'Appartenenza', domanda:'Chi mi vede davvero?', priorita:4},
+  {territorio:'Appartenenza', domanda:'Quale luogo continua a chiamarmi?', priorita:4},
+  {territorio:'Appartenenza', domanda:'A chi sto cercando di appartenere?', priorita:4},
+  {territorio:'Appartenenza', domanda:'Dove posso essere me stesso?', priorita:5},
+  {territorio:'Appartenenza', domanda:'Chi riconosce la mia lingua?', priorita:4},
+  {territorio:'Appartenenza', domanda:'Dove smetto di difendermi?', priorita:5},
+  {territorio:'Appartenenza', domanda:'Quale comunità sto cercando?', priorita:4},
+  {territorio:'Appartenenza', domanda:'Dove posso riposare?', priorita:5},
+  {territorio:'Desiderio', domanda:'Cosa desidero davvero?', priorita:5},
+  {territorio:'Desiderio', domanda:'Quale desiderio continuo a rimandare?', priorita:4},
+  {territorio:'Desiderio', domanda:'Cosa continua a bussare?', priorita:5},
+  {territorio:'Desiderio', domanda:'Cosa sto sacrificando per restare uguale?', priorita:5},
+  {territorio:'Desiderio', domanda:'Quale sogno non mi ha lasciato?', priorita:5},
+  {territorio:'Desiderio', domanda:'Cosa mi accende?', priorita:4},
+  {territorio:'Desiderio', domanda:'Cosa mi manca veramente?', priorita:4},
+  {territorio:'Desiderio', domanda:'Cosa sto soffocando?', priorita:5},
+  {territorio:'Desiderio', domanda:'Cosa chiede di essere vissuto?', priorita:5},
+  {territorio:'Desiderio', domanda:'Quale fuoco sto custodendo?', priorita:5},
+  {territorio:'Significato', domanda:'Perché questa esperienza continua a tornare?', priorita:5},
+  {territorio:'Significato', domanda:'Cosa sta cercando di insegnarmi la vita?', priorita:4},
+  {territorio:'Significato', domanda:'Cosa non ho ancora compreso?', priorita:4},
+  {territorio:'Significato', domanda:'Quale filo collega questi eventi?', priorita:5},
+  {territorio:'Significato', domanda:'Cosa continua a ripetersi?', priorita:5},
+  {territorio:'Significato', domanda:'Cosa sto chiamando destino?', priorita:4},
+  {territorio:'Significato', domanda:'Quale domanda sta cercando me?', priorita:5},
+  {territorio:'Significato', domanda:'Cosa vuole essere visto?', priorita:5},
+  {territorio:'Significato', domanda:'Quale storia sto raccontando?', priorita:4},
+  {territorio:'Significato', domanda:'Cosa mi sta ricordando chi sono?', priorita:5}
+];
+
+
+function pickArchiveQuestion(){
+  const active = archiveQuestions.filter(q => q.priorita >= 4);
+  const q = active[Math.floor(Math.random() * active.length)];
+  const featured = document.getElementById('featuredQuestion');
+  if(featured){
+    featured.textContent = q.domanda;
+    featured.dataset.territorio = q.territorio;
+    featured.dataset.priorita = q.priorita;
+  }
+  const randomCount = Math.floor(180 + Math.random() * 720);
+  featuredCount = randomCount;
+  localStorage.setItem('dct_featured_count', featuredCount);
+  renderTotals();
+}
+
 const themes = [
   {keys:['dove','direzione','strada','vado','andare','sbagliando','scelta','scegliere'], theme:'DIREZIONE', mother:'Sto andando nella direzione giusta?', count:451, near:37, trace:'Quale passo continua a tornare nei tuoi pensieri?', sisters:['Sto andando nella direzione giusta?','E se stessi sbagliando strada?','Come faccio a scegliere?','Sto ignorando qualcosa?']},
   {keys:['tardi','cambiare','ricominciare','vita','iniziare','ripartire'], theme:'CAMBIAMENTO', mother:'È troppo tardi per cambiare vita?', count:618, near:42, trace:'Quale parte di te merita di essere portata nel prossimo capitolo?', sisters:['Ho paura di ricominciare.','Sto perdendo tempo?','È tardi per ripartire?','Cosa devo lasciare indietro?']},
@@ -430,6 +549,7 @@ function updateClock(){const d=new Date();document.getElementById('clock').textC
 setInterval(updateClock,1000); updateClock();
 function renderTotals(){document.getElementById('archiveTotal').textContent=total.toLocaleString('it-IT');document.getElementById('archiveTotalLeft').textContent=total.toLocaleString('it-IT');document.getElementById('featuredCount').textContent=featuredCount.toLocaleString('it-IT');document.getElementById('rightCount').textContent=featuredCount.toLocaleString('it-IT');document.getElementById('todayCount').textContent=todayCount.toLocaleString('it-IT')}
 renderTotals();
+pickArchiveQuestion();
 function detectTheme(q){const s=q.toLowerCase();let best=null,score=0;for(const t of themes){let n=0;t.keys.forEach(k=>{if(s.includes(k)) n++}); if(n>score){score=n;best=t}} return best || fallback;}
 function addLatest(q){const d=new Date(); const time=`${pad(d.getHours())}:${pad(d.getMinutes())}`; const feed=document.getElementById('latestQuestions'); const div=document.createElement('div'); div.className='voice'; div.innerHTML=`<span class="time">${time}</span>${escapeHtml(q)}`; feed.prepend(div); while(feed.children.length>7) feed.removeChild(feed.lastChild);}
 function escapeHtml(str){return String(str).replace(/[&<>'"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
@@ -512,7 +632,13 @@ async function sendArchivistRequest(){
 document.getElementById('openFormBtn').addEventListener('click',()=>{document.getElementById('questionForm').classList.toggle('active');document.getElementById('questionInput').focus()});
 document.getElementById('submitQuestion').addEventListener('click',submitQuestion);
 document.getElementById('questionInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitQuestion();}});
-document.getElementById('recognizeBtn').addEventListener('click',()=>{featuredCount++; localStorage.setItem('dct_featured_count',featuredCount); renderTotals(); addLatest('Mi riconosco in questa domanda.');});
+document.getElementById('recognizeBtn').addEventListener('click',()=>{
+  featuredCount++;
+  localStorage.setItem('dct_featured_count',featuredCount);
+  renderTotals();
+  const current = document.getElementById('featuredQuestion').textContent.trim();
+  addLatest('Mi riconosco: ' + current);
+});
 document.getElementById('resultRecognize').addEventListener('click',()=>{addLatest('Mi riconosco anch\'io.'); document.getElementById('resultRecognize').textContent='RICONOSCIMENTO ACCOLTO';});
 document.getElementById('newQuestion').addEventListener('click',resetToPortal);
 document.getElementById('sendArchivist').addEventListener('click',sendArchivistRequest);
