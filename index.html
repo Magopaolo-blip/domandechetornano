@@ -1,469 +1,410 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Le Domande che Tornano | Archivio delle domande umane</title>
-  <meta name="description" content="Le Domande che Tornano raccoglie le domande che gli esseri umani si fanno quando nessuno li sta guardando. Forse la tua è già qui.">
-  <meta name="theme-color" content="#f7f1e5">
-  <meta property="og:title" content="Le Domande che Tornano">
-  <meta property="og:description" content="C'è una domanda che continua a tornare? Forse la tua è già qui.">
-  <meta property="og:type" content="website">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Le Domande che Tornano | Archivio Vivente</title>
+  <meta name="description" content="Un luogo per sostare davanti alle domande che tornano." />
   <style>
     :root{
-      --bg:#f7f1e5;
-      --paper:#fffaf0;
-      --ink:#22201d;
-      --muted:#6b6258;
-      --line:#cdbf9f;
-      --accent:#8b5e2f;
-      --accent-soft:#eadbc0;
-      --danger:#7a3d2b;
-      --max:920px;
+      --paper:#f7f1e6;
+      --ink:#151515;
+      --soft:#6c6257;
+      --line:#161616;
+      --accent:#9a5c21;
+      --veil:rgba(247,241,230,.86);
+      --shadow:0 18px 60px rgba(0,0,0,.16);
     }
     *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
+    html,body{height:100%;margin:0;overflow:hidden;background:#111;color:var(--ink)}
     body{
-      margin:0;
-      background:var(--bg);
-      color:var(--ink);
-      font-family:"Courier Prime", "IBM Plex Mono", "Courier New", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      line-height:1.55;
-      font-size:17px;
-    }
-    body:before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      opacity:.20;
-      background-image:
-        linear-gradient(rgba(34,32,29,.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(34,32,29,.025) 1px, transparent 1px);
-      background-size:28px 28px;
-      mix-blend-mode:multiply;
-    }
-    a{color:inherit;text-decoration:none;border-bottom:1px solid var(--accent)}
-    a:hover{color:var(--accent)}
-    .wrap{width:min(var(--max), calc(100% - 36px));margin:0 auto}
-    header{
-      padding:22px 0 14px;
-      border-bottom:1px dashed var(--line);
-    }
-    .nav{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:18px;
-      font-size:14px;
+      font-family:"Courier Prime","Courier New",monospace;
       letter-spacing:.02em;
-      text-transform:uppercase;
     }
-    .brand{font-weight:700;color:var(--ink);border:0}
-    .links{display:flex;gap:18px;flex-wrap:wrap;justify-content:flex-end}
-    .links a{border:0;color:var(--muted)}
-    .links a:hover{color:var(--ink)}
-    main{padding-bottom:52px}
-    .hero{
-      padding:82px 0 54px;
-      border-bottom:1px dashed var(--line);
+    button,input,textarea{font:inherit}
+    .screen{
+      width:100vw;height:100dvh;overflow:hidden;
+      background:
+        radial-gradient(circle at 55% 42%, rgba(255,255,255,.45), transparent 36%),
+        linear-gradient(90deg, rgba(0,0,0,.035), transparent 9%, transparent 91%, rgba(0,0,0,.035)),
+        var(--paper);
+      padding:clamp(18px,3.2vw,46px) clamp(18px,4.8vw,78px);
+      border:clamp(4px,.55vw,8px) solid #111;
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      gap:clamp(12px,2vh,20px);
+    }
+    .topbar{
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:12px;
+      font-size:clamp(12px,1.25vw,19px);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      padding-bottom:clamp(10px,1.8vh,22px);
+      border-bottom:2px dashed var(--line);
+      white-space:nowrap;
+    }
+    .topbar .center{text-align:center}
+    .topbar .right{text-align:right;font-size:.92em;letter-spacing:.08em}
+    .stage{
+      min-height:0;
+      display:grid;
+      grid-template-columns:1fr minmax(320px, 2.15fr) 1fr;
+      grid-template-rows:auto 1fr auto;
+      gap:clamp(12px,2vw,24px);
+      align-items:stretch;
+    }
+    .intro{
+      grid-column:1/4;
+      display:grid;
+      grid-template-columns:1fr auto;
+      align-items:start;
+      gap:22px;
+      min-height:0;
+    }
+    .intro-copy{max-width:760px}
+    .intro h1{
+      margin:0 0 clamp(10px,1.7vh,20px);
+      font-size:clamp(30px,4.1vw,68px);
+      line-height:1.12;
+      letter-spacing:.045em;
+      font-weight:700;
+    }
+    .intro p{
+      margin:0;
+      font-size:clamp(13px,1.45vw,23px);
+      line-height:1.45;
+    }
+    .hot-note{
+      text-align:right;
+      color:var(--accent);
+      font-size:clamp(11px,1vw,15px);
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      padding-top:8px;
+    }
+    .box{
+      border:2px dashed var(--line);
+      padding:clamp(14px,2vw,28px);
+      min-height:0;
+      background:rgba(255,255,255,.08);
+    }
+    .main-question{
+      grid-column:2/3;
+      grid-row:2/3;
+      border:none;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:0 clamp(8px,2vw,20px);
     }
     .eyebrow{
       color:var(--accent);
       text-transform:uppercase;
-      font-size:13px;
-      letter-spacing:.12em;
-      margin:0 0 18px;
+      letter-spacing:.18em;
+      font-size:clamp(11px,1vw,16px);
+      margin-bottom:clamp(12px,2vh,22px);
     }
-    h1{
-      font-size:clamp(34px, 6vw, 66px);
-      line-height:1.02;
-      margin:0 0 24px;
-      letter-spacing:-.04em;
-      max-width:850px;
-    }
-    .lead{
-      font-size:clamp(18px, 2.2vw, 24px);
-      max-width:720px;
-      color:var(--ink);
-      margin:0 0 26px;
-    }
-    .sublead{
-      max-width:760px;
-      color:var(--muted);
-      margin:0 0 34px;
-    }
-    .actions{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:48px;
-      padding:12px 18px;
-      border:1px solid var(--ink);
-      background:transparent;
-      color:var(--ink);
-      cursor:pointer;
-      font:inherit;
-      font-size:15px;
-      line-height:1.2;
-      text-transform:uppercase;
-      letter-spacing:.03em;
-      transition:.15s ease;
-    }
-    .btn:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-    .btn.primary{background:var(--ink);color:var(--paper)}
-    .btn.primary:hover{background:var(--accent);border-color:var(--accent)}
-    .btn.ghost{border-color:var(--line);color:var(--muted)}
-    section{padding:54px 0;border-bottom:1px dashed var(--line)}
-    .section-head{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:24px;
-      margin-bottom:28px;
-    }
-    h2{
-      font-size:clamp(23px, 3vw, 34px);
-      line-height:1.12;
+    .question{
+      font-size:clamp(34px,5.1vw,84px);
+      line-height:1.08;
+      font-weight:700;
       margin:0;
-      letter-spacing:-.03em;
+      letter-spacing:.035em;
     }
-    .small{font-size:14px;color:var(--muted)}
-    .archive-list{counter-reset:q;}
-    .question-row{
-      display:grid;
-      grid-template-columns:44px 1fr auto;
-      gap:18px;
-      align-items:start;
-      padding:22px 0;
-      border-top:1px solid rgba(205,191,159,.7);
-    }
-    .question-row:first-child{border-top:0}
-    .num{
+    .dash{color:var(--accent);margin:clamp(12px,2vh,22px) 0;font-size:clamp(18px,1.8vw,26px)}
+    .trace-label{
       color:var(--accent);
-      font-size:14px;
-      padding-top:4px;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      font-size:clamp(11px,1vw,16px);
+      margin-bottom:clamp(6px,1vh,10px);
     }
-    .qtext{
-      margin:0;
-      font-size:clamp(19px, 2.2vw, 25px);
-      line-height:1.22;
-      letter-spacing:-.03em;
+    .trace{
+      font-size:clamp(18px,2.1vw,34px);
+      line-height:1.45;
+      max-width:820px;
+      margin:0 auto;
     }
-    .recognize{
+    .side{
+      grid-row:2/3;
       display:flex;
       flex-direction:column;
-      align-items:flex-end;
-      gap:7px;
-      min-width:130px;
+      justify-content:center;
+      gap:clamp(12px,2vh,18px);
     }
-    .count{
-      color:var(--muted);
-      font-size:14px;
+    .user{grid-column:1/2}
+    .recognition{grid-column:3/4}
+    .box-title{
+      color:var(--accent);
+      text-transform:uppercase;
+      letter-spacing:.15em;
+      font-size:clamp(11px,1vw,16px);
+      margin:0 0 18px;
+    }
+    .small-text{font-size:clamp(12px,1.05vw,16px);line-height:1.55;margin:0;color:var(--ink)}
+    .visitor-no{font-size:clamp(16px,1.55vw,24px);margin:8px 0 10px;text-transform:uppercase}
+    .count{font-size:clamp(38px,4vw,68px);line-height:1;margin:4px 0 12px;color:var(--ink)}
+    .btn{
+      cursor:pointer;
+      border:2px solid var(--line);
+      background:transparent;
+      color:var(--ink);
+      padding:12px 24px;
+      text-transform:uppercase;
+      letter-spacing:.09em;
+      min-width:160px;
+      transition:.18s ease;
+    }
+    .btn:hover,.btn:focus{background:var(--ink);color:var(--paper);outline:none}
+    .btn.primary{background:var(--ink);color:var(--paper)}
+    .btn.primary:hover,.btn.primary:focus{background:transparent;color:var(--ink)}
+    .actions{
+      grid-column:1/4;
+      grid-row:3/4;
+      display:grid;
+      grid-template-columns:1fr 1fr 1.2fr;
+      border:2px dashed var(--line);
+      min-height:clamp(88px,12vh,130px);
+    }
+    .action{
+      border-right:2px dashed var(--line);
+      background:transparent;
+      padding:clamp(14px,2vw,24px);
+      text-align:left;
+      cursor:pointer;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:8px;
+      color:var(--ink);
+    }
+    .action:last-child{border-right:none;text-align:center;align-items:center}
+    .action-title{color:var(--accent);text-transform:uppercase;letter-spacing:.13em;font-size:clamp(14px,1.35vw,21px);font-weight:700}
+    .action-copy{font-size:clamp(11px,1vw,15px);line-height:1.4}
+    .action:hover .action-title,.action:focus .action-title{text-decoration:underline}
+    .nav-row{
+      display:flex;
+      gap:clamp(24px,5vw,72px);
+      justify-content:center;
+      align-items:center;
+      margin-top:clamp(12px,2vh,22px);
+    }
+    .arrow{
+      border:none;background:transparent;cursor:pointer;color:var(--ink);
+      font-size:clamp(22px,3vw,42px);padding:4px 10px;
+    }
+    .arrow span{display:block;font-size:clamp(10px,.85vw,13px);text-transform:uppercase;letter-spacing:.08em;margin-top:5px}
+    .footer{
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      gap:12px;
+      align-items:center;
+      padding-top:clamp(8px,1.3vh,14px);
+      border-top:2px dashed var(--line);
+      font-size:clamp(11px,1.15vw,18px);
+      text-transform:uppercase;
+      letter-spacing:.1em;
       white-space:nowrap;
     }
-    .anchio{
-      min-height:38px;
-      padding:8px 12px;
-      border:1px solid var(--line);
-      background:transparent;
-      color:var(--accent);
-      font:inherit;
-      font-size:13px;
-      text-transform:uppercase;
-      letter-spacing:.03em;
-      cursor:pointer;
+    .footer .center{text-align:center}.footer .right{text-align:right}
+
+    .modal-backdrop{
+      position:fixed;inset:0;background:rgba(0,0,0,.32);
+      display:none;align-items:center;justify-content:center;padding:22px;z-index:10;
     }
-    .anchio:hover{border-color:var(--accent);background:var(--accent-soft)}
-    .anchio[disabled]{cursor:default;color:var(--muted);background:rgba(255,250,240,.5)}
-    .form-block{
-      max-width:760px;
-      background:rgba(255,250,240,.50);
-      border:1px solid var(--line);
-      padding:30px;
-      margin-top:26px;
+    .modal-backdrop.show{display:flex}
+    .modal{
+      width:min(620px,92vw);max-height:86dvh;overflow:auto;
+      background:var(--paper);border:2px solid var(--line);box-shadow:var(--shadow);
+      padding:clamp(22px,3vw,42px);position:relative;
+      background-image:radial-gradient(circle at 50% 20%, rgba(255,255,255,.5), transparent 35%);
     }
-    label{display:block;margin:0 0 8px;font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-    input, textarea{
-      width:100%;
-      background:var(--paper);
-      color:var(--ink);
-      border:1px solid var(--line);
-      padding:13px 14px;
-      font:inherit;
-      font-size:16px;
-      outline:none;
-      border-radius:0;
+    .close{position:absolute;top:10px;right:12px;background:transparent;border:none;font-size:26px;cursor:pointer;color:var(--ink)}
+    .modal h2{margin:0 0 18px;text-align:center;font-size:clamp(22px,2.5vw,34px);line-height:1.2}
+    .modal p{font-size:16px;line-height:1.55;text-align:center;margin:0 0 20px}
+    label{display:block;text-transform:uppercase;letter-spacing:.1em;font-size:12px;color:var(--accent);margin:16px 0 7px}
+    input,textarea{width:100%;border:1.8px dashed var(--line);background:rgba(255,255,255,.25);padding:12px;color:var(--ink)}
+    textarea{min-height:130px;resize:vertical}
+    .modal .btn{margin-top:18px;width:100%}
+
+    @media (max-width: 880px){
+      .screen{padding:12px;border-width:4px}
+      .topbar{grid-template-columns:1fr;font-size:11px;text-align:left;gap:4px}.topbar .center,.topbar .right{text-align:left}
+      .intro{grid-template-columns:1fr}.hot-note{text-align:left;padding-top:0}
+      .stage{grid-template-columns:1fr;grid-template-rows:auto 1fr auto auto;gap:8px}
+      .intro{grid-column:1}.main-question{grid-column:1;grid-row:2}.side{display:none}.actions{grid-column:1;grid-row:3;grid-template-columns:1fr;min-height:0}.action{border-right:none;border-bottom:2px dashed var(--line);padding:10px}.action:last-child{border-bottom:none}
+      .footer{grid-template-columns:1fr;font-size:10px;gap:4px}.footer .center,.footer .right{text-align:left}
+      .intro h1{font-size:clamp(24px,8vw,42px)}.question{font-size:clamp(28px,9vw,46px)}.trace{font-size:clamp(15px,4vw,20px)}
+      .nav-row{margin-top:6px}
     }
-    textarea{min-height:170px;resize:vertical}
-    input:focus, textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(139,94,47,.12)}
-    .field{margin-bottom:18px}
-    .hint{
-      color:var(--muted);
-      font-size:14px;
-      margin:20px 0 0;
-      max-width:650px;
-    }
-    .ritual{
-      margin-top:26px;
-      padding-top:20px;
-      border-top:1px dashed var(--line);
-      color:var(--muted);
-      font-size:15px;
-    }
-    .ritual p{margin:.35em 0}
-    .notice{
-      display:none;
-      margin-top:20px;
-      border:1px solid var(--accent);
-      background:rgba(234,219,192,.5);
-      padding:18px;
-      color:var(--ink);
-    }
-    .notice.show{display:block}
-    .meeting{
-      display:grid;
-      grid-template-columns:1fr 280px;
-      gap:36px;
-      align-items:start;
-    }
-    .terminal-note{
-      border-left:2px solid var(--accent);
-      padding-left:18px;
-      color:var(--muted);
-    }
-    footer{padding:34px 0 42px;color:var(--muted);font-size:14px}
-    .footer-grid{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;border-top:1px dashed var(--line);padding-top:24px}
-    .mono-accent{color:var(--accent)}
-    @media (max-width:720px){
-      body{font-size:16px}
-      .wrap{width:min(100% - 26px, var(--max))}
-      header{padding:18px 0 12px}
-      .nav{display:block}
-      .links{margin-top:12px;justify-content:flex-start;gap:12px;font-size:13px}
-      .hero{padding:54px 0 40px}
-      section{padding:40px 0}
-      .section-head{display:block;margin-bottom:20px}
-      .section-head .small{margin-top:10px}
-      .question-row{
-        grid-template-columns:32px 1fr;
-        gap:12px;
-        padding:20px 0;
-      }
-      .recognize{grid-column:2;align-items:flex-start;margin-top:8px;min-width:auto}
-      .form-block{padding:20px;margin-top:20px}
-      .meeting{display:block}
-      .terminal-note{margin-top:24px}
-      .btn{width:100%}
-      .actions{gap:10px}
-    }
-    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn,.anchio{transition:none}}
   </style>
 </head>
 <body>
-  <header>
-    <div class="wrap nav">
-      <a class="brand" href="#top">LE DOMANDE CHE TORNANO</a>
-      <nav class="links" aria-label="Menu principale">
-        <a href="#archivio">Archivio</a>
-        <a href="#affida">Affida una storia</a>
-        <a href="#incontra">Incontra l'Archivista</a>
-      </nav>
-    </div>
-  </header>
+  <main class="screen" aria-live="polite">
+    <header class="topbar">
+      <div>LE DOMANDE CHE TORNANO</div>
+      <div class="center">ARCHIVIO VIVENTE</div>
+      <div class="right" id="clock">24/06/2026&nbsp;&nbsp;--:--</div>
+    </header>
 
-  <main id="top">
-    <section class="hero">
-      <div class="wrap">
-        <p class="eyebrow">Archivio delle domande umane</p>
-        <h1>C'è una domanda che continua a tornare?</h1>
-        <p class="lead">Forse la tua è già qui.</p>
-        <p class="sublead">Le Domande che Tornano raccoglie le domande che gli esseri umani si fanno quando nessuno li sta guardando.</p>
-        <div class="actions">
-          <a class="btn primary" href="#archivio">Esplora l'Archivio</a>
-          <a class="btn" href="#affida">Affida una storia all'Archivista</a>
+    <section class="stage">
+      <div class="intro">
+        <div class="intro-copy">
+          <h1 id="introTitle">Forse la tua domanda è già qui.</h1>
+          <p id="introText">Un luogo per sostare. Non per avere risposte, ma per riconoscersi.</p>
         </div>
+        <div class="hot-note">La domanda che chiama</div>
       </div>
+
+      <aside class="side user box">
+        <p class="box-title">Il tuo spazio</p>
+        <p class="visitor-no" id="visitorId">VISITATORE 1847</p>
+        <p class="small-text" id="userStats">Hai detto “Anch’io” a 0 domande.<br>Hai affidato 0 domande.</p>
+      </aside>
+
+      <section class="main-question">
+        <p class="eyebrow">La domanda che chiama</p>
+        <h2 class="question" id="questionText">Ho paura di ricominciare.</h2>
+        <div class="dash">------</div>
+        <p class="trace-label">La Traccia</p>
+        <p class="trace" id="traceText">Quale parte di te merita di essere portata nel prossimo capitolo?</p>
+        <div class="nav-row">
+          <button class="arrow" id="prevBtn" aria-label="Domanda precedente">←<span>precedente</span></button>
+          <button class="arrow" id="nextBtn" aria-label="Domanda successiva">→<span>successiva</span></button>
+        </div>
+      </section>
+
+      <aside class="side recognition box">
+        <p class="box-title">Persone riconosciute</p>
+        <div class="count" id="countText">842</div>
+        <p class="small-text">persone si sono riconosciute in questa domanda.</p>
+        <button class="btn" id="meTooBtn" style="margin-top:18px">Anch’io</button>
+      </aside>
+
+      <section class="actions">
+        <button class="action" id="storyBtn">
+          <span class="action-title">Affida una domanda</span>
+          <span class="action-copy">Lasciala qui, in modo anonimo. L’Archivista la custodirà.</span>
+        </button>
+        <button class="action" id="archivistBtn">
+          <span class="action-title">Incontra l’Archivista</span>
+          <span class="action-copy">Una domanda, uno spazio, una direzione possibile.</span>
+        </button>
+        <button class="action" id="openAnotherBtn">
+          <span class="action-title">Apri un’altra domanda</span>
+          <span class="action-copy">Il luogo resta fermo. Cambia solo ciò che viene mostrato.</span>
+        </button>
+      </section>
     </section>
 
-    <section id="archivio" aria-labelledby="archivio-title">
-      <div class="wrap">
-        <div class="section-head">
-          <h2 id="archivio-title">Le domande che tornano più spesso</h2>
-          <p class="small">Non sono risposte. Sono luoghi in cui riconoscersi.</p>
-        </div>
-
-        <div class="archive-list" id="questions">
-          <article class="question-row" data-id="q1" data-count="842">
-            <div class="num">01</div>
-            <p class="qtext">Ho paura di ricominciare.</p>
-            <div class="recognize"><span class="count">842 Anch'io</span><button class="anchio" type="button">Anch'io</button></div>
-          </article>
-          <article class="question-row" data-id="q2" data-count="618">
-            <div class="num">02</div>
-            <p class="qtext">È troppo tardi per cambiare vita?</p>
-            <div class="recognize"><span class="count">618 Anch'io</span><button class="anchio" type="button">Anch'io</button></div>
-          </article>
-          <article class="question-row" data-id="q3" data-count="597">
-            <div class="num">03</div>
-            <p class="qtext">Non so se restare o andare.</p>
-            <div class="recognize"><span class="count">597 Anch'io</span><button class="anchio" type="button">Anch'io</button></div>
-          </article>
-          <article class="question-row" data-id="q4" data-count="451">
-            <div class="num">04</div>
-            <p class="qtext">Sto andando nella direzione giusta?</p>
-            <div class="recognize"><span class="count">451 Anch'io</span><button class="anchio" type="button">Anch'io</button></div>
-          </article>
-          <article class="question-row" data-id="q5" data-count="384">
-            <div class="num">05</div>
-            <p class="qtext">Perché continuo a rimandare?</p>
-            <div class="recognize"><span class="count">384 Anch'io</span><button class="anchio" type="button">Anch'io</button></div>
-          </article>
-          <article class="question-row" data-id="q6" data-count="337">
-            <div class="num">06</div>
-            <p class="qtext">Ho perso il momento giusto?</p>
-            <div class="recognize"><span class="count">337 Anch'io</span><button class="anchio" type="button">Anch'io</button></div>
-          </article>
-          <article class="question-row" data-id="q7" data-count="294">
-            <div class="num">07</div>
-            <p class="qtext">Come faccio a scegliere?</p>
-            <div class="recognize"><span class="count">294 Anch'io</span><button class="anchio" type="button">Anch'io</button></div>
-          </article>
-          <article class="question-row" data-id="q8" data-count="287">
-            <div class="num">08</div>
-            <p class="qtext">Sto sprecando la mia vita?</p>
-            <div class="recognize"><span class="count">287 Anch'io</span><button class="anchio" type="button">Anch'io</button></div>
-          </article>
-          <article class="question-row" data-id="q9" data-count="231">
-            <div class="num">09</div>
-            <p class="qtext">Perché mi sento fuori posto?</p>
-            <div class="recognize"><span class="count">231 Anch'io</span><button class="anchio" type="button">Anch'io</button></div>
-          </article>
-          <article class="question-row" data-id="q10" data-count="204">
-            <div class="num">10</div>
-            <p class="qtext">Chi sarei se smettessi di avere paura?</p>
-            <div class="recognize"><span class="count">204 Anch'io</span><button class="anchio" type="button">Anch'io</button></div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="affida" aria-labelledby="affida-title">
-      <div class="wrap">
-        <h2 id="affida-title">Affida una storia all'Archivista</h2>
-        <p class="lead">C'è una domanda che continua a tornare?</p>
-        <p class="sublead">Se vuoi, racconta anche la storia che la accompagna.</p>
-
-        <form class="form-block" id="storyForm">
-          <div class="field">
-            <label for="name">Nome <span class="small">(facoltativo)</span></label>
-            <input id="name" name="name" autocomplete="name" placeholder="Il tuo nome">
-          </div>
-          <div class="field">
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" autocomplete="email" required placeholder="La tua email">
-          </div>
-          <div class="field">
-            <label for="story">La tua storia</label>
-            <textarea id="story" name="story" required placeholder="Scrivi qui la domanda, la storia o il pensiero che continua a tornare."></textarea>
-          </div>
-          <button class="btn primary" type="submit">Affida la tua storia</button>
-          <p class="hint">In questa prima versione si aprirà la tua email con il testo già preparato. Nel prossimo passaggio collegheremo il form direttamente all'Archivio.</p>
-          <div class="ritual" aria-label="Cosa accade dopo">
-            <p>Ogni storia viene accolta.</p>
-            <p>Alcune diventano una domanda.</p>
-            <p>Alcune incontrano altre domande.</p>
-            <p>Alcune ricevono una Traccia.</p>
-          </div>
-          <div class="notice" id="formNotice" role="status">
-            La tua storia è pronta per essere affidata all'Archivista. Controlla la finestra email che si è aperta e inviala.
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <section id="incontra" aria-labelledby="incontra-title">
-      <div class="wrap meeting">
-        <div>
-          <h2 id="incontra-title">Incontra l'Archivista</h2>
-          <p class="lead">A volte una domanda continua a tornare.</p>
-          <p class="sublead">Quando accade, può essere utile dedicarle uno spazio più ampio.</p>
-          <p>Un incontro con l'Archivista non cerca risposte.</p>
-          <p>Aiuta una domanda a trovare la sua forma.</p>
-          <div class="actions" style="margin-top:28px">
-            <a class="btn" href="mailto:archivista@domandechetornano.it?subject=Incontro%20con%20l'Archivista">Scrivi all'Archivista</a>
-          </div>
-        </div>
-        <aside class="terminal-note" aria-label="Nota dell'Archivista">
-          <p class="eyebrow">Nota dell'Archivista</p>
-          <p>L'interfaccia non deve chiedere attenzione. Deve lasciare spazio alle domande.</p>
-        </aside>
-      </div>
-    </section>
+    <footer class="footer">
+      <div>12.483 domande raccolte</div>
+      <div class="center">37.902 persone si sono riconosciute in una domanda</div>
+      <div class="right">Grazie.</div>
+    </footer>
   </main>
 
-  <footer>
-    <div class="wrap footer-grid">
-      <div>
-        <strong>LE DOMANDE CHE TORNANO</strong><br>
-        Custodite dall'Archivista.
-      </div>
-      <div>
-        <span class="mono-accent">archivista@domandechetornano.it</span>
-      </div>
+  <div class="modal-backdrop" id="storyModal" role="dialog" aria-modal="true" aria-labelledby="storyTitle">
+    <div class="modal">
+      <button class="close" data-close="storyModal" aria-label="Chiudi">×</button>
+      <h2 id="storyTitle">Affida una domanda</h2>
+      <p>Puoi lasciare una domanda o la storia che la accompagna. Verrà accolta dall’Archivista.</p>
+      <form id="storyForm">
+        <label for="name">Nome, se vuoi</label>
+        <input id="name" name="name" autocomplete="name" />
+        <label for="email">Email, se vuoi ricevere notizie</label>
+        <input id="email" name="email" type="email" autocomplete="email" />
+        <label for="story">La tua domanda / storia</label>
+        <textarea id="story" name="story" required></textarea>
+        <button class="btn primary" type="submit">Affidala all’Archivista</button>
+      </form>
     </div>
-  </footer>
+  </div>
 
-  <script>
-    (function(){
-      const rows = document.querySelectorAll('.question-row');
-      rows.forEach(row => {
-        const id = row.dataset.id;
-        const baseCount = Number(row.dataset.count || 0);
-        const clicked = localStorage.getItem('ldct_anchio_' + id) === '1';
-        const countEl = row.querySelector('.count');
-        const btn = row.querySelector('.anchio');
-        const extra = clicked ? 1 : 0;
-        countEl.textContent = (baseCount + extra) + " Anch'io";
-        if(clicked){
-          btn.disabled = true;
-          btn.textContent = 'Riconosciuta';
-        }
-        btn.addEventListener('click', () => {
-          localStorage.setItem('ldct_anchio_' + id, '1');
-          countEl.textContent = (baseCount + 1) + " Anch'io";
-          btn.disabled = true;
-          btn.textContent = 'Riconosciuta';
-        });
-      });
+  <div class="modal-backdrop" id="archivistModal" role="dialog" aria-modal="true" aria-labelledby="archivistTitle">
+    <div class="modal">
+      <button class="close" data-close="archivistModal" aria-label="Chiudi">×</button>
+      <h2 id="archivistTitle">Incontra l’Archivista</h2>
+      <p>Quando una domanda continua a tornare, può essere utile dedicarle uno spazio più ampio.</p>
+      <p>Un incontro non cerca risposte rapide. Aiuta una domanda a trovare forma, significato e direzione.</p>
+      <button class="btn primary" id="contactArchivist">Scrivi all’Archivista</button>
+    </div>
+  </div>
 
-      const form = document.getElementById('storyForm');
-      const notice = document.getElementById('formNotice');
-      form.addEventListener('submit', function(e){
-        e.preventDefault();
-        const name = document.getElementById('name').value.trim() || 'Anonimo';
-        const email = document.getElementById('email').value.trim();
-        const story = document.getElementById('story').value.trim();
-        if(!email || !story){ return; }
-        const subject = "Una storia affidata all'Archivista";
-        const body = [
-          "Una nuova storia è stata affidata all'Archivista.",
-          "",
-          "Nome: " + name,
-          "Email: " + email,
-          "",
-          "Storia:",
-          story,
-          "",
-          "---",
-          "Inviata da domandechetornano.it"
-        ].join('\n');
-        const mailto = "mailto:archivista@domandechetornano.it?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-        window.location.href = mailto;
-        notice.classList.add('show');
-      });
-    })();
-  </script>
+<script>
+(function(){
+  const questions = [
+    {q:'Ho paura di ricominciare.', t:'Quale parte di te merita di essere portata nel prossimo capitolo?', c:842},
+    {q:'Non so se restare o andare.', t:'Quale verità stai già conoscendo, anche se non l’hai ancora detta?', c:731},
+    {q:'È troppo tardi per cambiare vita?', t:'Che cosa potrebbe iniziare anche da un gesto piccolo?', c:618},
+    {q:'Perché continuo a ripetere gli stessi errori?', t:'Quale bisogno antico sta ancora cercando una strada migliore?', c:541},
+    {q:'Sto andando nella direzione giusta?', t:'Quale segnale del corpo stai ignorando da troppo tempo?', c:489},
+    {q:'Perché continuo a rimandare?', t:'Che cosa diventerebbe più vero se facessi il primo passo oggi?', c:384}
+  ];
+  let idx = Number(localStorage.getItem('ldt_idx') || 0) % questions.length;
+  let meToo = Number(localStorage.getItem('ldt_metoo') || 0);
+  let entrusted = Number(localStorage.getItem('ldt_entrusted') || 0);
+  let visitor = localStorage.getItem('ldt_visitor');
+  if(!visitor){ visitor = String(Math.floor(1000 + Math.random()*8999)); localStorage.setItem('ldt_visitor', visitor); }
+
+  const $ = id => document.getElementById(id);
+  function render(){
+    const item = questions[idx];
+    $('questionText').textContent = item.q;
+    $('traceText').textContent = item.t;
+    $('countText').textContent = item.c + (localStorage.getItem('ldt_seen_'+idx) ? 1 : 0);
+    $('visitorId').textContent = 'VISITATORE ' + visitor;
+    $('userStats').innerHTML = 'Hai detto “Anch’io” a ' + meToo + ' domande.<br>Hai affidato ' + entrusted + ' domande.';
+    localStorage.setItem('ldt_idx', idx);
+  }
+  function next(){ idx = (idx + 1) % questions.length; render(); }
+  function prev(){ idx = (idx - 1 + questions.length) % questions.length; render(); }
+  $('nextBtn').addEventListener('click', next);
+  $('prevBtn').addEventListener('click', prev);
+  $('openAnotherBtn').addEventListener('click', next);
+  $('meTooBtn').addEventListener('click', () => {
+    if(!localStorage.getItem('ldt_seen_'+idx)){
+      localStorage.setItem('ldt_seen_'+idx, '1');
+      meToo++; localStorage.setItem('ldt_metoo', meToo);
+    }
+    render();
+  });
+  function show(id){ $(id).classList.add('show'); }
+  function hide(id){ $(id).classList.remove('show'); }
+  $('storyBtn').addEventListener('click', () => show('storyModal'));
+  $('archivistBtn').addEventListener('click', () => show('archivistModal'));
+  document.querySelectorAll('[data-close]').forEach(btn => btn.addEventListener('click', () => hide(btn.dataset.close)));
+  document.querySelectorAll('.modal-backdrop').forEach(m => m.addEventListener('click', e => { if(e.target === m) hide(m.id); }));
+  $('storyForm').addEventListener('submit', e => {
+    e.preventDefault();
+    entrusted++; localStorage.setItem('ldt_entrusted', entrusted); render();
+    const name = $('name').value || 'Anonimo';
+    const email = $('email').value || 'Non indicata';
+    const story = $('story').value;
+    const subject = encodeURIComponent('Domanda affidata all’Archivista');
+    const body = encodeURIComponent('Nome: '+name+'\nEmail: '+email+'\n\nDomanda / storia:\n'+story);
+    window.location.href = 'mailto:archivista@domandechetornano.it?subject='+subject+'&body='+body;
+  });
+  $('contactArchivist').addEventListener('click', () => {
+    window.location.href = 'mailto:archivista@domandechetornano.it?subject=' + encodeURIComponent('Incontro con l’Archivista');
+  });
+  function clock(){
+    const d = new Date();
+    const dd = String(d.getDate()).padStart(2,'0');
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const yy = d.getFullYear();
+    const hh = String(d.getHours()).padStart(2,'0');
+    const mi = String(d.getMinutes()).padStart(2,'0');
+    $('clock').textContent = dd+'/'+mm+'/'+yy+'  '+hh+':'+mi;
+  }
+  clock(); setInterval(clock, 30000);
+  render();
+})();
+</script>
 </body>
 </html>
