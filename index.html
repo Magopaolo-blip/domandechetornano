@@ -237,6 +237,8 @@
     .modal-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
     .modal-btn{border:2px solid var(--ink);padding:11px 14px;color:var(--brick);font-weight:700}
     .modal-btn:hover{background:var(--ink);color:var(--paper)}
+    .archivist-form{text-align:left;margin:16px 0;display:grid;gap:10px}
+    .contact-input{width:100%;background:transparent;border:2px dashed var(--ink);color:var(--ink);padding:12px;outline:none}
 
     @media (max-width:920px){
       body{overflow:auto}
@@ -362,10 +364,22 @@
       <h2>Incontra l'Archivista</h2>
       <p>Una domanda può chiedere uno spazio più ampio.</p>
       <p>L'incontro con l'Archivista non cerca risposte. Aiuta una domanda a trovare forma, direzione e Traccia.</p>
+
+      <div class="archivist-form">
+        <label class="small-label" for="archivistQuestion">La domanda che vuoi affidare</label>
+        <textarea id="archivistQuestion" placeholder="Scrivi qui la tua domanda..."></textarea>
+
+        <label class="small-label" for="archivistContact">Contatto, se vuoi essere richiamato</label>
+        <input id="archivistContact" class="contact-input" type="text" placeholder="Email o WhatsApp" />
+
+        <p class="hint">Il messaggio resta nel sito e viene custodito nell'Archivio. Non si apre la posta.</p>
+      </div>
+
       <div class="modal-actions">
-        <a class="modal-btn" id="mailArchivist" href="mailto:archivista@domandechetornano.it">SCRIVI ALL'ARCHIVISTA</a>
+        <button class="modal-btn" id="sendArchivist" type="button">INVIA ALL'ARCHIVISTA</button>
         <a class="modal-btn" href="#">CHIUDI</a>
       </div>
+      <p id="archivistStatus" class="hint" aria-live="polite"></p>
     </div>
   </div>
 
@@ -418,16 +432,55 @@ function submitQuestion(){
     document.getElementById('traceText').textContent=t.trace;
     document.getElementById('sisterList').innerHTML=t.sisters.map(x=>`<div>${escapeHtml(x)}</div>`).join('');
     document.getElementById('resultRecognize').textContent=`MI RICONOSCO ANCH'IO (${t.count})`;
-    document.getElementById('mailArchivist').href='mailto:archivista@domandechetornano.it?subject=Incontro con l\'Archivista&body=La domanda che continua a tornare:%0D%0A%0D%0A'+encodeURIComponent(q);
+    document.getElementById('archivistQuestion').value=q;
     document.getElementById('resultBody').style.display='block';
   },2500);
 }
+
+async function sendArchivistRequest(){
+  const domanda = document.getElementById('archivistQuestion').value.trim();
+  const contatto = document.getElementById('archivistContact').value.trim();
+  const status = document.getElementById('archivistStatus');
+  if(!domanda){
+    status.textContent = 'Scrivi prima la domanda da affidare.';
+    document.getElementById('archivistQuestion').focus();
+    return;
+  }
+  status.textContent = "L'Archivista sta ricevendo la domanda...";
+  try{
+    await fetch(SHEETS_URL,{
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({
+        domanda: domanda + (contatto ? ' | Contatto: ' + contatto : ''),
+        tema:'ARCHIVISTA',
+        tipo:'richiesta_archivista',
+        pagina:location.href,
+        data:new Date().toISOString()
+      })
+    });
+    total++; todayCount++;
+    localStorage.setItem('dct_total',total);
+    localStorage.setItem('dct_today',todayCount);
+    renderTotals();
+    addLatest(domanda);
+    status.textContent = "Domanda affidata. L'Archivista la custodirà.";
+    document.getElementById('archivistQuestion').value='';
+    document.getElementById('archivistContact').value='';
+  }catch(e){
+    status.textContent = 'Non riesco a inviare ora. Riprova tra poco.';
+  }
+}
+
 document.getElementById('openFormBtn').addEventListener('click',()=>{document.getElementById('questionForm').classList.toggle('active');document.getElementById('questionInput').focus()});
 document.getElementById('submitQuestion').addEventListener('click',submitQuestion);
 document.getElementById('questionInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitQuestion();}});
 document.getElementById('recognizeBtn').addEventListener('click',()=>{featuredCount++; localStorage.setItem('dct_featured_count',featuredCount); renderTotals(); addLatest('Mi riconosco in questa domanda.');});
 document.getElementById('resultRecognize').addEventListener('click',()=>{addLatest('Mi riconosco anch\'io.'); document.getElementById('resultRecognize').textContent='RICONOSCIMENTO ACCOLTO';});
 document.getElementById('newQuestion').addEventListener('click',resetToPortal);
+document.getElementById('sendArchivist').addEventListener('click',sendArchivistRequest);
+document.getElementById('archivistQuestion').addEventListener('keydown',e=>{if(e.key==='Enter' && (e.ctrlKey||e.metaKey)){e.preventDefault();sendArchivistRequest();}});
 </script>
 </body>
 </html>
