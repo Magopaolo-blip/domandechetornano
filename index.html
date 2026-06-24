@@ -8,95 +8,83 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="page-shell" aria-label="Archivio Vivente delle Domande Umane">
-    <header class="terminal-header">
-      <div class="header-left">LE DOMANDE CHE TORNANO</div>
-      <div class="header-center">ARCHIVIO VIVENTE</div>
-      <time class="header-right" id="archiveTime" datetime="2026-06-24T06:55">24/06/2026&nbsp;&nbsp;06:55</time>
+  <div class="archive-screen" aria-label="Archivio Vivente delle Domande Umane">
+    <header class="top-line">
+      <div>LE DOMANDE CHE TORNANO</div>
+      <div>ARCHIVIO VIVENTE</div>
+      <time id="archiveTime" datetime="2026-06-24T07:10">24/06/2026&nbsp;&nbsp;07:10</time>
     </header>
 
-    <main class="terminal-container">
-      <aside class="terminal-box box-left" aria-label="Il tuo spazio">
-        <p class="box-title">IL TUO SPAZIO</p>
-        <div class="box-body user-space">
-          <div>
-            <p class="stat-label">HAI RICONOSCIUTO</p>
-            <p><span id="userRecognized">0</span> domande.</p>
-          </div>
-          <div>
-            <p class="stat-label">HAI AFFIDATO</p>
-            <p><span id="userEntrusted">0</span> domande.</p>
-          </div>
+    <main class="main-grid">
+      <aside class="side-box user-box" aria-label="Il tuo spazio">
+        <div class="box-kicker">IL TUO SPAZIO</div>
+        <div class="thin-mark"></div>
+        <div class="side-content">
+          <p class="side-label">HAI RICONOSCIUTO</p>
+          <p><span id="userRecognized">0</span> domande.</p>
+          <p class="side-label top-space">HAI AFFIDATO</p>
+          <p><span id="userEntrusted">0</span> domande.</p>
         </div>
       </aside>
 
-      <section class="center-stage" aria-live="polite">
-        <div class="center-inner">
-          <p class="tag-label strong-brick">LA DOMANDA CHE CHIAMA</p>
-
-          <h1 class="main-question" id="mainQuestion">È TROPPO TARDI PER CAMBIARE VITA?</h1>
-
-          <div class="soft-separator" aria-hidden="true">— — —</div>
-
-          <p class="tag-label strong-brick trace-label">LA TRACCIA</p>
-          <p class="sub-question strong-black" id="traceText">Quale parte di te sta aspettando un permesso che nessuno può concederti?</p>
-
-          <p class="archive-counter strong-brick" id="archiveCounter">COMPARSA 618 VOLTE NELL'ARCHIVIO.</p>
-        </div>
+      <section class="question-stage" aria-live="polite">
+        <p class="brick-title">LA DOMANDA CHE CHIAMA</p>
+        <h1 id="mainQuestion" class="main-question">È TROPPO TARDI PER CAMBIARE VITA?</h1>
+        <div class="dash" aria-hidden="true">— — —</div>
+        <p class="brick-title trace-title">LA TRACCIA</p>
+        <p id="traceText" class="trace-text">Quale parte di te sta aspettando un permesso che nessuno può concederti?</p>
+        <p id="archiveCounter" class="archive-note">COMPARSA 618 VOLTE NELL'ARCHIVIO.</p>
       </section>
 
-      <aside class="terminal-box box-right" aria-label="Persone riconosciute">
-        <p class="box-title">PERSONE RICONOSCIUTE</p>
-        <div class="box-body recognition-box">
-          <div class="big-counter" id="recognitionCounter">618</div>
-          <p class="counter-status">persone si sono riconosciute in questa domanda.</p>
-          <button class="terminal-btn primary-action" id="recognizeButton" type="button">ANCH'IO</button>
-        </div>
+      <aside class="side-box count-box" aria-label="Persone riconosciute">
+        <div class="box-kicker">PERSONE<br>RICONOSCIUTE</div>
+        <div class="thin-mark"></div>
+        <div id="recognitionCounter" class="big-number">618</div>
+        <p class="counter-copy">persone si sono riconosciute in questa domanda.</p>
+        <button id="recognizeButton" class="outline-button" type="button">ANCH'IO</button>
       </aside>
     </main>
 
-    <nav class="terminal-navigation" aria-label="Comandi principali">
-      <div class="nav-row nav-question-row">
-        <button class="nav-link" id="prevQuestion" type="button">← PRECEDENTE</button>
-        <span class="nav-current" id="questionNumber">DOMANDA N. 1849</span>
-        <button class="nav-link" id="nextQuestion" type="button">SUCCESSIVA →</button>
+    <nav class="command-area" aria-label="Comandi dell'Archivio">
+      <div class="question-nav">
+        <button id="prevQuestion" type="button">← PRECEDENTE</button>
+        <span id="questionNumber">DOMANDA N. 1849</span>
+        <button id="nextQuestion" type="button">SUCCESSIVA →</button>
       </div>
-
-      <div class="nav-row nav-actions-row">
-        <button class="action-trigger" id="openEntrust" type="button">AFFIDA UNA DOMANDA</button>
-        <button class="action-trigger highlight-trigger" id="openArchivist" type="button">INCONTRA L'ARCHIVISTA</button>
+      <div class="door-row">
+        <button id="openEntrust" type="button">AFFIDA UNA DOMANDA</button>
+        <button id="openArchivist" type="button">INCONTRA L'ARCHIVISTA</button>
       </div>
     </nav>
 
-    <footer class="terminal-footer">
+    <footer class="bottom-line">
       <div>12.483 DOMANDE RACCOLTE</div>
       <div>QUESTO ARCHIVIO CRESCE UNA DOMANDA ALLA VOLTA.</div>
       <div>GRAZIE.</div>
     </footer>
   </div>
 
-  <dialog class="archive-dialog" id="entrustDialog" aria-labelledby="entrustTitle">
+  <dialog id="entrustDialog" class="archive-dialog" aria-labelledby="entrustTitle">
     <form method="dialog" class="dialog-card">
       <button class="dialog-close" value="close" aria-label="Chiudi">×</button>
       <h2 id="entrustTitle">AFFIDA UNA DOMANDA</h2>
-      <p>Lascia qui una domanda o una storia. L'Archivista la custodirà.</p>
-      <textarea placeholder="Scrivi qui, in modo anonimo." aria-label="Scrivi la tua domanda"></textarea>
+      <p>Scrivila qui, in modo anonimo. L'Archivista la custodirà.</p>
+      <textarea aria-label="La tua domanda" placeholder="La domanda che continua a tornare..."></textarea>
       <div class="dialog-actions">
-        <button class="terminal-btn" value="close">CHIUDI</button>
-        <button class="terminal-btn primary-action" id="entrustSubmit" value="close">AFFIDA</button>
+        <button value="close" type="submit">CHIUDI</button>
+        <button id="entrustSubmit" value="close" type="submit">AFFIDA</button>
       </div>
     </form>
   </dialog>
 
-  <dialog class="archive-dialog" id="archivistDialog" aria-labelledby="archivistTitle">
+  <dialog id="archivistDialog" class="archive-dialog" aria-labelledby="archivistTitle">
     <form method="dialog" class="dialog-card">
       <button class="dialog-close" value="close" aria-label="Chiudi">×</button>
       <h2 id="archivistTitle">INCONTRA L'ARCHIVISTA</h2>
-      <p>Una domanda, uno spazio, una direzione.</p>
-      <p>L'incontro personale serve a trasformare la domanda in una Traccia più chiara.</p>
+      <p>Un incontro individuale per dare forma, significato e direzione alla domanda.</p>
       <div class="dialog-actions">
-        <button class="terminal-btn" value="close">CHIUDI</button>
-        <a class="terminal-btn primary-action link-button" href="mailto:archivista@domandechetornano.it?subject=Incontro%20con%20l%27Archivista">SCRIVI ALL'ARCHIVISTA</a>
+        <button value="close" type="submit">CHIUDI</button>
+        <a href="mailto:archivista@domandechetornano.it?subject=Incontro%20con%20l%27Archivista">SCRIVI</a>
       </div>
     </form>
   </dialog>
