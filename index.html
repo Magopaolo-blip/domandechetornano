@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le Domande che Tornano | Archivio Vivente</title>
+  <!-- versione corretta: conferma invio archivista + ritorno home -->
   <style>
     :root{
       --paper:#f4efe6;
@@ -465,21 +466,19 @@ async function sendArchivistRequest(){
     localStorage.setItem('dct_today',todayCount);
     renderTotals();
     addLatest(domanda);
-    document.querySelector('.archivist-form').innerHTML = `
-      <div style="text-align:center;padding:22px 0;">
-        <h3 style="color:#9b3f2e;margin-bottom:14px;letter-spacing:.14em;text-transform:uppercase;">
-          Messaggio inviato
-        </h3>
-        <p style="margin-bottom:20px;line-height:1.6;">
-          La tua domanda è stata affidata all'Archivista.
-        </p>
-        <a href="/" class="modal-btn" style="display:inline-block;">
-          TORNA ALLA HOME
-        </a>
+    const panel = document.querySelector('#archivista .modal-panel');
+    panel.innerHTML = `
+      <h2>Messaggio inviato</h2>
+      <p>La tua domanda è stata affidata all'Archivista.</p>
+      <p class="hint">Tra pochi secondi tornerai alla Home.</p>
+      <div class="modal-actions">
+        <a class="modal-btn" href="/">TORNA ALLA HOME</a>
       </div>
     `;
-    document.getElementById('sendArchivist').style.display='none';
-    status.textContent = "";
+
+    setTimeout(function(){
+      window.location.href = '/';
+    }, 2500);
   }catch(e){
     status.textContent = 'Non riesco a inviare ora. Riprova tra poco.';
   }
