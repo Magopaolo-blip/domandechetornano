@@ -394,7 +394,7 @@ button:hover,.btn:hover{background:var(--ink);color:var(--paper)}
   4) Pubblica come Web App.
   5) Inserisci qui sotto l'URL /exec al posto di INCOLLA_QUI_URL_APPS_SCRIPT.
 */
-const GOOGLE_SCRIPT_URL = 'INCOLLA_QUI_URL_APPS_SCRIPT';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzdOXoPPSkjzjkW9-1StCls4_nE1-6aplSynCy3JU55LibC7GunTZjVTY6YrhmZfMatkg/exec';
 
 const pad=n=>String(n).padStart(2,'0');
 const clock=document.getElementById('clock');
@@ -432,9 +432,11 @@ function scriptConfigured(){return GOOGLE_SCRIPT_URL && !GOOGLE_SCRIPT_URL.inclu
 function sendQuestionToSheet(payload){
   if(!scriptConfigured()) return;
   try{
-    const data=new FormData();
-    Object.entries(payload).forEach(([k,v])=>data.append(k,v));
-    fetch(GOOGLE_SCRIPT_URL,{method:'POST',body:data,mode:'no-cors'});
+    fetch(GOOGLE_SCRIPT_URL,{
+      method:'POST',
+      mode:'no-cors',
+      body:JSON.stringify(payload)
+    });
   }catch(e){console.warn('Invio a Google Sheets non riuscito',e)}
 }
 
