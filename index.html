@@ -2,263 +2,618 @@
 <html lang="it">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Le Domande che Tornano | Archivio Vivente</title>
+  <meta name="description" content="Archivio Vivente delle Domande Umane. Un luogo per sostare, riconoscersi e affidare una domanda all'Archivista." />
   <style>
     :root{
-      --bg:#f6efe3;
-      --ink:#1f1d1a;
-      --muted:#7b5a37;
-      --line:#1f1d1a;
-      --soft:rgba(31,29,26,.06);
-      --panel:rgba(255,250,240,.42);
+      --ink:#1e1d1a;
+      --muted:#73685d;
+      --paper:#f4efe4;
+      --paper-2:#fbf7ed;
+      --line:#1e1d1a;
+      --warm:#9b5d22;
+      --soft:#ded3c0;
+      --black:#0e0e0e;
+      --danger:#7e3e23;
+      --mono:"Courier New", Courier, monospace;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;overflow:hidden;background:#111;color:var(--ink)}
-    body{
-      font-family:"Courier New", Courier, monospace;
-      display:flex;align-items:center;justify-content:center;
-    }
-    .screen{
-      width:min(96vw,1500px);
-      height:min(88vh,820px);
-      background:
-        radial-gradient(circle at 50% 45%, rgba(255,255,255,.28), transparent 42%),
-        linear-gradient(90deg, rgba(0,0,0,.035) 0 1px, transparent 1px 100%),
-        var(--bg);
-      background-size:auto, 9px 100%, auto;
-      border:1px solid rgba(31,29,26,.4);
-      padding:34px 52px 30px;
-      display:grid;
-      grid-template-rows:auto 1fr auto;
-      gap:18px;
-      position:relative;
-    }
-    header{
-      display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
-      letter-spacing:.18em;font-weight:700;font-size:17px;text-transform:uppercase;
-      border-bottom:2px dashed var(--line);padding-bottom:16px;
-    }
-    header .brand{text-align:left}
-    header .center{text-align:center}
-    header .time{text-align:right;font-weight:400;font-size:15px;letter-spacing:.16em}
 
-    main{
+    *{box-sizing:border-box}
+    html,body{height:100%; margin:0;}
+    body{
+      background:var(--black);
+      color:var(--ink);
+      font-family:var(--mono);
+      overflow:hidden;
+    }
+
+    button, input, textarea{
+      font:inherit;
+      color:inherit;
+    }
+
+    .shell{
+      width:min(96vw, 1500px);
+      height:calc(100svh - 34px);
+      min-height:620px;
+      margin:17px auto;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,.025) 1px, transparent 1px) 0 0/10px 10px,
+        linear-gradient(180deg, rgba(0,0,0,.018) 1px, transparent 1px) 0 0/10px 10px,
+        radial-gradient(circle at 42% 45%, rgba(255,255,255,.45), transparent 55%),
+        var(--paper);
+      border:1px solid rgba(0,0,0,.25);
+      box-shadow:0 0 0 1px rgba(255,255,255,.08), 0 18px 45px rgba(0,0,0,.28);
+      display:grid;
+      grid-template-rows:54px minmax(0,1fr) 96px 42px;
+      padding:0 clamp(20px,3.4vw,54px);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .topbar{
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:16px;
+      border-bottom:2px dashed var(--line);
+      letter-spacing:.20em;
+      font-size:clamp(.72rem,1.05vw,.98rem);
+      font-weight:700;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    .topbar .brand{text-align:left;}
+    .topbar .center{text-align:center;}
+    .topbar .clock{text-align:right; font-weight:400; letter-spacing:.16em;}
+
+    .stage{
       min-height:0;
       display:grid;
-      grid-template-columns:260px 1fr 260px;
-      grid-template-rows:1fr auto;
-      gap:22px;
+      grid-template-columns:minmax(210px,300px) minmax(0,1fr) minmax(210px,300px);
+      gap:clamp(18px,3.2vw,52px);
       align-items:center;
+      padding:clamp(18px,3vh,34px) 0 clamp(8px,1.5vh,18px);
+      position:relative;
     }
-    .side{
+
+    .sidebox{
       border:2px dashed var(--line);
-      min-height:210px;
-      padding:28px 26px;
-      background:var(--panel);
-      align-self:center;
-      display:flex;flex-direction:column;justify-content:center;
+      background:rgba(244,239,228,.62);
+      min-height:190px;
+      max-height:300px;
+      padding:clamp(18px,2vw,28px);
       overflow:auto;
       scrollbar-width:thin;
     }
-    .label{
-      color:var(--muted);letter-spacing:.35em;text-transform:uppercase;font-size:14px;text-align:center;margin-bottom:18px;
+    .sidebox h2,
+    .question-label,
+    .trace-label{
+      margin:0 0 18px;
+      color:var(--warm);
+      font-size:clamp(.72rem,.95vw,.92rem);
+      font-weight:400;
+      letter-spacing:.38em;
+      text-transform:uppercase;
+      text-align:center;
     }
-    .small-line{width:34px;height:1px;background:var(--muted);margin:0 auto 22px}
-    .side p{margin:0 0 13px;line-height:1.55;font-size:15px}
-    .side strong{font-size:16px;letter-spacing:.12em;text-transform:uppercase}
-
-    .recognition{text-align:center}
-    .recognition .num{font-family:Georgia,serif;font-size:70px;line-height:1;margin-bottom:18px;letter-spacing:.08em}
-    .button{
-      display:inline-flex;align-items:center;justify-content:center;
-      border:2px solid var(--line);background:transparent;color:var(--ink);
-      padding:13px 34px;font-family:inherit;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
-      cursor:pointer;text-decoration:none;font-size:14px;
+    .tiny-line{
+      width:42px;
+      border-top:1px solid var(--warm);
+      margin:0 auto 24px;
     }
-    .button:hover{background:var(--ink);color:var(--bg)}
-
-    .center-stage{
-      min-width:0;text-align:center;align-self:stretch;
-      display:grid;grid-template-rows:auto auto auto auto auto;align-content:center;gap:22px;
-      padding:0 10px;
+    .sidebox p{
+      margin:0 0 14px;
+      font-size:clamp(.74rem,.95vw,.95rem);
+      line-height:1.55;
     }
-    .warm-label{color:var(--muted);letter-spacing:.42em;text-transform:uppercase;font-size:14px}
-    .question{
-      margin:0;
-      font-size:clamp(44px,6.4vw,86px);
-      line-height:1.08;
-      font-weight:900;
-      letter-spacing:.06em;
+    .sidebox strong{
+      display:block;
+      margin-bottom:4px;
+      letter-spacing:.12em;
       text-transform:uppercase;
     }
-    .dash{color:var(--muted);letter-spacing:.8em;font-weight:700}
-    .trace-label{color:var(--muted);letter-spacing:.42em;text-transform:uppercase;font-size:14px;margin-top:2px}
+
+    .mainquestion{
+      min-height:0;
+      align-self:stretch;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:0 clamp(4px,1vw,12px);
+      overflow:hidden;
+    }
+    .question-label{margin-bottom:16px;}
+    .warm-dash{
+      color:var(--warm);
+      letter-spacing:.62em;
+      margin:0 0 clamp(16px,2.6vh,26px);
+      font-size:clamp(.8rem,1.2vw,1rem);
+      transform:translateX(.3em);
+    }
+    .question{
+      margin:0;
+      max-width:790px;
+      font-size:clamp(2.7rem,4.65vw,4.9rem);
+      line-height:1.05;
+      letter-spacing:.035em;
+      font-weight:900;
+      text-transform:uppercase;
+      text-wrap:balance;
+    }
+    .trace-wrap{
+      margin-top:clamp(22px,4.2vh,42px);
+      max-width:720px;
+    }
+    .trace-label{margin-bottom:12px;}
     .trace{
-      max-width:720px;margin:0 auto;
-      font-size:clamp(21px,2.3vw,34px);
-      line-height:1.42;
+      margin:0;
+      font-size:clamp(1.15rem,1.75vw,1.65rem);
+      line-height:1.45;
+      letter-spacing:.035em;
+      text-wrap:balance;
+    }
+    .archive-note{
+      margin:clamp(14px,2vh,20px) 0 0;
+      color:var(--warm);
+      font-size:clamp(.74rem,.9vw,.9rem);
+      letter-spacing:.22em;
+      text-transform:uppercase;
+    }
+
+    .recognition{
+      text-align:center;
+    }
+    .recognition .number{
+      display:block;
+      margin:0 0 12px;
+      font-size:clamp(3.2rem,5.2vw,5rem);
+      line-height:.95;
+      letter-spacing:.12em;
       font-weight:400;
     }
-    .note{font-size:15px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
-
-    .nav-row{
-      grid-column:1 / 4;
-      display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
-      border-top:2px dashed var(--line);
-      padding-top:16px;
-      letter-spacing:.18em;text-transform:uppercase;font-size:14px;
+    .recognition p{
+      margin:0 auto 22px;
+      max-width:190px;
+      text-align:center;
     }
-    .nav-row button{background:transparent;border:0;font:inherit;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;color:var(--ink)}
-    .nav-row button:hover{color:var(--muted)}
-    .nav-row .prev{text-align:left}.nav-row .next{text-align:right}.nav-row .id{color:var(--muted)}
 
-    footer{
-      display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:2px dashed var(--line);
+    .quiet-button{
+      appearance:none;
+      border:1.7px solid var(--line);
+      background:transparent;
+      padding:13px 24px;
+      min-width:170px;
+      cursor:pointer;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      transition:background .18s ease, color .18s ease, transform .18s ease;
+    }
+    .quiet-button:hover,
+    .quiet-button:focus-visible{
+      background:var(--ink);
+      color:var(--paper-2);
+      outline:none;
+    }
+    .quiet-button:active{transform:translateY(1px)}
+
+    .question-nav{
+      position:absolute;
+      left:50%;
+      bottom:clamp(10px,1.2vh,18px);
+      transform:translateX(-50%);
+      display:grid;
+      grid-template-columns:auto auto auto;
+      gap:clamp(58px,9vw,150px);
+      align-items:center;
+      font-size:clamp(.78rem,.95vw,.9rem);
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      white-space:nowrap;
+      color:var(--ink);
+    }
+    .navlink{
+      border:0;
+      background:transparent;
+      padding:6px 8px;
+      cursor:pointer;
+      color:inherit;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+    }
+    .navlink:hover{color:var(--warm)}
+    .question-number{color:var(--warm)}
+
+    .doors{
+      border-top:2px dashed var(--line);
+      border-bottom:2px dashed var(--line);
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      min-height:0;
     }
     .door{
-      min-height:82px;border-bottom:2px dashed var(--line);padding:18px 30px;
-      display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:22px;
-      text-decoration:none;color:var(--ink);background:rgba(255,255,255,.08);
+      border:0;
+      background:rgba(244,239,228,.45);
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      align-items:center;
+      gap:18px;
+      padding:14px clamp(18px,3vw,40px);
+      cursor:pointer;
+      text-align:left;
+      border-right:2px dashed var(--line);
+      min-width:0;
     }
-    .door:first-child{border-right:2px dashed var(--line)}
-    .door-title{color:var(--muted);letter-spacing:.35em;text-transform:uppercase;font-size:15px;margin-bottom:6px}
-    .door-text{font-size:14px;letter-spacing:.06em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .door .icon,.door .arrow{font-size:26px;color:var(--muted)}
-    .breath{
-      grid-column:1 / 3;
-      display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center;
-      padding-top:14px;font-size:14px;letter-spacing:.16em;text-transform:uppercase;
+    .door:last-child{border-right:0;}
+    .door:hover,
+    .door:focus-visible{
+      background:rgba(155,93,34,.075);
+      outline:none;
     }
-    .breath .center{text-align:center;color:var(--muted)}
-    .breath .right{text-align:right}
+    .door .icon{
+      color:var(--warm);
+      font-size:1.45rem;
+      line-height:1;
+    }
+    .door strong{
+      display:block;
+      color:var(--warm);
+      font-weight:400;
+      letter-spacing:.34em;
+      text-transform:uppercase;
+      font-size:clamp(.78rem,.96vw,.95rem);
+      margin-bottom:5px;
+    }
+    .door span{
+      display:block;
+      font-size:clamp(.76rem,.9vw,.9rem);
+      letter-spacing:.05em;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .door .arrow{font-size:2rem; font-weight:300; color:var(--ink)}
 
-    dialog{border:2px dashed var(--line);background:var(--bg);color:var(--ink);padding:0;max-width:520px;width:calc(100vw - 40px)}
-    dialog::backdrop{background:rgba(17,17,17,.55)}
-    .modal{padding:38px;text-align:center;font-family:"Courier New", Courier, monospace}
-    .modal h2{margin:0 0 22px;font-size:24px;letter-spacing:.1em;text-transform:uppercase}
-    .modal p{line-height:1.6;margin:0 0 20px}.modal textarea{width:100%;height:150px;background:#fffaf0;border:1px solid var(--line);font-family:inherit;padding:14px;margin:12px 0 18px}
-    .modal-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}.close{border:0;background:transparent;text-decoration:underline;font-family:inherit;cursor:pointer;margin-top:18px}
+    .bottombar{
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:18px;
+      font-size:clamp(.72rem,.95vw,.9rem);
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    .bottombar .center{text-align:center;}
+    .bottombar .right{text-align:right;}
 
-    @media (max-width: 900px){
-      html,body{overflow:auto;background:var(--bg)}
-      .screen{width:100vw;height:auto;min-height:100svh;border:0;padding:22px 18px;overflow:hidden}
-      header{grid-template-columns:1fr;gap:10px;text-align:center;font-size:14px}.brand,.center,.time{text-align:center!important}
-      main{grid-template-columns:1fr;grid-template-rows:auto;gap:14px}.center-stage{order:1}.side{min-height:auto;padding:18px}.left{order:2}.right{order:3}.nav-row{grid-column:1;order:4}
-      .question{font-size:clamp(38px,13vw,64px)}.trace{font-size:22px}
-      footer{grid-template-columns:1fr}.door:first-child{border-right:0}.breath{grid-column:1;grid-template-columns:1fr;text-align:center}.breath .right{text-align:center}
+    .modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      place-items:center;
+      background:rgba(14,14,14,.42);
+      z-index:10;
+      padding:20px;
+    }
+    .modal[aria-hidden="false"]{display:grid;}
+    .modal-card{
+      width:min(92vw,620px);
+      max-height:min(86svh,720px);
+      overflow:auto;
+      background:var(--paper-2);
+      border:2px dashed var(--line);
+      padding:clamp(24px,4vw,44px);
+      box-shadow:0 20px 60px rgba(0,0,0,.28);
+      position:relative;
+      text-align:center;
+    }
+    .close{
+      position:absolute;
+      right:16px;
+      top:12px;
+      border:0;
+      background:transparent;
+      font-size:1.3rem;
+      cursor:pointer;
+    }
+    .modal-card h2{
+      margin:0 0 22px;
+      font-size:clamp(1.1rem,2.2vw,1.7rem);
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+    .modal-card p{
+      margin:0 auto 20px;
+      max-width:430px;
+      line-height:1.65;
+    }
+    textarea{
+      width:100%;
+      min-height:160px;
+      resize:vertical;
+      border:1.5px solid var(--line);
+      background:transparent;
+      padding:16px;
+      line-height:1.5;
+      margin:10px 0 18px;
+    }
+    .modal-actions{display:flex; justify-content:center; gap:12px; flex-wrap:wrap;}
+
+    @media (max-height:760px){
+      .shell{height:calc(100svh - 18px); min-height:0; margin:9px auto; grid-template-rows:44px minmax(0,1fr) 82px 34px;}
+      .stage{padding:12px 0 8px;}
+      .question{font-size:clamp(2.15rem,4.2vw,4.15rem); line-height:1.02;}
+      .trace-wrap{margin-top:18px;}
+      .trace{font-size:clamp(1rem,1.45vw,1.38rem); line-height:1.35;}
+      .sidebox{min-height:150px; max-height:230px; padding:18px;}
+      .question-nav{bottom:4px;}
+      .door{padding:10px 24px;}
+      .door .icon{font-size:1.2rem;}
+    }
+
+    @media (max-width:980px){
+      body{overflow:hidden;}
+      .shell{
+        width:100vw;
+        height:100svh;
+        margin:0;
+        min-height:0;
+        padding:0 14px;
+        grid-template-rows:46px minmax(0,1fr) 128px 34px;
+      }
+      .topbar{grid-template-columns:1fr; text-align:center; gap:0;}
+      .topbar .brand,.topbar .clock{display:none;}
+      .stage{
+        grid-template-columns:1fr;
+        grid-template-rows:auto minmax(0,1fr) auto;
+        gap:10px;
+        padding:12px 0 6px;
+      }
+      .sidebox{
+        min-height:auto;
+        max-height:88px;
+        padding:10px 14px;
+      }
+      .sidebox h2,.tiny-line{display:none;}
+      .sidebox p{margin:0; font-size:.72rem; display:inline;}
+      .sidebox strong{display:inline; margin-right:6px;}
+      .userbox{order:1;}
+      .mainquestion{order:2;}
+      .recognition{order:3; display:flex; align-items:center; justify-content:space-between; gap:12px; text-align:left;}
+      .recognition .number{font-size:2.2rem; margin:0; letter-spacing:.06em;}
+      .recognition p{display:none;}
+      .quiet-button{min-width:auto; padding:10px 14px;}
+      .question{font-size:clamp(2.05rem,11vw,4rem);}
+      .trace{font-size:clamp(1rem,5vw,1.4rem);}
+      .question-nav{position:static; transform:none; order:4; display:flex; justify-content:center; gap:22px; margin-top:2px;}
+      .doors{grid-template-columns:1fr;}
+      .door{border-right:0; border-bottom:2px dashed var(--line); padding:10px 12px; gap:10px;}
+      .door:last-child{border-bottom:0;}
+      .door span{font-size:.72rem;}
+      .bottombar{font-size:.62rem; grid-template-columns:1fr; text-align:center;}
+      .bottombar .left,.bottombar .right{display:none;}
     }
   </style>
 </head>
 <body>
-  <section class="screen" aria-label="Archivio Vivente delle Domande">
-    <header>
+  <main class="shell" aria-label="Archivio Vivente delle Domande Umane">
+    <header class="topbar" aria-label="Intestazione del luogo">
       <div class="brand">Le Domande che Tornano</div>
       <div class="center">Archivio Vivente</div>
-      <div class="time" id="clock">24/06/2026&nbsp;&nbsp;06:25</div>
+      <div class="clock" id="clock">24/06/2026&nbsp;&nbsp;06:26</div>
     </header>
 
-    <main>
-      <aside class="side left">
-        <div class="label">Il tuo spazio</div>
-        <div class="small-line"></div>
-        <p><strong>Hai riconosciuto</strong><br><span id="user-recognized">0</span> domande.</p>
-        <p><strong>Hai affidato</strong><br><span id="user-submitted">0</span> domande.</p>
+    <section class="stage" aria-label="Schermata principale dell'Archivio">
+      <aside class="sidebox userbox" aria-label="Il tuo spazio">
+        <h2>Il tuo spazio</h2>
+        <div class="tiny-line"></div>
+        <p><strong>Hai riconosciuto</strong><span id="userRecognized">0</span> domande.</p>
+        <p><strong>Hai affidato</strong><span id="userTrusted">0</span> domande.</p>
       </aside>
 
-      <section class="center-stage">
-        <div class="warm-label">La domanda che chiama</div>
-        <h1 class="question" id="question">È troppo tardi<br>per cambiare vita?</h1>
-        <div class="dash">-----</div>
-        <div class="trace-label">La traccia</div>
-        <p class="trace" id="trace">Quale parte di te sta aspettando un permesso che nessuno può concederti?</p>
-        <div class="note" id="archive-note">Comparsa 618 volte nell'Archivio.</div>
+      <section class="mainquestion" aria-live="polite">
+        <div class="question-label">La domanda che chiama</div>
+        <h1 class="question" id="questionText">È troppo tardi per cambiare vita?</h1>
+        <div class="warm-dash">-----</div>
+        <div class="trace-wrap">
+          <div class="trace-label">La traccia</div>
+          <p class="trace" id="traceText">Quale parte di te sta aspettando un permesso che nessuno può concederti?</p>
+          <p class="archive-note" id="archiveNote">Comparsa 618 volte nell'Archivio.</p>
+        </div>
+        <nav class="question-nav" aria-label="Sfoglia le domande">
+          <button class="navlink" id="prevBtn" type="button">← Precedente</button>
+          <span class="question-number" id="questionNumber">Domanda n. 1849</span>
+          <button class="navlink" id="nextBtn" type="button">Successiva →</button>
+        </nav>
       </section>
 
-      <aside class="side right recognition">
-        <div class="label">Persone riconosciute</div>
-        <div class="small-line"></div>
-        <div class="num" id="count">618</div>
+      <aside class="sidebox recognition" aria-label="Persone riconosciute">
+        <h2>Persone riconosciute</h2>
+        <div class="tiny-line"></div>
+        <span class="number" id="recognizedNumber">618</span>
         <p>persone si sono riconosciute in questa domanda.</p>
-        <button class="button" id="meToo">Anch'io</button>
+        <button class="quiet-button" id="meTooBtn" type="button">Anch'io</button>
       </aside>
+    </section>
 
-      <nav class="nav-row" aria-label="Navigazione domande">
-        <button class="prev" id="prev">← Precedente</button>
-        <div class="id" id="qid">Domanda n. 1849</div>
-        <button class="next" id="next">Successiva →</button>
-      </nav>
-    </main>
-
-    <footer>
-      <a class="door" href="#" id="openStory">
+    <section class="doors" aria-label="Porte principali">
+      <button class="door" type="button" data-modal="storyModal">
         <span class="icon">□</span>
-        <span><span class="door-title">Affida una domanda</span><br><span class="door-text">Lascia la tua domanda. L'Archivista la custodirà.</span></span>
+        <span><strong>Affida una domanda</strong><span>Lascia la tua domanda. L'Archivista la custodirà.</span></span>
         <span class="arrow">›</span>
-      </a>
-      <a class="door" href="#" id="openArchivist">
-        <span class="icon">⌂</span>
-        <span><span class="door-title">Incontra l'Archivista</span><br><span class="door-text">Una domanda, uno spazio, una direzione.</span></span>
+      </button>
+      <button class="door" type="button" data-modal="archivistModal">
+        <span class="icon">⌒</span>
+        <span><strong>Incontra l'Archivista</strong><span>Una domanda, uno spazio, una direzione.</span></span>
         <span class="arrow">›</span>
-      </a>
-      <div class="breath">
-        <div>12.483 domande raccolte</div>
-        <div class="center">Questo archivio cresce una domanda alla volta.</div>
-        <div class="right">Grazie.</div>
-      </div>
+      </button>
+    </section>
+
+    <footer class="bottombar" aria-label="Respiro del luogo">
+      <div class="left">12.483 domande raccolte</div>
+      <div class="center">Questo archivio cresce una domanda alla volta.</div>
+      <div class="right">Grazie.</div>
     </footer>
-  </section>
+  </main>
 
-  <dialog id="storyDialog">
-    <div class="modal">
-      <h2>Affida una domanda</h2>
-      <p>Scrivila in modo semplice. L'Archivista la leggerà e la custodirà.</p>
-      <textarea placeholder="La domanda che torna..."></textarea>
-      <div class="modal-actions"><button class="button" id="saveStory">Affida</button></div>
-      <button class="close" onclick="storyDialog.close()">chiudi</button>
+  <div class="modal" id="storyModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="storyTitle">
+    <div class="modal-card">
+      <button class="close" type="button" data-close aria-label="Chiudi">×</button>
+      <h2 id="storyTitle">Affida una domanda</h2>
+      <p>Scrivila in modo semplice. Non serve spiegare tutto. Una domanda vera basta.</p>
+      <textarea id="storyText" placeholder="La domanda che continua a tornare..."></textarea>
+      <div class="modal-actions">
+        <button class="quiet-button" id="sendStory" type="button">Affida</button>
+        <button class="quiet-button" type="button" data-close>Chiudi</button>
+      </div>
     </div>
-  </dialog>
+  </div>
 
-  <dialog id="archivistDialog">
-    <div class="modal">
-      <h2>Incontra l'Archivista</h2>
-      <p>Un incontro individuale per dare forma alla domanda che continua a tornare.</p>
-      <div class="modal-actions"><a class="button" href="mailto:archivista@domandechetornano.it">Scrivi all'Archivista</a></div>
-      <button class="close" onclick="archivistDialog.close()">chiudi</button>
+  <div class="modal" id="archivistModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="archivistTitle">
+    <div class="modal-card">
+      <button class="close" type="button" data-close aria-label="Chiudi">×</button>
+      <h2 id="archivistTitle">Incontra l'Archivista</h2>
+      <p>Quando una domanda continua a tornare, può essere utile darle uno spazio preciso.</p>
+      <p>Un incontro individuale non cerca risposte immediate. Aiuta la domanda a trovare forma, significato e direzione.</p>
+      <div class="modal-actions">
+        <a class="quiet-button" href="mailto:archivista@domandechetornano.it?subject=Incontro%20con%20l%27Archivista" style="text-decoration:none; display:inline-block;">Scrivi</a>
+        <button class="quiet-button" type="button" data-close>Chiudi</button>
+      </div>
     </div>
-  </dialog>
+  </div>
 
   <script>
-    const data = [
-      {q:'È troppo tardi<br>per cambiare vita?', t:'Quale parte di te sta aspettando un permesso che nessuno può concederti?', c:618, id:1849},
-      {q:'Ho paura<br>di ricominciare.', t:'Quale parte di te merita di essere portata nel prossimo capitolo?', c:842, id:1847},
-      {q:'Non so<br>se restare<br>o andare.', t:'Che cosa stai chiamando fedeltà, anche se forse è solo paura?', c:731, id:1848},
-      {q:'Perché ripeto<br>gli stessi errori?', t:'Quale bisogno antico sta ancora cercando una strada migliore?', c:541, id:1850},
-      {q:'Sto andando<br>nella direzione giusta?', t:'Quale piccolo segnale stai ignorando perché sembra troppo semplice?', c:489, id:1851}
+    const questions = [
+      {
+        question: "È troppo tardi per cambiare vita?",
+        trace: "Quale parte di te sta aspettando un permesso che nessuno può concederti?",
+        count: 618,
+        id: 1849
+      },
+      {
+        question: "Ho paura di ricominciare.",
+        trace: "Quale parte di te merita di essere portata nel prossimo capitolo?",
+        count: 842,
+        id: 1850
+      },
+      {
+        question: "Non so se restare o andare.",
+        trace: "Che cosa diventerebbe più vero se smettessi di scegliere per paura?",
+        count: 731,
+        id: 1851
+      },
+      {
+        question: "Perché continuo a ripetere gli stessi errori?",
+        trace: "Quale vecchia protezione stai ancora chiamando destino?",
+        count: 541,
+        id: 1852
+      },
+      {
+        question: "Sto andando nella direzione giusta?",
+        trace: "Quale piccolo segnale il tuo corpo conosce già prima della tua mente?",
+        count: 489,
+        id: 1853
+      }
     ];
-    let i = 0;
-    let recognized = Number(localStorage.getItem('recognized')||0);
-    let submitted = Number(localStorage.getItem('submitted')||0);
-    const el = id => document.getElementById(id);
+
+    let index = 0;
+    const state = {
+      recognized: Number(localStorage.getItem("ldct_recognized") || 0),
+      trusted: Number(localStorage.getItem("ldct_trusted") || 0),
+      voted: JSON.parse(localStorage.getItem("ldct_voted") || "{}")
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const qEl = $("questionText");
+    const tEl = $("traceText");
+    const nEl = $("recognizedNumber");
+    const noteEl = $("archiveNote");
+    const numberEl = $("questionNumber");
+    const userRecognizedEl = $("userRecognized");
+    const userTrustedEl = $("userTrusted");
+    const meTooBtn = $("meTooBtn");
+
+    function saveState(){
+      localStorage.setItem("ldct_recognized", String(state.recognized));
+      localStorage.setItem("ldct_trusted", String(state.trusted));
+      localStorage.setItem("ldct_voted", JSON.stringify(state.voted));
+    }
+
     function render(){
-      const d=data[i];
-      el('question').innerHTML=d.q; el('trace').textContent=d.t; el('count').textContent=d.c;
-      el('archive-note').textContent=`Comparsa ${d.c} volte nell'Archivio.`;
-      el('qid').textContent=`Domanda n. ${d.id}`;
-      el('user-recognized').textContent=recognized; el('user-submitted').textContent=submitted;
+      const item = questions[index];
+      qEl.textContent = item.question;
+      tEl.textContent = item.trace;
+      nEl.textContent = String(item.count + (state.voted[item.id] ? 1 : 0));
+      noteEl.textContent = `Comparsa ${item.count} volte nell'Archivio.`;
+      numberEl.textContent = `Domanda n. ${item.id}`;
+      userRecognizedEl.textContent = String(state.recognized);
+      userTrustedEl.textContent = String(state.trusted);
+      meTooBtn.textContent = state.voted[item.id] ? "Riconosciuta" : "Anch'io";
+      meTooBtn.disabled = !!state.voted[item.id];
     }
-    el('next').onclick=()=>{i=(i+1)%data.length; render()};
-    el('prev').onclick=()=>{i=(i-1+data.length)%data.length; render()};
-    el('meToo').onclick=()=>{recognized++; data[i].c++; localStorage.setItem('recognized',recognized); render()};
-    el('openStory').onclick=e=>{e.preventDefault(); storyDialog.showModal()};
-    el('openArchivist').onclick=e=>{e.preventDefault(); archivistDialog.showModal()};
-    el('saveStory').onclick=()=>{submitted++; localStorage.setItem('submitted',submitted); storyDialog.close(); render()};
-    function clock(){
-      const d=new Date();
-      const pad=n=>String(n).padStart(2,'0');
-      el('clock').innerHTML=`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}&nbsp;&nbsp;${pad(d.getHours())}:${pad(d.getMinutes())}`;
+
+    $("prevBtn").addEventListener("click", () => {
+      index = (index - 1 + questions.length) % questions.length;
+      render();
+    });
+    $("nextBtn").addEventListener("click", () => {
+      index = (index + 1) % questions.length;
+      render();
+    });
+    meTooBtn.addEventListener("click", () => {
+      const id = questions[index].id;
+      if(!state.voted[id]){
+        state.voted[id] = true;
+        state.recognized += 1;
+        saveState();
+        render();
+      }
+    });
+
+    document.querySelectorAll("[data-modal]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const modal = document.getElementById(btn.dataset.modal);
+        modal.setAttribute("aria-hidden", "false");
+      });
+    });
+    document.querySelectorAll("[data-close]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        btn.closest(".modal").setAttribute("aria-hidden", "true");
+      });
+    });
+    document.querySelectorAll(".modal").forEach(modal => {
+      modal.addEventListener("click", e => {
+        if(e.target === modal) modal.setAttribute("aria-hidden", "true");
+      });
+    });
+
+    $("sendStory").addEventListener("click", () => {
+      const text = $("storyText").value.trim();
+      if(!text){
+        $("storyText").focus();
+        return;
+      }
+      state.trusted += 1;
+      saveState();
+      render();
+      const subject = encodeURIComponent("Domanda affidata all'Archivista");
+      const body = encodeURIComponent(text);
+      window.location.href = `mailto:archivista@domandechetornano.it?subject=${subject}&body=${body}`;
+    });
+
+    function updateClock(){
+      const now = new Date();
+      const date = now.toLocaleDateString("it-IT", {day:"2-digit", month:"2-digit", year:"numeric"});
+      const time = now.toLocaleTimeString("it-IT", {hour:"2-digit", minute:"2-digit"});
+      $("clock").innerHTML = `${date}&nbsp;&nbsp;${time}`;
     }
-    render(); clock(); setInterval(clock,60000);
+    updateClock();
+    setInterval(updateClock, 30000);
+    render();
   </script>
 </body>
 </html>
