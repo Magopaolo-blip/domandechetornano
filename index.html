@@ -312,6 +312,59 @@
     a.solid-btn{display:inline-block;}
     .solid-btn:hover{background:var(--ink);color:var(--paper);}
 
+
+
+    .access-box{
+      border-top:1px dashed var(--line);
+      border-bottom:1px dashed var(--line);
+      padding:10px 0;
+      margin:14px 0 16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      font-size:clamp(11px,.92vw,13px);
+      letter-spacing:.14em;
+    }
+
+    .mini-link{
+      color:var(--brick);
+      text-decoration:none;
+      font-weight:700;
+      text-transform:uppercase;
+    }
+
+    .mini-link:hover{text-decoration:underline;}
+
+    .mini-dot{color:var(--brick);font-weight:700;}
+
+    .field{
+      width:100%;
+      border:2px dashed var(--line);
+      background:transparent;
+      font:inherit;
+      padding:12px;
+      margin:8px 0 14px;
+      color:var(--ink);
+    }
+
+    .field-label{
+      display:block;
+      color:var(--brick);
+      font-weight:700;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-size:12px;
+      text-align:left;
+      margin-top:10px;
+    }
+
+    .hint{
+      font-size:12px;
+      opacity:.78;
+      margin-top:4px;
+    }
+
     @media (max-height:760px){
       .screen{gap:8px;padding:12px 28px;}
       .sidebox{min-height:150px;max-height:32vh;padding:14px;}
@@ -350,10 +403,20 @@
       <aside class="sidebox box-left" aria-label="Il tuo spazio">
         <div class="side-title">IL TUO SPAZIO</div>
         <div class="sep">—</div>
+
+        <strong>NOME UTENTE</strong>
+        <p id="username-view">VISITATORE</p>
+
+        <div class="access-box" aria-label="Accesso e iscrizione">
+          <a href="#accesso" class="mini-link">ACCESSO</a>
+          <span class="mini-dot">•</span>
+          <a href="#iscrizione" class="mini-link">ISCRIZIONE</a>
+        </div>
+
         <strong>HAI RICONOSCIUTO</strong>
-        <p>0 domande.</p>
+        <p><span id="recognized-count">0</span> domande.</p>
         <strong>HAI AFFIDATO</strong>
-        <p>0 domande.</p>
+        <p><span id="entrusted-count">0</span> domande.</p>
       </aside>
 
       <section class="centerstage" aria-label="Domanda centrale">
@@ -415,14 +478,69 @@
     </div>
   </div>
 
+
+
+  <div id="accesso" class="modal" role="dialog" aria-modal="true" aria-labelledby="accesso-title">
+    <div class="modal-panel">
+      <h2 id="accesso-title">Accesso</h2>
+      <p>Entra nel tuo spazio per ritrovare le domande che hai riconosciuto e quelle che hai affidato all'Archivista.</p>
+      <label class="field-label" for="login-name">Nome utente</label>
+      <input id="login-name" class="field" type="text" placeholder="Il tuo nome o pseudonimo">
+      <div class="modal-actions">
+        <button class="solid-btn" type="button" onclick="saveUser('login-name')">ENTRA</button>
+        <a class="solid-btn" href="#">CHIUDI</a>
+      </div>
+      <p class="hint">Versione prototipo: il nome viene salvato solo su questo dispositivo.</p>
+    </div>
+  </div>
+
+  <div id="iscrizione" class="modal" role="dialog" aria-modal="true" aria-labelledby="iscrizione-title">
+    <div class="modal-panel">
+      <h2 id="iscrizione-title">Iscrizione</h2>
+      <p>Crea un piccolo spazio personale nell'Archivio. Non serve molto: basta un nome con cui tornare.</p>
+      <label class="field-label" for="signup-name">Nome utente</label>
+      <input id="signup-name" class="field" type="text" placeholder="Scegli un nome">
+      <label class="field-label" for="signup-email">Email</label>
+      <input id="signup-email" class="field" type="email" placeholder="nome@email.it">
+      <div class="modal-actions">
+        <button class="solid-btn" type="button" onclick="saveUser('signup-name')">CREA IL TUO SPAZIO</button>
+        <a class="solid-btn" href="#">CHIUDI</a>
+      </div>
+      <p class="hint">Versione prototipo: l'iscrizione non invia ancora dati a un database.</p>
+    </div>
+  </div>
+
   <script>
     const pad=n=>String(n).padStart(2,'0');
     const clock=document.getElementById('clock');
+    const usernameView=document.getElementById('username-view');
+
     function updateClock(){
       const d=new Date();
       clock.textContent=`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
     }
+
+    function loadUser(){
+      const savedName=localStorage.getItem('ldt_nome_utente');
+      if(savedName){
+        usernameView.textContent=savedName.toUpperCase();
+      }
+    }
+
+    function saveUser(inputId){
+      const field=document.getElementById(inputId);
+      const name=(field?.value || '').trim();
+      if(!name){
+        field?.focus();
+        return;
+      }
+      localStorage.setItem('ldt_nome_utente', name);
+      usernameView.textContent=name.toUpperCase();
+      window.location.hash='';
+    }
+
     updateClock();
+    loadUser();
     setInterval(updateClock,30000);
   </script>
 </body>
