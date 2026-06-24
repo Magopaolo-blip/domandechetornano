@@ -172,6 +172,20 @@ button:hover,.btn:hover{background:var(--ink);color:var(--paper)}
   font-size:clamp(12px,1vw,15px);
   line-height:1.38;
 }
+.archive-total-box{
+  margin:10px auto 0;
+  padding:8px 10px;
+  border-top:1px dashed var(--line);
+  color:var(--brick);
+  font-size:clamp(12px,1vw,15px);
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.archive-total-box span{
+  color:var(--ink);
+  font-size:1.18em;
+}
 .result{display:none;width:100%;height:100%;min-height:0;overflow:auto;padding-right:4px}
 .result.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
 .result::-webkit-scrollbar,.feed-list::-webkit-scrollbar,.near-list::-webkit-scrollbar{width:5px}
@@ -324,8 +338,9 @@ button:hover,.btn:hover{background:var(--ink);color:var(--paper)}
         <div class="entry-card">
           <div class="field-label">Scrivi qui la tua domanda</div>
           <textarea id="questionField" class="question-input" placeholder="La domanda che continua a tornare..."></textarea>
-          <button id="submitQuestion" type="button">Scrivi la tua domanda all'Archivista</button>
+          <button id="submitQuestion" type="button">Invia la domanda all'Archivista</button>
           <p class="hint">L'Archivio cercherà le domande che le assomigliano. Forse la tua non è sola.</p>
+          <div class="archive-total-box">Domande nell'Archivio: <span id="entryTotalQuestions">12.483</span></div>
         </div>
       </div>
 
@@ -333,6 +348,7 @@ button:hover,.btn:hover{background:var(--ink);color:var(--paper)}
         <p class="label">La tua domanda è entrata nell'Archivio</p>
         <div class="userq" id="userQuestionText"></div>
         <p class="reaction" id="reactionText">L'Archivio la sta confrontando con le domande già custodite.</p>
+        <p class="status-line">Domande nell'Archivio: <span id="resultTotalQuestions">12.483</span></p>
 
         <p class="label">Domande vicine</p>
         <div class="near-list" id="nearQuestions"></div>
@@ -370,6 +386,16 @@ button:hover,.btn:hover{background:var(--ink);color:var(--paper)}
 </div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script>
+/*
+  CONFIGURAZIONE GOOGLE SHEETS
+  1) Crea un Google Sheet.
+  2) Apri Estensioni > Apps Script.
+  3) Incolla il file apps_script_google_sheets.gs fornito nello zip.
+  4) Pubblica come Web App.
+  5) Inserisci qui sotto l'URL /exec al posto di INCOLLA_QUI_URL_APPS_SCRIPT.
+*/
+const GOOGLE_SCRIPT_URL = 'INCOLLA_QUI_URL_APPS_SCRIPT';
+
 const pad=n=>String(n).padStart(2,'0');
 const clock=document.getElementById('clock');
 function updateClock(){const d=new Date();clock.textContent=`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`}
@@ -384,20 +410,100 @@ const baseArchive=[
  {theme:'Identità',keys:['chi sono','identità','senso','me stesso','me stessa','riconosco','valgo','abbastanza'],hot:'Non so più chi sono.',trace:'Quale versione di te ha terminato il proprio compito?',near:['Mi sento fuori posto.','Non mi sento abbastanza.','Sto diventando qualcuno che non riconosco?','Quale misura non ti appartiene più?'],count:512}
 ];
 const feedTexts=['Sto vivendo questo adesso.','Mi riguarda più di quanto pensassi.','Non l\'avevo mai detto.','Pensavo fosse solo mio.','Da anni torna sempre qui.','Mi sono riconosciuto subito.','È la domanda che non riuscivo a scrivere.'];
-const storageKey='ldt_state_v1';
+const storageKey='ldt_state_v2';
 let state=JSON.parse(localStorage.getItem(storageKey)||'{}');
 state.recognitions=state.recognitions||{}; state.questions=state.questions||[]; state.totalQuestions=state.totalQuestions||12483; state.today=state.today||17;
 function save(){localStorage.setItem(storageKey,JSON.stringify(state))}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
+function itNumber(n){return Number(n).toLocaleString('it-IT')}
 function renderFeed(extra){const now=new Date();let list=[...feedTexts]; if(extra) list.unshift(extra); document.getElementById('feedList').innerHTML=list.slice(0,5).map((txt,i)=>`<div class="feed-item"><span class="time">${pad(now.getHours())}:${pad((now.getMinutes()-i*7+60)%60)}</span>"${txt}"</div>`).join('')}
-function renderStats(){document.getElementById('todayCount').textContent=state.today; document.getElementById('totalQuestions').textContent=Number(state.totalQuestions).toLocaleString('it-IT')}
+function renderStats(){
+  document.getElementById('todayCount').textContent=state.today;
+  ['totalQuestions','entryTotalQuestions','resultTotalQuestions'].forEach(id=>{const el=document.getElementById(id); if(el) el.textContent=itNumber(state.totalQuestions)})
+}
 renderFeed(); renderStats();
 function matchArchive(q){const l=q.toLowerCase();let best=baseArchive[0],score=-1;baseArchive.forEach(a=>{let s=0;a.keys.forEach(k=>{if(l.includes(k)) s+=1});if(s>score){score=s;best=a}});return best}
 function countFor(item){return item.count + (state.recognitions[item.hot]||0)}
 function updateMailto(q){const subject=encodeURIComponent('Incontro con l\'Archivista'); const body=encodeURIComponent(q?`La domanda che continua a tornare è:\n\n${q}\n\nVorrei incontrare l'Archivista.`:'Vorrei incontrare l\'Archivista per una domanda che continua a tornare.'); document.getElementById('meetArchivist').href=`mailto:archivista@domandechetornano.it?subject=${subject}&body=${body}`}
 let currentItem=baseArchive[0]; updateMailto('');
-document.getElementById('submitQuestion').onclick=()=>{const q=document.getElementById('questionField').value.trim(); if(!q){document.getElementById('questionField').focus();showToast('Scrivi una domanda, anche breve.');return} currentItem=matchArchive(q); const found=23+Math.floor(Math.random()*31); state.questions.unshift({q,date:new Date().toISOString(),theme:currentItem.theme}); state.totalQuestions+=1; state.today+=1; save(); renderStats(); document.getElementById('userQuestionText').textContent='“'+q+'”'; document.getElementById('reactionText').textContent=`Questa domanda è già passata di qui. L'Archivio ha trovato ${found} domande vicine.`; document.getElementById('nearQuestions').innerHTML=currentItem.near.map(n=>`<div class="near-item">${n}</div>`).join(''); document.getElementById('hotQuestion').textContent=currentItem.hot; document.getElementById('traceText').textContent=currentItem.trace; document.getElementById('recognitionsInline').textContent=countFor(currentItem); document.getElementById('recognitionsBox').textContent=countFor(currentItem); document.getElementById('entry').style.display='none'; document.getElementById('result').classList.add('active'); document.getElementById('lastTime').textContent='adesso'; renderFeed('Una domanda è appena entrata nell\'Archivio.'); updateMailto(q); showToast('La tua domanda è entrata nell\'Archivio.');}
-function meToo(){if(!currentItem) currentItem=baseArchive[0]; state.recognitions[currentItem.hot]=(state.recognitions[currentItem.hot]||0)+1; save(); document.getElementById('recognitionsInline').textContent=countFor(currentItem); document.getElementById('recognitionsBox').textContent=countFor(currentItem); renderFeed('Anch\'io.'); showToast('Ti sei riconosciuto in questa domanda.');}
+
+function scriptConfigured(){return GOOGLE_SCRIPT_URL && !GOOGLE_SCRIPT_URL.includes('INCOLLA_QUI')}
+
+function sendQuestionToSheet(payload){
+  if(!scriptConfigured()) return;
+  try{
+    const data=new FormData();
+    Object.entries(payload).forEach(([k,v])=>data.append(k,v));
+    fetch(GOOGLE_SCRIPT_URL,{method:'POST',body:data,mode:'no-cors'});
+  }catch(e){console.warn('Invio a Google Sheets non riuscito',e)}
+}
+
+window.ldtCounterCallback=function(data){
+  if(data && Number(data.totalQuestions)){
+    state.totalQuestions=Number(data.totalQuestions);
+    save();
+    renderStats();
+  }
+}
+function loadRemoteCounter(){
+  if(!scriptConfigured()) return;
+  const s=document.createElement('script');
+  s.src=`${GOOGLE_SCRIPT_URL}?action=count&callback=ldtCounterCallback&ts=${Date.now()}`;
+  s.onerror=()=>console.warn('Counter remoto non disponibile');
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(),10000);
+}
+loadRemoteCounter();
+
+function handleSubmit(){
+  const q=document.getElementById('questionField').value.trim();
+  if(!q){document.getElementById('questionField').focus();showToast('Scrivi una domanda, anche breve.');return}
+  currentItem=matchArchive(q);
+  const found=23+Math.floor(Math.random()*31);
+  state.questions.unshift({q,date:new Date().toISOString(),theme:currentItem.theme});
+  state.totalQuestions+=1;
+  state.today+=1;
+  save(); renderStats();
+  document.getElementById('userQuestionText').textContent='“'+q+'”';
+  document.getElementById('reactionText').textContent=`Questa domanda è già passata di qui. L'Archivio ha trovato ${found} domande vicine.`;
+  document.getElementById('nearQuestions').innerHTML=currentItem.near.map(n=>`<div class="near-item">${n}</div>`).join('');
+  document.getElementById('hotQuestion').textContent=currentItem.hot;
+  document.getElementById('traceText').textContent=currentItem.trace;
+  document.getElementById('recognitionsInline').textContent=countFor(currentItem);
+  document.getElementById('recognitionsBox').textContent=countFor(currentItem);
+  document.getElementById('entry').style.display='none';
+  document.getElementById('result').classList.add('active');
+  document.getElementById('lastTime').textContent='adesso';
+  renderFeed('Una domanda è appena entrata nell\'Archivio.');
+  updateMailto(q);
+  sendQuestionToSheet({
+    tipo:'domanda',
+    domanda:q,
+    tema:currentItem.theme,
+    domanda_vicina:currentItem.hot,
+    traccia:currentItem.trace,
+    domande_totali_locali:state.totalQuestions,
+    user_agent:navigator.userAgent,
+    pagina:location.href
+  });
+  showToast(`La tua domanda è entrata nell'Archivio. Ora sono ${itNumber(state.totalQuestions)} domande.`);
+}
+
+document.getElementById('submitQuestion').onclick=handleSubmit;
+document.getElementById('questionField').addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey) && e.key==='Enter') handleSubmit();
+});
+
+function meToo(){
+  if(!currentItem) currentItem=baseArchive[0];
+  state.recognitions[currentItem.hot]=(state.recognitions[currentItem.hot]||0)+1;
+  save();
+  document.getElementById('recognitionsInline').textContent=countFor(currentItem);
+  document.getElementById('recognitionsBox').textContent=countFor(currentItem);
+  renderFeed('Anch\'io.');
+  sendQuestionToSheet({tipo:'anchio',domanda_vicina:currentItem.hot,tema:currentItem.theme,pagina:location.href});
+  showToast('Ti sei riconosciuto in questa domanda.');
+}
 document.getElementById('meToo').onclick=meToo; document.getElementById('sideMeToo').onclick=meToo;
 document.getElementById('newQuestion').onclick=()=>{document.getElementById('result').classList.remove('active');document.getElementById('entry').style.display='block';document.getElementById('questionField').value='';updateMailto('');setTimeout(()=>document.getElementById('questionField').focus(),80)};
 </script>
