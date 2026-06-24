@@ -465,9 +465,21 @@ async function sendArchivistRequest(){
     localStorage.setItem('dct_today',todayCount);
     renderTotals();
     addLatest(domanda);
-    status.textContent = "Domanda affidata. L'Archivista la custodirà.";
-    document.getElementById('archivistQuestion').value='';
-    document.getElementById('archivistContact').value='';
+    document.querySelector('.archivist-form').innerHTML = `
+      <div style="text-align:center;padding:22px 0;">
+        <h3 style="color:#9b3f2e;margin-bottom:14px;letter-spacing:.14em;text-transform:uppercase;">
+          Messaggio inviato
+        </h3>
+        <p style="margin-bottom:20px;line-height:1.6;">
+          La tua domanda è stata affidata all'Archivista.
+        </p>
+        <a href="/" class="modal-btn" style="display:inline-block;">
+          TORNA ALLA HOME
+        </a>
+      </div>
+    `;
+    document.getElementById('sendArchivist').style.display='none';
+    status.textContent = "";
   }catch(e){
     status.textContent = 'Non riesco a inviare ora. Riprova tra poco.';
   }
