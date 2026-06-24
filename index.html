@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le Domande che Tornano | Archivio Vivente</title>
-  <!-- versione corretta: conferma invio archivista + ritorno home -->
+  <!-- versione 24-06-gerarchia-home: soglia + domanda mostrata -->
   <style>
     :root{
       --paper:#f4efe6;
@@ -146,13 +146,29 @@
       letter-spacing:.04em;
       margin-bottom:clamp(14px,2vh,24px);
     }
+    .door-label{
+      color:var(--brick);
+      font-weight:700;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      font-size:clamp(11px,.9vw,14px);
+      margin-bottom:12px;
+    }
     .door-question{
-      font-size:clamp(24px,3vw,42px);
-      line-height:1.14;
+      font-size:clamp(22px,2.7vw,38px);
+      line-height:1.15;
       font-weight:900;
       text-transform:uppercase;
-      letter-spacing:.035em;
-      margin-bottom:clamp(10px,1.6vh,18px);
+      letter-spacing:.04em;
+      margin-bottom:clamp(10px,1.8vh,18px);
+    }
+    .shown-label{
+      color:var(--brick);
+      font-weight:700;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      font-size:clamp(11px,.9vw,14px);
+      margin-bottom:10px;
     }
     .mirror-question{
       border-top:2px dashed var(--ink);
@@ -161,7 +177,7 @@
       margin:clamp(14px,2vh,22px) 0;
     }
     .featured{
-      font-size:clamp(22px,3.1vw,44px);
+      font-size:clamp(20px,2.7vw,40px);
       line-height:1.12;
       font-weight:900;
       text-transform:uppercase;
@@ -259,7 +275,7 @@
       .choice-row{grid-template-columns:1fr}
     }
     @media (max-height:760px) and (min-width:921px){
-      .screen{padding:10px 22px;gap:8px}.portal{padding:18px}.featured{font-size:clamp(24px,3vw,42px)}.door-question{font-size:clamp(22px,2.8vw,36px)}.mirror-question{padding:12px 0;margin:12px 0}.side{padding:12px}.voices{max-height:36vh}.manifesto{margin-bottom:8px}.footer{padding-top:8px}
+      .screen{padding:10px 22px;gap:8px}.portal{padding:18px}.featured{font-size:clamp(24px,3vw,42px)}.big-question{font-size:clamp(22px,2.8vw,36px)}.mirror-question{padding:12px 0;margin:12px 0}.side{padding:12px}.voices{max-height:36vh}.manifesto{margin-bottom:8px}.footer{padding-top:8px}
     }
   </style>
 </head>
@@ -291,12 +307,12 @@
         <div class="manifesto">L'anima si fa domande per riconoscere se stessa.</div>
 
         <div class="portal" id="portal">
-          <div class="small-label">LA SOGLIA</div>
+          <div class="door-label">LA SOGLIA</div>
           <div class="door-question">C'è una domanda che continua a tornare?</div>
           <p class="quiet-note">Forse la tua domanda è già passata di qui.</p>
 
           <div class="mirror-question">
-            <div class="small-label">OGGI L'ARCHIVIO TI MOSTRA</div>
+            <div class="shown-label">OGGI L'ARCHIVIO TI MOSTRA</div>
             <div class="featured" id="featuredQuestion">È troppo tardi per cambiare vita?</div>
             <div class="recognition"><span id="featuredCount">618</span> persone si sono riconosciute.</div>
           </div>
