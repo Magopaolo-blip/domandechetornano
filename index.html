@@ -202,7 +202,12 @@
       await saveQuestion(q, cluster);
       setTimeout(()=>showResult(q, cluster), 450);
     });
-    $('questionInput').addEventListener('keydown', e=>{ if(e.key==='Enter' && (e.ctrlKey || e.metaKey)){ $('submitQuestion').click(); }});
+    $('questionInput').addEventListener('keydown', e=>{
+      if(e.key === 'Enter' && !e.shiftKey){
+        e.preventDefault();
+        $('submitQuestion').click();
+      }
+    });
     $('anchioBtn').addEventListener('click', ()=>{ anchioCurrent += 1; localStorage.setItem('dct_anchio', anchioCurrent); renderCounters(); $('anchioBtn').disabled = true; $('anchioBtn').innerHTML = `ANCH'IO <span id="anchioCount">${anchioCurrent}</span>`; });
     $('newQuestionBtn').addEventListener('click', ()=>{ $('resultCard').classList.remove('active'); $('entryCard').style.display='block'; $('questionInput').value=''; $('submitStatus').textContent=''; $('questionInput').focus(); });
     renderFeed(); renderCounters();
