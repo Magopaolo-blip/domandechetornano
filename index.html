@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le Domande che Tornano | Archivio Vivente</title>
-  <!-- versione 25-06-titoli-box-logo-riflessione-controllata -->
+  <!-- versione 25-06-cassetta-archivista-coerenza-controllata -->
   <style>
     :root{
       --paper:#f4efe6;
@@ -140,6 +140,25 @@
       text-transform:none!important;
       box-shadow:0 0 0 1px rgba(23,23,23,.15);
     }
+    .cassetta-stage{
+      width:min(820px,100%);
+      margin:0 auto clamp(12px,1.8vh,20px);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      pointer-events:none;
+    }
+    .cassetta{
+      width:clamp(86px,9vw,128px);
+      height:auto;
+      color:var(--ink);
+      opacity:.96;
+      filter:drop-shadow(0 2px 0 rgba(23,23,23,.08));
+    }
+    .cassetta .wood{fill:rgba(155,63,46,.08);stroke:var(--ink);stroke-width:2.2;stroke-linejoin:round}
+    .cassetta .card{fill:rgba(244,239,230,.94);stroke:var(--ink);stroke-width:1.7;stroke-linejoin:round}
+    .cassetta .label{fill:rgba(244,239,230,.66);stroke:var(--ink);stroke-width:1.5}
+    .cassetta .fine-line{stroke:rgba(23,23,23,.72);stroke-width:1.1;stroke-linecap:round}
     .portal{
       width:min(820px,100%);
       margin:0 auto;
@@ -517,8 +536,8 @@
         <div class="mini-data archivista-box">
           <h2>L'ARCHIVISTA</h2>
           <div class="archive-icon" aria-hidden="true">▣</div>
-          <p>Custodisce le domande e</p>
-          <p>aiuta una domanda a trovare forma.</p>
+          <p>Custodisce domande.</p>
+          <p>Aiuta a trovare il filo.</p>
           <p><strong>Oggi accolte:</strong> <span id="todayCount">17</span></p>
           <p><strong>In archivio:</strong> <span id="archiveTotalLeft">12.483</span></p>
           <a class="side-action" href="#archivista">SCRIVI ALL'ARCHIVISTA</a>
@@ -527,6 +546,22 @@
 
       <section class="main-stage" aria-live="polite">
         <div class="manifesto">L'anima si fa domande per riconoscere se stessa.</div>
+
+        <div class="cassetta-stage" aria-label="La Cassetta dell'Archivio">
+          <svg class="cassetta" viewBox="0 0 160 118" role="img" aria-labelledby="cassettaTitle cassettaDesc">
+            <title id="cassettaTitle">La Cassetta</title>
+            <desc id="cassettaDesc">Una cassetta d'archivio vintage con schede interne e una scheda leggermente più alta, come una domanda che ha deciso di mostrarsi.</desc>
+            <path class="card" d="M42 20h54v54H42z"/>
+            <path class="card" d="M62 12h54v62H62z"/>
+            <path class="card" d="M24 29h54v45H24z"/>
+            <path class="wood" d="M18 54h112l14 18v30H30L18 86z"/>
+            <path class="wood" d="M18 54l12 18h114l-14-18z"/>
+            <path class="label" d="M61 78h46v15H61z"/>
+            <path class="fine-line" d="M67 84h34"/>
+            <path class="fine-line" d="M31 72h112"/>
+            <path class="fine-line" d="M30 102h114"/>
+          </svg>
+        </div>
 
         <div class="portal" id="portal">
           <div class="door-label">LA DOMANDA CHE APRE</div>
@@ -611,7 +646,7 @@
 
   <div id="archivista" class="modal" role="dialog" aria-modal="true">
     <div class="modal-panel">
-      <h2>Incontra l'Archivista</h2>
+      <h2>Scrivi all'Archivista</h2>
       <p>Una domanda può chiedere uno spazio più ampio.</p>
       <p>L'incontro con l'Archivista non cerca risposte. Aiuta una domanda a trovare forma, direzione e Traccia.</p>
 
