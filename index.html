@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le Domande che Tornano | Archivio Vivente</title>
-  <!-- versione 25-06-home-minima-stylist-layout-no-scroll -->
+  <!-- versione 25-06-home-minima-header-mission-contatore -->
   <style>
     :root{
       --paper:#f4efe6;
@@ -382,6 +382,65 @@
       .question-card{padding:8px;}
     }
 
+
+    /* HEADER HERO 25-06: richieste Paolo - solo disposizione grafica, nessuna funzione modificata */
+    .cassetta{
+      margin-bottom:6px!important;
+    }
+    .archive-counter{
+      display:block!important;
+      width:max-content;
+      max-width:92vw;
+      margin:0 auto 7px!important;
+      text-align:center;
+    }
+    .mission{
+      display:block!important;
+      width:max-content;
+      max-width:92vw;
+      margin:0 auto 10px!important;
+      text-align:center;
+      font-size:clamp(17px,1.55vw,22px)!important;
+      line-height:1.18!important;
+      letter-spacing:.1em;
+    }
+    h1{
+      max-width:760px;
+      margin:5px auto 4px!important;
+      text-align:center;
+      line-height:1.04!important;
+    }
+    h1 span{
+      display:block;
+      text-align:center;
+    }
+    .hero>.eyebrow{
+      margin-top:4px!important;
+      margin-bottom:4px!important;
+    }
+    .stream{
+      margin-top:clamp(18px,3.4vh,34px)!important;
+    }
+
+    @media (max-height:820px) and (min-width:761px){
+      .mission{font-size:clamp(16px,1.35vw,20px)!important;margin-bottom:6px!important;}
+      .archive-counter{margin-bottom:4px!important;}
+      h1{margin:3px auto 3px!important;}
+      .stream{margin-top:clamp(14px,2.5vh,26px)!important;}
+    }
+    @media(max-width:760px){
+      .mission{font-size:clamp(13px,3.8vw,17px)!important;line-height:1.12!important;letter-spacing:.055em;margin-bottom:5px!important;}
+      .archive-counter{margin-bottom:4px!important;}
+      h1{max-width:94vw;margin:3px auto 4px!important;}
+      .stream{margin-top:clamp(10px,2.2vh,20px)!important;}
+    }
+    @media(max-width:390px), (max-height:640px){
+      .mission{font-size:clamp(10px,3.1vw,14px)!important;margin-bottom:3px!important;}
+      .archive-counter{margin-bottom:2px!important;}
+      h1{margin:2px auto 3px!important;}
+      .stream{margin-top:clamp(7px,1.5vh,14px)!important;}
+    }
+
   </style>
 </head>
 <body>
@@ -399,7 +458,7 @@
       <div class="archive-counter"><span id="archiveTotalTop">12.483</span> domande custodite</div>
       <div class="mission">L'anima si fa domande per riconoscere se stessa.</div>
       <div class="eyebrow">La domanda che, in questo momento, ha deciso di mostrarsi</div>
-      <h1>C'è una domanda che continua a tornare?</h1>
+      <h1><span>C'è una domanda che</span><span>continua a tornare?</span></h1>
       <p class="intro">Forse non cerca subito una risposta. Forse cerca prima un luogo dove essere riconosciuta.</p>
     </section>
 
