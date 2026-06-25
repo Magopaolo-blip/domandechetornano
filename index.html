@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le Domande che Tornano | Archivio Vivente</title>
-  <!-- versione 25-06-interfaccia-compatta-viandante-font-vintage -->
+  <!-- versione 25-06-ripristino-viandante-random-controllato -->
   <style>
     :root{
       --paper:#f4efe6;
@@ -126,10 +126,19 @@
       padding:0 clamp(4px,1vw,16px);
     }
     .manifesto{
-      font-size:clamp(12px,1vw,15px);
-      margin-bottom:clamp(12px,2vh,22px);
-      letter-spacing:.18em;
-      line-height:1.45;
+      display:inline-block;
+      align-self:center;
+      font-family:"Lucida Console","Consolas","Courier New",monospace;
+      font-size:clamp(10px,.78vw,13px);
+      margin:0 auto clamp(12px,2vh,22px);
+      padding:6px 10px;
+      letter-spacing:.14em;
+      line-height:1.25;
+      color:var(--paper)!important;
+      background:var(--ink);
+      border:1px solid var(--ink);
+      text-transform:none!important;
+      box-shadow:0 0 0 1px rgba(23,23,23,.15);
     }
     .portal{
       width:min(820px,100%);
@@ -155,14 +164,15 @@
       margin-bottom:12px;
     }
     .door-question{
-      font-size:clamp(17px,2.05vw,30px);
-      line-height:1.55;
+      font-family:"Lucida Console","Consolas","Courier New",monospace;
+      font-size:clamp(16px,1.85vw,28px);
+      line-height:1.18;
       font-weight:700;
       text-transform:uppercase;
-      letter-spacing:.16em;
-      max-width:720px;
+      letter-spacing:.12em;
+      max-width:680px;
       margin:0 auto clamp(12px,1.8vh,20px);
-      text-shadow:0 0 1px rgba(23,23,23,.18);
+      text-shadow:0 0 1px rgba(23,23,23,.16);
     }
     .shown-label{
       color:var(--brick);
@@ -345,6 +355,85 @@
       margin:.42rem 0;
     }
 
+
+    /* CONTROLLO 25-06: box Viandante a sinistra, Archivista compatto, destra solo Voci */
+    .left.side{
+      overflow:hidden;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .left .viandante-box{
+      border-top:0;
+      padding-top:0;
+      margin-top:0;
+      font-size:clamp(11px,.88vw,13px);
+      line-height:1.35;
+    }
+    .left .viandante-box p{
+      margin:.32rem 0;
+    }
+    .left .viandante-title{
+      color:var(--brick);
+      font-weight:700;
+      letter-spacing:.17em;
+      text-transform:uppercase;
+      font-size:clamp(10px,.82vw,12px);
+      margin-bottom:6px;
+    }
+    .left .viandante-thread{
+      color:var(--brick);
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      margin:3px 0;
+    }
+    .left .viandante-small{
+      font-size:10px;
+      line-height:1.25;
+      opacity:.88;
+      margin-top:4px;
+    }
+    .left .viandante-box input{
+      width:100%;
+      background:transparent;
+      border:1px dashed var(--ink);
+      color:var(--ink);
+      padding:7px;
+      outline:none;
+      margin:5px 0;
+      font-size:12px;
+    }
+    .left .viandante-box .side-action{
+      padding:7px 6px;
+      min-height:auto;
+      margin-top:6px;
+      font-size:10px;
+    }
+    .archivista-box{
+      padding-top:10px!important;
+      margin-top:8px!important;
+      font-size:clamp(11px,.88vw,13px)!important;
+      line-height:1.35!important;
+    }
+    .archivista-box h2{
+      margin-bottom:6px!important;
+    }
+    .archivista-box .archive-icon{
+      font-size:24px;
+      margin:2px 0 6px;
+    }
+    .archivista-box p{
+      margin:.34rem 0!important;
+    }
+    .archivista-box .side-action{
+      padding:8px 6px;
+      margin-top:8px;
+      font-size:11px;
+    }
+    .right.side{
+      overflow:hidden;
+    }
+
     @media (max-width:920px){
       body{overflow:auto}
       .screen{height:auto;min-height:100vh;grid-template-rows:auto auto auto;padding:14px;}
@@ -353,7 +442,7 @@
       .room{grid-template-columns:1fr;gap:12px}
       .main-stage{order:1;padding:0}.left{order:2}.right{order:3}.side{max-height:none}
       .choice-row{grid-template-columns:1fr}
-      .door-question{font-size:clamp(20px,7vw,34px);line-height:1.35;letter-spacing:.08em;}
+      .door-question{font-size:clamp(18px,5.5vw,28px);line-height:1.18;letter-spacing:.07em;}
       .featured{font-size:clamp(18px,6vw,30px);line-height:1.3;}
     }
     @media (max-height:760px) and (min-width:921px){
@@ -372,15 +461,40 @@
     <main class="room">
       <aside class="side left">
         <div>
+
+          <div class="viandante-box" id="viandanteBox">
+            <p class="viandante-title">IL TUO PASSAGGIO</p>
+
+            <div id="viandanteNamePrompt">
+              <p>L'Archivio si ricorda del tuo passaggio.</p>
+              <p>Come desideri essere chiamato?</p>
+              <input id="viandanteNameInput" type="text" placeholder="Viandante" />
+              <button class="side-action" id="saveViandanteName" type="button">CUSTODISCI IL NOME</button>
+            </div>
+
+            <div id="viandantePresence">
+              <p>Bentornato, <span id="viandanteName">Viandante</span>.</p>
+              <p>Visite: <span id="viandanteVisits">1</span></p>
+              <p>Domande: <span id="viandanteQuestions">0</span></p>
+              <p>Riconoscimenti: <span id="viandanteRecognitions">0</span></p>
+
+              <p class="viandante-title" style="margin-top:8px;">IL FILO</p>
+              <p>Le tue domande tornano attorno a:</p>
+              <p class="viandante-thread" id="viandanteThread">IN ASCOLTO</p>
+              <p class="viandante-small" id="viandanteThreadNote">Affida una domanda. Il filo inizierà a mostrarsi.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="mini-data archivista-box">
           <h2>L'ARCHIVISTA</h2>
           <div class="archive-icon" aria-hidden="true">▣</div>
           <p>Custodisce le domande.</p>
           <p>Non offre risposte.</p>
           <p>Aiuta una domanda a trovare forma.</p>
-        </div>
-        <div class="mini-data">
-          <p><strong>Oggi accolte:</strong> <span id="todayCount">17</span> domande</p>
-          <p><strong>Sta custodendo:</strong> <span id="archiveTotalLeft">12.483</span> domande</p>
+          <p><strong>Oggi accolte:</strong> <span id="todayCount">17</span></p>
+          <p><strong>In archivio:</strong> <span id="archiveTotalLeft">12.483</span></p>
           <a class="side-action" href="#archivista">INCONTRA L'ARCHIVISTA</a>
         </div>
       </aside>
@@ -395,7 +509,7 @@
 
           <div class="mirror-question">
             <div class="shown-label">UNA DOMANDA DELL'ARCHIVIO</div>
-            <div class="featured" id="featuredQuestion">È troppo tardi per cambiare vita?</div>
+            <div class="featured" id="featuredQuestion">Dove mi sento a casa?</div>
             <div class="recognition"><span id="featuredCount">618</span> persone si sono riconosciute.</div>
           </div>
 
@@ -493,26 +607,90 @@
     </div>
   </div>
 
+
 <script>
+/* COSTANTE DI RICONTROLLO MODIFICHE - 25/06
+   - Home random a ogni refresh
+   - Box Viandante presente nella colonna sinistra
+   - Nome Viandante richiesto da subito
+   - Filo del Viandante attivo
+   - Box Archivista compatto
+*/
+
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbzdOXoPPSkjzjkW9-1StCls4_nE1-6aplSynCy3JU55LibC7GunTZjVTY6YrhmZfMatkg/exec";
+
+const archiveQuestions = [{"territorio": "Direzione", "domanda": "Sto andando nella direzione giusta?"}, {"territorio": "Direzione", "domanda": "E se stessi sbagliando strada?"}, {"territorio": "Direzione", "domanda": "Quanto tempo posso restare dove non mi sento più vivo?"}, {"territorio": "Direzione", "domanda": "Quale passo continuo a rimandare?"}, {"territorio": "Direzione", "domanda": "Cosa mi trattiene dal procedere?"}, {"territorio": "Direzione", "domanda": "Sto aspettando un segnale che non arriverà?"}, {"territorio": "Direzione", "domanda": "Quale strada continua a chiamarmi?"}, {"territorio": "Direzione", "domanda": "Dove sto consumando energia senza avanzare?"}, {"territorio": "Direzione", "domanda": "Cosa accadrebbe se scegliessi?"}, {"territorio": "Direzione", "domanda": "Quale bivio continua a tornare?"}, {"territorio": "Amore", "domanda": "Amo questa persona o ciò che rappresenta?"}, {"territorio": "Amore", "domanda": "Perché continuo a tornare qui?"}, {"territorio": "Amore", "domanda": "Sto aspettando qualcuno che non arriverà?"}, {"territorio": "Amore", "domanda": "Cosa non riesco a lasciare andare?"}, {"territorio": "Amore", "domanda": "Mi sento amato o necessario?"}, {"territorio": "Amore", "domanda": "Sto vedendo questa persona o il mio desiderio?"}, {"territorio": "Amore", "domanda": "Cosa sto cercando attraverso l'altro?"}, {"territorio": "Amore", "domanda": "Cosa continuo a sperare?"}, {"territorio": "Amore", "domanda": "Quale assenza continua a parlare?"}, {"territorio": "Amore", "domanda": "Cosa mi lega davvero?"}, {"territorio": "Identità", "domanda": "Chi sarei senza questa storia?"}, {"territorio": "Identità", "domanda": "Cosa sto cercando di dimostrare?"}, {"territorio": "Identità", "domanda": "Quale ruolo mi sta diventando stretto?"}, {"territorio": "Identità", "domanda": "Chi sono quando nessuno guarda?"}, {"territorio": "Identità", "domanda": "Quale immagine di me sto difendendo?"}, {"territorio": "Identità", "domanda": "Cosa non sto più riuscendo a fingere?"}, {"territorio": "Identità", "domanda": "Dove mi tradisco?"}, {"territorio": "Identità", "domanda": "Quale parte di me sta chiedendo spazio?"}, {"territorio": "Identità", "domanda": "Chi sto diventando?"}, {"territorio": "Identità", "domanda": "Cosa non mi rappresenta più?"}, {"territorio": "Tempo", "domanda": "È troppo tardi?"}, {"territorio": "Tempo", "domanda": "Cosa sto rimandando da anni?"}, {"territorio": "Tempo", "domanda": "Se non fosse adesso, quando?"}, {"territorio": "Tempo", "domanda": "Cosa continua ad aspettarmi?"}, {"territorio": "Tempo", "domanda": "Quale stagione della mia vita sto vivendo?"}, {"territorio": "Tempo", "domanda": "Cosa non può più essere rinviato?"}, {"territorio": "Tempo", "domanda": "Quanto tempo voglio ancora aspettare?"}, {"territorio": "Tempo", "domanda": "Cosa è arrivato il momento di vedere?"}, {"territorio": "Tempo", "domanda": "Cosa sto lasciando passare?"}, {"territorio": "Tempo", "domanda": "Quale tempo è maturo?"}, {"territorio": "Cambiamento", "domanda": "Cosa deve finire?"}, {"territorio": "Cambiamento", "domanda": "Cosa sta cercando di nascere?"}, {"territorio": "Cambiamento", "domanda": "Sto lasciando andare o sto perdendo?"}, {"territorio": "Cambiamento", "domanda": "Quale porta continua ad aprirsi?"}, {"territorio": "Cambiamento", "domanda": "Cosa non può accompagnarmi oltre?"}, {"territorio": "Cambiamento", "domanda": "Dove sto resistendo?"}, {"territorio": "Cambiamento", "domanda": "Cosa sta cambiando anche se non lo voglio?"}, {"territorio": "Cambiamento", "domanda": "Quale passaggio sto attraversando?"}, {"territorio": "Cambiamento", "domanda": "Cosa chiede di essere trasformato?"}, {"territorio": "Cambiamento", "domanda": "Quale pelle non mi appartiene più?"}, {"territorio": "Paura", "domanda": "Cosa temo davvero?"}, {"territorio": "Paura", "domanda": "Cosa sto proteggendo?"}, {"territorio": "Paura", "domanda": "Quale rischio non voglio correre?"}, {"territorio": "Paura", "domanda": "Cosa potrebbe accadere se smettessi di controllare?"}, {"territorio": "Paura", "domanda": "Quale verità evito?"}, {"territorio": "Paura", "domanda": "Cosa mi spaventa perché conta?"}, {"territorio": "Paura", "domanda": "Di cosa ho paura di perdere il controllo?"}, {"territorio": "Paura", "domanda": "Cosa continuo a evitare?"}, {"territorio": "Paura", "domanda": "Quale paura si traveste da prudenza?"}, {"territorio": "Paura", "domanda": "Cosa accadrebbe se andasse bene?"}, {"territorio": "Libertà", "domanda": "Dove mi sento prigioniero?"}, {"territorio": "Libertà", "domanda": "Chi ha deciso che deve essere così?"}, {"territorio": "Libertà", "domanda": "Cosa mi impedisco?"}, {"territorio": "Libertà", "domanda": "Quale permesso sto aspettando?"}, {"territorio": "Libertà", "domanda": "A chi appartiene questa scelta?"}, {"territorio": "Libertà", "domanda": "Dove rinuncio a me stesso?"}, {"territorio": "Libertà", "domanda": "Cosa farei se non avessi paura del giudizio?"}, {"territorio": "Libertà", "domanda": "Quale catena tengo stretta da solo?"}, {"territorio": "Libertà", "domanda": "Dove potrei respirare di più?"}, {"territorio": "Libertà", "domanda": "Cosa significa libertà per me?"}, {"territorio": "Appartenenza", "domanda": "Dove mi sento a casa?"}, {"territorio": "Appartenenza", "domanda": "Dove mi sento fuori posto?"}, {"territorio": "Appartenenza", "domanda": "Chi mi vede davvero?"}, {"territorio": "Appartenenza", "domanda": "Quale luogo continua a chiamarmi?"}, {"territorio": "Appartenenza", "domanda": "A chi sto cercando di appartenere?"}, {"territorio": "Appartenenza", "domanda": "Dove posso essere me stesso?"}, {"territorio": "Appartenenza", "domanda": "Chi riconosce la mia lingua?"}, {"territorio": "Appartenenza", "domanda": "Dove smetto di difendermi?"}, {"territorio": "Appartenenza", "domanda": "Quale comunità sto cercando?"}, {"territorio": "Appartenenza", "domanda": "Dove posso riposare?"}, {"territorio": "Desiderio", "domanda": "Cosa desidero davvero?"}, {"territorio": "Desiderio", "domanda": "Quale desiderio continuo a rimandare?"}, {"territorio": "Desiderio", "domanda": "Cosa continua a bussare?"}, {"territorio": "Desiderio", "domanda": "Cosa sto sacrificando per restare uguale?"}, {"territorio": "Desiderio", "domanda": "Quale sogno non mi ha lasciato?"}, {"territorio": "Desiderio", "domanda": "Cosa mi accende?"}, {"territorio": "Desiderio", "domanda": "Cosa mi manca veramente?"}, {"territorio": "Desiderio", "domanda": "Cosa sto soffocando?"}, {"territorio": "Desiderio", "domanda": "Cosa chiede di essere vissuto?"}, {"territorio": "Desiderio", "domanda": "Quale fuoco sto custodendo?"}, {"territorio": "Significato", "domanda": "Perché questa esperienza continua a tornare?"}, {"territorio": "Significato", "domanda": "Cosa sta cercando di insegnarmi la vita?"}, {"territorio": "Significato", "domanda": "Cosa non ho ancora compreso?"}, {"territorio": "Significato", "domanda": "Quale filo collega questi eventi?"}, {"territorio": "Significato", "domanda": "Cosa continua a ripetersi?"}, {"territorio": "Significato", "domanda": "Cosa sto chiamando destino?"}, {"territorio": "Significato", "domanda": "Quale domanda sta cercando me?"}, {"territorio": "Significato", "domanda": "Cosa vuole essere visto?"}, {"territorio": "Significato", "domanda": "Quale storia sto raccontando?"}, {"territorio": "Significato", "domanda": "Cosa mi sta ricordando chi sono?"}];
+
+const themes = [
+  {keys:['dove','direzione','strada','vado','andare','sbagliando','scelta','scegliere','bivio','passo'], theme:'Direzione', mother:'Sto andando nella direzione giusta?', count:451, near:37, trace:'Quale passo continua a tornare nei tuoi pensieri?', sisters:['Sto andando nella direzione giusta?','E se stessi sbagliando strada?','Quale passo continuo a rimandare?','Dove sto consumando energia senza avanzare?']},
+  {keys:['tardi','tempo','anni','quando','aspettare','rinviato','maturo'], theme:'Tempo', mother:'È troppo tardi?', count:618, near:42, trace:'Cosa è arrivato il momento di vedere?', sisters:['È troppo tardi?','Cosa sto rimandando da anni?','Se non fosse adesso, quando?','Quanto tempo voglio ancora aspettare?']},
+  {keys:['cambiare','ricominciare','vita','iniziare','ripartire','nascere','finire','pelle','trasformato'], theme:'Cambiamento', mother:'Cosa sta cercando di nascere?', count:521, near:39, trace:'Quale parte di te merita di essere portata nel prossimo capitolo?', sisters:['Cosa deve finire?','Cosa sta cercando di nascere?','Sto lasciando andare o sto perdendo?','Quale pelle non mi appartiene più?']},
+  {keys:['amore','relazione','restare','lasciare','lui','lei','coppia','persona','assenza'], theme:'Amore', mother:'Amo questa persona o ciò che rappresenta?', count:597, near:31, trace:'Cosa sai già ma non stai ancora dicendo ad alta voce?', sisters:['Amo questa persona o ciò che rappresenta?','Perché continuo a tornare qui?','Cosa non riesco a lasciare andare?','Quale assenza continua a parlare?']},
+  {keys:['paura','sbagliare','ansia','blocco','fallire','controllo','rischio','prudenza','temo'], theme:'Paura', mother:'Cosa temo davvero?', count:402, near:33, trace:'Cosa accadrebbe se scegliessi senza dover essere perfetto?', sisters:['Cosa temo davvero?','Cosa sto proteggendo?','Quale paura si traveste da prudenza?','Cosa accadrebbe se andasse bene?']},
+  {keys:['chi sono','identità','me stesso','me stessa','storia','ruolo','fingere','diventando','rappresenta'], theme:'Identità', mother:'Chi sarei senza questa storia?', count:386, near:27, trace:'Quale versione di te ha terminato il proprio compito?', sisters:['Chi sarei senza questa storia?','Cosa sto cercando di dimostrare?','Cosa non sto più riuscendo a fingere?','Chi sto diventando?']},
+  {keys:['libertà','prigioniero','impedisco','permesso','giudizio','catena','respirare','rinuncio'], theme:'Libertà', mother:'Dove mi sento prigioniero?', count:332, near:24, trace:'Quale permesso stai ancora aspettando?', sisters:['Dove mi sento prigioniero?','Quale permesso sto aspettando?','A chi appartiene questa scelta?','Dove potrei respirare di più?']},
+  {keys:['casa','appartenere','appartenenza','posto','vede','lingua','comunità','riposare','difendermi'], theme:'Appartenenza', mother:'Dove mi sento a casa?', count:489, near:34, trace:'Dove smetti di dover dimostrare qualcosa?', sisters:['Dove mi sento a casa?','Dove mi sento fuori posto?','Chi mi vede davvero?','Dove posso essere me stesso?']},
+  {keys:['desidero','desiderio','bussare','sogno','accende','manca','soffocando','fuoco'], theme:'Desiderio', mother:'Cosa desidero davvero?', count:427, near:28, trace:'Cosa continua a bussare anche quando fai finta di non sentire?', sisters:['Cosa desidero davvero?','Cosa continua a bussare?','Quale sogno non mi ha lasciato?','Quale fuoco sto custodendo?']},
+  {keys:['significato','esperienza','vita','compreso','filo','eventi','ripetersi','destino','storia'], theme:'Significato', mother:'Quale filo collega questi eventi?', count:466, near:30, trace:'Cosa vuole essere visto?', sisters:['Perché questa esperienza continua a tornare?','Quale filo collega questi eventi?','Cosa continua a ripetersi?','Cosa mi sta ricordando chi sono?']}
+];
+
+const fallback = themes[0];
+
 let total = Number(localStorage.getItem('dct_total') || 12483);
 let featuredCount = Number(localStorage.getItem('dct_featured_count') || 618);
 let todayCount = Number(localStorage.getItem('dct_today') || 17);
 let lastQuestion = "";
 
-const themes = [
-  {keys:['dove','direzione','strada','vado','andare','sbagliando','scelta','scegliere'], theme:'DIREZIONE', mother:'Sto andando nella direzione giusta?', count:451, near:37, trace:'Quale passo continua a tornare nei tuoi pensieri?', sisters:['Sto andando nella direzione giusta?','E se stessi sbagliando strada?','Come faccio a scegliere?','Sto ignorando qualcosa?']},
-  {keys:['tardi','cambiare','ricominciare','vita','iniziare','ripartire'], theme:'CAMBIAMENTO', mother:'È troppo tardi per cambiare vita?', count:618, near:42, trace:'Quale parte di te merita di essere portata nel prossimo capitolo?', sisters:['Ho paura di ricominciare.','Sto perdendo tempo?','È tardi per ripartire?','Cosa devo lasciare indietro?']},
-  {keys:['amore','relazione','restare','lasciare','lui','lei','coppia'], theme:'AMORE', mother:'Non so se restare o andare.', count:597, near:31, trace:'Cosa sai già ma non stai ancora dicendo ad alta voce?', sisters:['Non so se restare o andare.','Perché continuo ad aspettare?','Mi ama davvero?','Cosa sto proteggendo?']},
-  {keys:['solo','sola','solitudine','nessuno','abbandono'], theme:'SOLITUDINE', mother:'Mi sento solo anche quando non sono solo.', count:344, near:29, trace:'Dove stai aspettando di essere raggiunto?', sisters:['Mi sento solo anche quando non sono solo.','Perché non riesco a chiedere aiuto?','Chi mi vede davvero?','Dove mi sono ritirato?']},
-  {keys:['paura','sbagliare','ansia','blocco','fallire'], theme:'PAURA', mother:'Ho paura di sbagliare scelta.', count:402, near:33, trace:'Cosa accadrebbe se scegliessi senza dover essere perfetto?', sisters:['Ho paura di sbagliare scelta.','Perché mi blocco sempre?','Cosa temo davvero?','Chi sto cercando di non deludere?']},
-  {keys:['chi sono','identità','me stesso','me stessa','senso'], theme:'IDENTITÀ', mother:'Non so più chi sono.', count:386, near:27, trace:'Quale versione di te ha terminato il proprio compito?', sisters:['Non so più chi sono.','Sto tradendo me stesso?','Chi sarei senza questa paura?','Quale parte di me non ascolto?']}
-];
-const fallback = themes[0];
 function pad(n){return String(n).padStart(2,'0')}
-function updateClock(){const d=new Date();document.getElementById('clock').textContent=`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`}
-setInterval(updateClock,1000); updateClock();
-function renderTotals(){document.getElementById('archiveTotal').textContent=total.toLocaleString('it-IT');document.getElementById('archiveTotalLeft').textContent=total.toLocaleString('it-IT');document.getElementById('featuredCount').textContent=featuredCount.toLocaleString('it-IT');document.getElementById('rightCount').textContent=featuredCount.toLocaleString('it-IT');document.getElementById('todayCount').textContent=todayCount.toLocaleString('it-IT')}
+function byId(id){return document.getElementById(id)}
+
+function updateClock(){
+  const d=new Date();
+  const el=byId('clock');
+  if(el) el.textContent=`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
+function renderTotals(){
+  const totalText = total.toLocaleString('it-IT');
+  if(byId('archiveTotal')) byId('archiveTotal').textContent=totalText;
+  if(byId('archiveTotalLeft')) byId('archiveTotalLeft').textContent=totalText;
+  if(byId('featuredCount')) byId('featuredCount').textContent=featuredCount.toLocaleString('it-IT');
+  if(byId('rightCount')) byId('rightCount').textContent=featuredCount.toLocaleString('it-IT');
+  if(byId('todayCount')) byId('todayCount').textContent=todayCount.toLocaleString('it-IT');
+}
+
+function pickHomeQuestion(){
+  const featured = byId('featuredQuestion');
+  if(!featured) return;
+
+  const last = localStorage.getItem('dct_home_last_question') || "";
+  let chosen = archiveQuestions[Math.floor(Math.random() * archiveQuestions.length)];
+  let guard = 0;
+
+  while(chosen.domanda === last && guard < 30){
+    chosen = archiveQuestions[Math.floor(Math.random() * archiveQuestions.length)];
+    guard++;
+  }
+
+  featured.textContent = chosen.domanda;
+  featured.dataset.territorio = chosen.territorio;
+  localStorage.setItem('dct_home_last_question', chosen.domanda);
+
+  featuredCount = Math.floor(180 + Math.random() * 720);
+  localStorage.setItem('dct_featured_count', featuredCount);
+  renderTotals();
+}
+
+function detectTheme(q){
+  const s=String(q || '').toLowerCase();
+  let best=null, score=0;
+  for(const t of themes){
+    let n=0;
+    t.keys.forEach(k=>{ if(s.includes(k)) n++; });
+    if(n>score){ score=n; best=t; }
+  }
+  return best || fallback;
+}
 
 function getViandanteData(){
   return {
@@ -523,6 +701,7 @@ function getViandanteData(){
     territories: JSON.parse(localStorage.getItem('dct_viandante_territories') || '{}')
   };
 }
+
 function saveViandanteData(data){
   localStorage.setItem('dct_viandante_name', data.name || 'Viandante');
   localStorage.setItem('dct_viandante_visits', String(data.visits || 0));
@@ -530,67 +709,46 @@ function saveViandanteData(data){
   localStorage.setItem('dct_viandante_recognitions', String(data.recognitions || 0));
   localStorage.setItem('dct_viandante_territories', JSON.stringify(data.territories || {}));
 }
-function currentFeaturedTerritory(){
-  const featured = document.getElementById('featuredQuestion');
-  if(featured && featured.dataset && featured.dataset.territorio) return featured.dataset.territorio;
-  const text = featured ? featured.textContent.toLowerCase() : '';
-  const matched = detectTheme(text);
-  return matched ? matched.theme : 'IN ASCOLTO';
-}
-function addViandanteTerritory(territory){
-  const data = getViandanteData();
-  if(!territory) territory = 'IN ASCOLTO';
-  data.territories[territory] = (data.territories[territory] || 0) + 1;
-  saveViandanteData(data);
-  renderViandanteBox();
-}
+
 function calculateViandanteThread(data){
-  const entries = Object.entries(data.territories || {});
+  const entries = Object.entries(data.territories || {}).filter(([k,v]) => k && k !== 'IN ASCOLTO' && k !== 'ARCHIVISTA');
   if(!entries.length) return 'IN ASCOLTO';
   entries.sort((a,b)=>b[1]-a[1]);
   return entries[0][0];
 }
+
 function renderViandanteBox(){
   const data = getViandanteData();
-  const nameEl = document.getElementById('viandanteName');
-  const visitsEl = document.getElementById('viandanteVisits');
-  const questionsEl = document.getElementById('viandanteQuestions');
-  const recognitionsEl = document.getElementById('viandanteRecognitions');
-  const threadEl = document.getElementById('viandanteThread');
-  const noteEl = document.getElementById('viandanteThreadNote');
-  const promptEl = document.getElementById('viandanteNamePrompt');
 
-  if(nameEl) nameEl.textContent = data.name || 'Viandante';
-  if(visitsEl) visitsEl.textContent = data.visits;
-  if(questionsEl) questionsEl.textContent = data.questions;
-  if(recognitionsEl) recognitionsEl.textContent = data.recognitions;
+  if(byId('viandanteName')) byId('viandanteName').textContent = data.name || 'Viandante';
+  if(byId('viandanteVisits')) byId('viandanteVisits').textContent = data.visits;
+  if(byId('viandanteQuestions')) byId('viandanteQuestions').textContent = data.questions;
+  if(byId('viandanteRecognitions')) byId('viandanteRecognitions').textContent = data.recognitions;
+
+  const hasName = Boolean(localStorage.getItem('dct_viandante_name'));
+  if(byId('viandanteNamePrompt')) byId('viandanteNamePrompt').style.display = hasName ? 'none' : 'block';
 
   const thread = calculateViandanteThread(data);
-  if(threadEl) threadEl.textContent = thread;
+  if(byId('viandanteThread')) byId('viandanteThread').textContent = thread;
 
-  if(noteEl){
-    if(thread === 'IN ASCOLTO'){
-      noteEl.textContent = 'Affida una domanda. Il filo inizierà a mostrarsi.';
-    } else {
-      noteEl.textContent = 'Non è un profilo. È il filo che emerge.';
-    }
-  }
-
-  if(promptEl){
-    const hasName = Boolean(localStorage.getItem('dct_viandante_name'));
-    promptEl.style.display = (!hasName && data.visits >= 3) ? 'block' : 'none';
+  if(byId('viandanteThreadNote')){
+    byId('viandanteThreadNote').textContent =
+      thread === 'IN ASCOLTO'
+      ? 'Affida una domanda. Il filo inizierà a mostrarsi.'
+      : 'Non è un profilo. È il filo che emerge.';
   }
 }
+
 function initViandante(){
   const data = getViandanteData();
   data.visits += 1;
   saveViandanteData(data);
   renderViandanteBox();
 
-  const saveBtn = document.getElementById('saveViandanteName');
+  const saveBtn = byId('saveViandanteName');
   if(saveBtn){
     saveBtn.addEventListener('click', function(){
-      const input = document.getElementById('viandanteNameInput');
+      const input = byId('viandanteNameInput');
       const value = input ? input.value.trim() : '';
       const data = getViandanteData();
       data.name = value || 'Viandante';
@@ -600,51 +758,115 @@ function initViandante(){
   }
 }
 
-renderTotals();
-initViandante();
-function detectTheme(q){const s=q.toLowerCase();let best=null,score=0;for(const t of themes){let n=0;t.keys.forEach(k=>{if(s.includes(k)) n++}); if(n>score){score=n;best=t}} return best || fallback;}
-function addLatest(q){const d=new Date(); const time=`${pad(d.getHours())}:${pad(d.getMinutes())}`; const feed=document.getElementById('latestQuestions'); const div=document.createElement('div'); div.className='voice'; div.innerHTML=`<span class="time">${time}</span>${escapeHtml(q)}`; feed.prepend(div); while(feed.children.length>7) feed.removeChild(feed.lastChild);}
-function escapeHtml(str){return String(str).replace(/[&<>'"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
-async function saveQuestion(q,theme){
-  try{ await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({domanda:q,tema:theme,data:new Date().toISOString(),tipo:'domanda'})}); }catch(e){}
+function addViandanteTerritory(territory){
+  const data = getViandanteData();
+  const key = territory || 'IN ASCOLTO';
+  data.territories[key] = (data.territories[key] || 0) + 1;
+  saveViandanteData(data);
+  renderViandanteBox();
 }
-function resetToPortal(){document.getElementById('result').classList.remove('active');document.getElementById('portal').style.display='block';document.getElementById('questionInput').value='';document.getElementById('questionForm').classList.add('active');document.getElementById('questionInput').focus();}
+
+function currentFeaturedTerritory(){
+  const featured = byId('featuredQuestion');
+  if(featured && featured.dataset && featured.dataset.territorio) return featured.dataset.territorio;
+  const matched = detectTheme(featured ? featured.textContent : '');
+  return matched ? matched.theme : 'IN ASCOLTO';
+}
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>'"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+}
+
+function addLatest(q){
+  const feed=byId('latestQuestions');
+  if(!feed) return;
+  const d=new Date();
+  const time=`${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const div=document.createElement('div');
+  div.className='voice';
+  div.innerHTML=`<span class="time">${time}</span>${escapeHtml(q)}`;
+  feed.prepend(div);
+  while(feed.children.length>7) feed.removeChild(feed.lastChild);
+}
+
+async function saveQuestion(q,theme){
+  try{
+    await fetch(SHEETS_URL,{
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({domanda:q,tema:theme,data:new Date().toISOString(),tipo:'domanda'})
+    });
+  }catch(e){}
+}
+
+function resetToPortal(){
+  if(byId('result')) byId('result').classList.remove('active');
+  if(byId('portal')) byId('portal').style.display='block';
+  if(byId('questionInput')){
+    byId('questionInput').value='';
+    byId('questionInput').focus();
+  }
+  if(byId('questionForm')) byId('questionForm').classList.add('active');
+}
+
 function submitQuestion(){
-  const input=document.getElementById('questionInput');
-  const q=input.value.trim();
-  if(!q){input.focus();return;}
-  const t=detectTheme(q); lastQuestion=q;
-  total++; todayCount++; localStorage.setItem('dct_total',total); localStorage.setItem('dct_today',todayCount); const vd=getViandanteData(); vd.questions += 1; saveViandanteData(vd); addViandanteTerritory(t.theme); renderTotals(); renderViandanteBox(); addLatest(q); saveQuestion(q,t.theme);
-  document.getElementById('portal').style.display='none';
-  document.getElementById('result').classList.add('active');
-  document.getElementById('userQuestionText').textContent='“'+q+'”';
-  document.getElementById('ritualStatus').textContent="L'Archivista sta cercando...";
-  document.getElementById('resultBody').style.display='none';
-  setTimeout(()=>{document.getElementById('ritualStatus').textContent=`L'Archivio ha riconosciuto il tema: ${t.theme}.`;},800);
-  setTimeout(()=>{document.getElementById('ritualStatus').textContent=`Non è sola. Sono state trovate ${t.near} domande vicine.`;},1600);
+  const input=byId('questionInput');
+  const q=input ? input.value.trim() : '';
+  if(!q){ if(input) input.focus(); return; }
+
+  const t=detectTheme(q);
+  lastQuestion=q;
+
+  total++;
+  todayCount++;
+  localStorage.setItem('dct_total',total);
+  localStorage.setItem('dct_today',todayCount);
+
+  const vd=getViandanteData();
+  vd.questions += 1;
+  saveViandanteData(vd);
+  addViandanteTerritory(t.theme);
+
+  renderTotals();
+  renderViandanteBox();
+  addLatest(q);
+  saveQuestion(q,t.theme);
+
+  if(byId('portal')) byId('portal').style.display='none';
+  if(byId('result')) byId('result').classList.add('active');
+  if(byId('userQuestionText')) byId('userQuestionText').textContent='“'+q+'”';
+  if(byId('ritualStatus')) byId('ritualStatus').textContent="L'Archivista sta cercando...";
+  if(byId('resultBody')) byId('resultBody').style.display='none';
+
+  setTimeout(()=>{ if(byId('ritualStatus')) byId('ritualStatus').textContent=`L'Archivio ha riconosciuto il tema: ${t.theme}.`; },800);
+  setTimeout(()=>{ if(byId('ritualStatus')) byId('ritualStatus').textContent=`Non è sola. Sono state trovate ${t.near} domande vicine.`; },1600);
   setTimeout(()=>{
-    document.getElementById('ritualStatus').textContent="L'Archivista ha trovato una parentela.";
-    document.getElementById('themeText').textContent=t.theme;
-    document.getElementById('nearCount').textContent=t.near;
-    document.getElementById('motherQuestion').textContent=t.mother;
-    document.getElementById('traceText').textContent=t.trace;
-    document.getElementById('sisterList').innerHTML=t.sisters.map(x=>`<div>${escapeHtml(x)}</div>`).join('');
-    document.getElementById('resultRecognize').textContent=`MI RICONOSCO ANCH'IO (${t.count})`;
-    document.getElementById('archivistQuestion').value=q;
-    document.getElementById('resultBody').style.display='block';
+    if(byId('ritualStatus')) byId('ritualStatus').textContent="L'Archivista ha trovato una parentela.";
+    if(byId('themeText')) byId('themeText').textContent=t.theme;
+    if(byId('nearCount')) byId('nearCount').textContent=t.near;
+    if(byId('motherQuestion')) byId('motherQuestion').textContent=t.mother;
+    if(byId('traceText')) byId('traceText').textContent=t.trace;
+    if(byId('sisterList')) byId('sisterList').innerHTML=t.sisters.map(x=>`<div>${escapeHtml(x)}</div>`).join('');
+    if(byId('resultRecognize')) byId('resultRecognize').textContent=`MI RICONOSCO ANCH'IO (${t.count})`;
+    if(byId('archivistQuestion')) byId('archivistQuestion').value=q;
+    if(byId('resultBody')) byId('resultBody').style.display='block';
   },2500);
 }
 
 async function sendArchivistRequest(){
-  const domanda = document.getElementById('archivistQuestion').value.trim();
-  const contatto = document.getElementById('archivistContact').value.trim();
-  const status = document.getElementById('archivistStatus');
+  const domanda = byId('archivistQuestion') ? byId('archivistQuestion').value.trim() : '';
+  const contatto = byId('archivistContact') ? byId('archivistContact').value.trim() : '';
+  const status = byId('archivistStatus');
+
   if(!domanda){
-    status.textContent = 'Scrivi prima la domanda da affidare.';
-    document.getElementById('archivistQuestion').focus();
+    if(status) status.textContent = 'Scrivi prima la domanda da affidare.';
+    if(byId('archivistQuestion')) byId('archivistQuestion').focus();
     return;
   }
-  status.textContent = "L'Archivista sta ricevendo la domanda...";
+
+  if(status) status.textContent = "L'Archivista sta ricevendo la domanda...";
+
   try{
     await fetch(SHEETS_URL,{
       method:'POST',
@@ -658,59 +880,90 @@ async function sendArchivistRequest(){
         data:new Date().toISOString()
       })
     });
-    total++; todayCount++;
+
+    total++;
+    todayCount++;
     localStorage.setItem('dct_total',total);
     localStorage.setItem('dct_today',todayCount);
+
     const vd=getViandanteData();
     vd.questions += 1;
     saveViandanteData(vd);
-    addViandanteTerritory('ARCHIVISTA');
+
     renderTotals();
     renderViandanteBox();
     addLatest(domanda);
-    const panel = document.querySelector('#archivista .modal-panel');
-    panel.innerHTML = `
-      <h2>Messaggio inviato</h2>
-      <p>La tua domanda è stata affidata all'Archivista.</p>
-      <p class="hint">Tra pochi secondi tornerai alla Home.</p>
-      <div class="modal-actions">
-        <a class="modal-btn" href="/">TORNA ALLA HOME</a>
-      </div>
-    `;
 
-    setTimeout(function(){
-      window.location.href = '/';
-    }, 2500);
+    const panel = document.querySelector('#archivista .modal-panel');
+    if(panel){
+      panel.innerHTML = `
+        <h2>Messaggio inviato</h2>
+        <p>La tua domanda è stata affidata all'Archivista.</p>
+        <p class="hint">Tra pochi secondi tornerai alla Home.</p>
+        <div class="modal-actions">
+          <a class="modal-btn" href="/">TORNA ALLA HOME</a>
+        </div>
+      `;
+    }
+
+    setTimeout(function(){ window.location.href = '/'; }, 2500);
   }catch(e){
-    status.textContent = 'Non riesco a inviare ora. Riprova tra poco.';
+    if(status) status.textContent = 'Non riesco a inviare ora. Riprova tra poco.';
   }
 }
 
-document.getElementById('openFormBtn').addEventListener('click',()=>{document.getElementById('questionForm').classList.toggle('active');document.getElementById('questionInput').focus()});
-document.getElementById('submitQuestion').addEventListener('click',submitQuestion);
-document.getElementById('questionInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitQuestion();}});
-document.getElementById('recognizeBtn').addEventListener('click',()=>{
-  featuredCount++;
-  localStorage.setItem('dct_featured_count',featuredCount);
-  const data = getViandanteData();
-  data.recognitions += 1;
-  saveViandanteData(data);
+function wireEvents(){
+  if(byId('openFormBtn')) byId('openFormBtn').addEventListener('click',()=>{
+    if(byId('questionForm')) byId('questionForm').classList.toggle('active');
+    if(byId('questionInput')) byId('questionInput').focus();
+  });
+
+  if(byId('submitQuestion')) byId('submitQuestion').addEventListener('click',submitQuestion);
+
+  if(byId('questionInput')) byId('questionInput').addEventListener('keydown',e=>{
+    if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); submitQuestion(); }
+  });
+
+  if(byId('recognizeBtn')) byId('recognizeBtn').addEventListener('click',()=>{
+    featuredCount++;
+    localStorage.setItem('dct_featured_count',featuredCount);
+    const data = getViandanteData();
+    data.recognitions += 1;
+    saveViandanteData(data);
+    addViandanteTerritory(currentFeaturedTerritory());
+    renderTotals();
+    addLatest('Mi riconosco in questa domanda.');
+  });
+
+  if(byId('resultRecognize')) byId('resultRecognize').addEventListener('click',()=>{
+    const data = getViandanteData();
+    data.recognitions += 1;
+    saveViandanteData(data);
+    addViandanteTerritory(byId('themeText') ? byId('themeText').textContent.trim() : 'IN ASCOLTO');
+    addLatest('Mi riconosco anch\'io.');
+    renderViandanteBox();
+    byId('resultRecognize').textContent='RICONOSCIMENTO ACCOLTO';
+  });
+
+  if(byId('newQuestion')) byId('newQuestion').addEventListener('click',resetToPortal);
+  if(byId('sendArchivist')) byId('sendArchivist').addEventListener('click',sendArchivistRequest);
+
+  if(byId('archivistQuestion')) byId('archivistQuestion').addEventListener('keydown',e=>{
+    if(e.key==='Enter' && (e.ctrlKey||e.metaKey)){ e.preventDefault(); sendArchivistRequest(); }
+  });
+}
+
+function initApp(){
+  updateClock();
+  setInterval(updateClock,1000);
+  pickHomeQuestion();
+  initViandante();
   renderTotals();
-  addViandanteTerritory(currentFeaturedTerritory());
-  addLatest('Mi riconosco in questa domanda.');
-});
-document.getElementById('resultRecognize').addEventListener('click',()=>{
-  const data = getViandanteData();
-  data.recognitions += 1;
-  saveViandanteData(data);
-  addViandanteTerritory(document.getElementById('themeText').textContent.trim() || 'IN ASCOLTO');
-  addLatest('Mi riconosco anch\'io.');
-  renderViandanteBox();
-  document.getElementById('resultRecognize').textContent='RICONOSCIMENTO ACCOLTO';
-});
-document.getElementById('newQuestion').addEventListener('click',resetToPortal);
-document.getElementById('sendArchivist').addEventListener('click',sendArchivistRequest);
-document.getElementById('archivistQuestion').addEventListener('keydown',e=>{if(e.key==='Enter' && (e.ctrlKey||e.metaKey)){e.preventDefault();sendArchivistRequest();}});
+  wireEvents();
+}
+
+initApp();
 </script>
+
 </body>
 </html>
