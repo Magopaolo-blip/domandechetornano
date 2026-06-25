@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le Domande che Tornano | Archivio Vivente</title>
-  <!-- versione 24-06-box-viandante-vivo -->
+  <!-- versione 24-06-random-home-viandante-subito -->
   <style>
     :root{
       --paper:#f4efe6;
@@ -350,7 +350,7 @@
 
           <div class="mirror-question">
             <div class="shown-label">UNA DOMANDA DELL'ARCHIVIO</div>
-            <div class="featured" id="featuredQuestion">È troppo tardi per cambiare vita?</div>
+            <div class="featured" id="featuredQuestion">Dove mi sento a casa?</div>
             <div class="recognition"><span id="featuredCount">618</span> persone si sono riconosciute.</div>
           </div>
 
@@ -553,7 +553,7 @@ function renderViandanteBox(){
 
   if(promptEl){
     const hasName = Boolean(localStorage.getItem('dct_viandante_name'));
-    promptEl.style.display = (!hasName && data.visits >= 3) ? 'block' : 'none';
+    promptEl.style.display = (!hasName) ? 'block' : 'none';
   }
 }
 function initViandante(){
@@ -576,8 +576,8 @@ function initViandante(){
 }
 
 renderTotals();
-initViandante();
 function detectTheme(q){const s=q.toLowerCase();let best=null,score=0;for(const t of themes){let n=0;t.keys.forEach(k=>{if(s.includes(k)) n++}); if(n>score){score=n;best=t}} return best || fallback;}
+initViandante();
 function addLatest(q){const d=new Date(); const time=`${pad(d.getHours())}:${pad(d.getMinutes())}`; const feed=document.getElementById('latestQuestions'); const div=document.createElement('div'); div.className='voice'; div.innerHTML=`<span class="time">${time}</span>${escapeHtml(q)}`; feed.prepend(div); while(feed.children.length>7) feed.removeChild(feed.lastChild);}
 function escapeHtml(str){return String(str).replace(/[&<>'"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 async function saveQuestion(q,theme){
@@ -687,5 +687,34 @@ document.getElementById('newQuestion').addEventListener('click',resetToPortal);
 document.getElementById('sendArchivist').addEventListener('click',sendArchivistRequest);
 document.getElementById('archivistQuestion').addEventListener('keydown',e=>{if(e.key==='Enter' && (e.ctrlKey||e.metaKey)){e.preventDefault();sendArchivistRequest();}});
 </script>
+
+<script>
+/* RANDOM HOME + FILO VIANDANTE - VERSIONE 24-06-V2 */
+(function(){
+  const domandeArchivio = [{"territorio": "Direzione", "domanda": "Sto andando nella direzione giusta?"}, {"territorio": "Direzione", "domanda": "E se stessi sbagliando strada?"}, {"territorio": "Direzione", "domanda": "Quanto tempo posso restare dove non mi sento più vivo?"}, {"territorio": "Direzione", "domanda": "Quale passo continuo a rimandare?"}, {"territorio": "Direzione", "domanda": "Cosa mi trattiene dal procedere?"}, {"territorio": "Direzione", "domanda": "Sto aspettando un segnale che non arriverà?"}, {"territorio": "Direzione", "domanda": "Quale strada continua a chiamarmi?"}, {"territorio": "Direzione", "domanda": "Dove sto consumando energia senza avanzare?"}, {"territorio": "Direzione", "domanda": "Cosa accadrebbe se scegliessi?"}, {"territorio": "Direzione", "domanda": "Quale bivio continua a tornare?"}, {"territorio": "Amore", "domanda": "Amo questa persona o ciò che rappresenta?"}, {"territorio": "Amore", "domanda": "Perché continuo a tornare qui?"}, {"territorio": "Amore", "domanda": "Sto aspettando qualcuno che non arriverà?"}, {"territorio": "Amore", "domanda": "Cosa non riesco a lasciare andare?"}, {"territorio": "Amore", "domanda": "Mi sento amato o necessario?"}, {"territorio": "Amore", "domanda": "Sto vedendo questa persona o il mio desiderio?"}, {"territorio": "Amore", "domanda": "Cosa sto cercando attraverso l'altro?"}, {"territorio": "Amore", "domanda": "Cosa continuo a sperare?"}, {"territorio": "Amore", "domanda": "Quale assenza continua a parlare?"}, {"territorio": "Amore", "domanda": "Cosa mi lega davvero?"}, {"territorio": "Identità", "domanda": "Chi sarei senza questa storia?"}, {"territorio": "Identità", "domanda": "Cosa sto cercando di dimostrare?"}, {"territorio": "Identità", "domanda": "Quale ruolo mi sta diventando stretto?"}, {"territorio": "Identità", "domanda": "Chi sono quando nessuno guarda?"}, {"territorio": "Identità", "domanda": "Quale immagine di me sto difendendo?"}, {"territorio": "Identità", "domanda": "Cosa non sto più riuscendo a fingere?"}, {"territorio": "Identità", "domanda": "Dove mi tradisco?"}, {"territorio": "Identità", "domanda": "Quale parte di me sta chiedendo spazio?"}, {"territorio": "Identità", "domanda": "Chi sto diventando?"}, {"territorio": "Identità", "domanda": "Cosa non mi rappresenta più?"}, {"territorio": "Tempo", "domanda": "È troppo tardi?"}, {"territorio": "Tempo", "domanda": "Cosa sto rimandando da anni?"}, {"territorio": "Tempo", "domanda": "Se non fosse adesso, quando?"}, {"territorio": "Tempo", "domanda": "Cosa continua ad aspettarmi?"}, {"territorio": "Tempo", "domanda": "Quale stagione della mia vita sto vivendo?"}, {"territorio": "Tempo", "domanda": "Cosa non può più essere rinviato?"}, {"territorio": "Tempo", "domanda": "Quanto tempo voglio ancora aspettare?"}, {"territorio": "Tempo", "domanda": "Cosa è arrivato il momento di vedere?"}, {"territorio": "Tempo", "domanda": "Cosa sto lasciando passare?"}, {"territorio": "Tempo", "domanda": "Quale tempo è maturo?"}, {"territorio": "Cambiamento", "domanda": "Cosa deve finire?"}, {"territorio": "Cambiamento", "domanda": "Cosa sta cercando di nascere?"}, {"territorio": "Cambiamento", "domanda": "Sto lasciando andare o sto perdendo?"}, {"territorio": "Cambiamento", "domanda": "Quale porta continua ad aprirsi?"}, {"territorio": "Cambiamento", "domanda": "Cosa non può accompagnarmi oltre?"}, {"territorio": "Cambiamento", "domanda": "Dove sto resistendo?"}, {"territorio": "Cambiamento", "domanda": "Cosa sta cambiando anche se non lo voglio?"}, {"territorio": "Cambiamento", "domanda": "Quale passaggio sto attraversando?"}, {"territorio": "Cambiamento", "domanda": "Cosa chiede di essere trasformato?"}, {"territorio": "Cambiamento", "domanda": "Quale pelle non mi appartiene più?"}, {"territorio": "Paura", "domanda": "Cosa temo davvero?"}, {"territorio": "Paura", "domanda": "Cosa sto proteggendo?"}, {"territorio": "Paura", "domanda": "Quale rischio non voglio correre?"}, {"territorio": "Paura", "domanda": "Cosa potrebbe accadere se smettessi di controllare?"}, {"territorio": "Paura", "domanda": "Quale verità evito?"}, {"territorio": "Paura", "domanda": "Cosa mi spaventa perché conta?"}, {"territorio": "Paura", "domanda": "Di cosa ho paura di perdere il controllo?"}, {"territorio": "Paura", "domanda": "Cosa continuo a evitare?"}, {"territorio": "Paura", "domanda": "Quale paura si traveste da prudenza?"}, {"territorio": "Paura", "domanda": "Cosa accadrebbe se andasse bene?"}, {"territorio": "Libertà", "domanda": "Dove mi sento prigioniero?"}, {"territorio": "Libertà", "domanda": "Chi ha deciso che deve essere così?"}, {"territorio": "Libertà", "domanda": "Cosa mi impedisco?"}, {"territorio": "Libertà", "domanda": "Quale permesso sto aspettando?"}, {"territorio": "Libertà", "domanda": "A chi appartiene questa scelta?"}, {"territorio": "Libertà", "domanda": "Dove rinuncio a me stesso?"}, {"territorio": "Libertà", "domanda": "Cosa farei se non avessi paura del giudizio?"}, {"territorio": "Libertà", "domanda": "Quale catena tengo stretta da solo?"}, {"territorio": "Libertà", "domanda": "Dove potrei respirare di più?"}, {"territorio": "Libertà", "domanda": "Cosa significa libertà per me?"}, {"territorio": "Appartenenza", "domanda": "Dove mi sento a casa?"}, {"territorio": "Appartenenza", "domanda": "Dove mi sento fuori posto?"}, {"territorio": "Appartenenza", "domanda": "Chi mi vede davvero?"}, {"territorio": "Appartenenza", "domanda": "Quale luogo continua a chiamarmi?"}, {"territorio": "Appartenenza", "domanda": "A chi sto cercando di appartenere?"}, {"territorio": "Appartenenza", "domanda": "Dove posso essere me stesso?"}, {"territorio": "Appartenenza", "domanda": "Chi riconosce la mia lingua?"}, {"territorio": "Appartenenza", "domanda": "Dove smetto di difendermi?"}, {"territorio": "Appartenenza", "domanda": "Quale comunità sto cercando?"}, {"territorio": "Appartenenza", "domanda": "Dove posso riposare?"}, {"territorio": "Desiderio", "domanda": "Cosa desidero davvero?"}, {"territorio": "Desiderio", "domanda": "Quale desiderio continuo a rimandare?"}, {"territorio": "Desiderio", "domanda": "Cosa continua a bussare?"}, {"territorio": "Desiderio", "domanda": "Cosa sto sacrificando per restare uguale?"}, {"territorio": "Desiderio", "domanda": "Quale sogno non mi ha lasciato?"}, {"territorio": "Desiderio", "domanda": "Cosa mi accende?"}, {"territorio": "Desiderio", "domanda": "Cosa mi manca veramente?"}, {"territorio": "Desiderio", "domanda": "Cosa sto soffocando?"}, {"territorio": "Desiderio", "domanda": "Cosa chiede di essere vissuto?"}, {"territorio": "Desiderio", "domanda": "Quale fuoco sto custodendo?"}, {"territorio": "Significato", "domanda": "Perché questa esperienza continua a tornare?"}, {"territorio": "Significato", "domanda": "Cosa sta cercando di insegnarmi la vita?"}, {"territorio": "Significato", "domanda": "Cosa non ho ancora compreso?"}, {"territorio": "Significato", "domanda": "Quale filo collega questi eventi?"}, {"territorio": "Significato", "domanda": "Cosa continua a ripetersi?"}, {"territorio": "Significato", "domanda": "Cosa sto chiamando destino?"}, {"territorio": "Significato", "domanda": "Quale domanda sta cercando me?"}, {"territorio": "Significato", "domanda": "Cosa vuole essere visto?"}, {"territorio": "Significato", "domanda": "Quale storia sto raccontando?"}, {"territorio": "Significato", "domanda": "Cosa mi sta ricordando chi sono?"}];
+  function scegliDomandaHome(){
+    const el = document.getElementById('featuredQuestion');
+    if(!el) return;
+    const ultima = localStorage.getItem('dct_home_last_question') || "";
+    let scelta = domandeArchivio[Math.floor(Math.random() * domandeArchivio.length)];
+    let tentativi = 0;
+    while(scelta.domanda === ultima && tentativi < 25){
+      scelta = domandeArchivio[Math.floor(Math.random() * domandeArchivio.length)];
+      tentativi++;
+    }
+    el.textContent = scelta.domanda;
+    el.dataset.territorio = scelta.territorio;
+    localStorage.setItem('dct_home_last_question', scelta.domanda);
+    const n = Math.floor(180 + Math.random() * 720);
+    const count = document.getElementById('featuredCount');
+    const rightCount = document.getElementById('rightCount');
+    if(count) count.textContent = n.toLocaleString('it-IT');
+    if(rightCount) rightCount.textContent = n.toLocaleString('it-IT');
+  }
+  window.addEventListener('DOMContentLoaded', scegliDomandaHome);
+  window.addEventListener('pageshow', scegliDomandaHome);
+})();
+</script>
+
 </body>
 </html>
