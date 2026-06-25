@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le Domande che Tornano | Archivio Vivente</title>
-  <!-- versione 25-06-scheda-slim-domanda-algoritmica-controllata -->
+  <!-- versione 25-06-fix-nome-archivio-obbligatorio-controllata -->
   <style>
     :root{
       --paper:#f4efe6;
@@ -861,7 +861,7 @@ function extractTagsFrom(text, territory){
 
 function getViandanteData(){
   return {
-    name: localStorage.getItem('dct_viandante_name') || 'Viandante',
+    name: localStorage.getItem('dct_viandante_name') || '',
     opened: localStorage.getItem('dct_viandante_opened') || '',
     visits: Number(localStorage.getItem('dct_viandante_visits') || 0),
     questions: Number(localStorage.getItem('dct_viandante_questions') || 0),
@@ -872,7 +872,8 @@ function getViandanteData(){
 }
 
 function saveViandanteData(data){
-  localStorage.setItem('dct_viandante_name', data.name || 'Viandante');
+  if(data.name && data.name !== 'Viandante') localStorage.setItem('dct_viandante_name', data.name);
+  else localStorage.removeItem('dct_viandante_name');
   if(data.opened) localStorage.setItem('dct_viandante_opened', data.opened);
   localStorage.setItem('dct_viandante_visits', String(data.visits || 0));
   localStorage.setItem('dct_viandante_questions', String(data.questions || 0));
@@ -945,7 +946,8 @@ function renderViandanteTags(data){
 
 function renderViandanteBox(){
   const data = getViandanteData();
-  const hasScheda = Boolean(localStorage.getItem('dct_viandante_name'));
+  const savedName = localStorage.getItem('dct_viandante_name') || '';
+  const hasScheda = Boolean(savedName && savedName !== 'Viandante');
 
   if(byId('viandanteArchiveName')) byId('viandanteArchiveName').textContent = data.name || '—';
   if(byId('viandanteCardTitle')) byId('viandanteCardTitle').textContent = hasScheda && data.name ? `LA SCHEDA DI ${data.name}` : 'LA TUA SCHEDA';
@@ -961,7 +963,8 @@ function renderViandanteBox(){
 
 function initViandante(){
   const data = getViandanteData();
-  const hasScheda = Boolean(localStorage.getItem('dct_viandante_name'));
+  const savedName = localStorage.getItem('dct_viandante_name') || '';
+  const hasScheda = Boolean(savedName && savedName !== 'Viandante');
 
   if(hasScheda && !data.opened) data.opened = todayArchivioDate();
   data.visits += 1;
