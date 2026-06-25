@@ -4,22 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le Domande che Tornano | Archivio Vivente</title>
-  <!-- versione 25-06-fix-nome-archivio-obbligatorio-controllata -->
+  <!-- versione 25-06-home-minima-riconoscimento -->
   <style>
     :root{
       --paper:#f4efe6;
       --ink:#171717;
       --brick:#9b3f2e;
       --soft:rgba(23,23,23,.06);
-      --veil:rgba(244,239,230,.88);
+      --veil:rgba(244,239,230,.92);
     }
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{width:100%;height:100%;}
+    html,body{min-height:100%;}
     body{
       background:var(--paper);
       color:var(--ink);
       font-family:"Courier New", Courier, monospace;
-      overflow:hidden;
     }
     body::before{
       content:"";
@@ -33,1193 +32,170 @@
       opacity:.55;
       z-index:0;
     }
-    button, textarea, input{font:inherit}
+    button,textarea,input{font:inherit}
     button{cursor:pointer;background:transparent;color:var(--ink);border:0;text-transform:uppercase;letter-spacing:.12em}
-    button:hover, a:hover{color:var(--brick)}
     a{color:inherit;text-decoration:none}
-
-    .screen{
-      position:relative;
-      z-index:1;
-      width:100vw;
-      height:100vh;
-      display:grid;
-      grid-template-rows:auto 1fr auto;
-      padding:clamp(12px,2vw,28px);
-      gap:clamp(10px,1.5vh,18px);
-    }
-    .topbar{
-      display:grid;
-      grid-template-columns:1fr auto 1fr;
-      align-items:center;
-      border-bottom:2px dashed var(--ink);
-      padding-bottom:10px;
-      font-weight:700;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      font-size:clamp(11px,1vw,15px);
-      white-space:nowrap;
-    }
-    .topbar .center{text-align:center;color:var(--brick)}
-    .topbar .right{text-align:right;font-weight:400;color:var(--ink)}
-
-    .room{
-      min-height:0;
-      display:grid;
-      grid-template-columns:minmax(190px,250px) minmax(0,1fr) minmax(190px,250px);
-      gap:clamp(16px,2.4vw,36px);
-      align-items:stretch;
-    }
-    .side{
-      border:2px dashed var(--ink);
-      background:rgba(244,239,230,.72);
-      padding:clamp(12px,1.4vw,20px);
-      min-height:0;
-      overflow:auto;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-    }
-    .side h2,.small-label,.manifesto,.status-title{
-      color:var(--brick);
-      font-weight:700;
-      letter-spacing:.22em;
-      text-transform:uppercase;
-    }
-    .side h2{font-size:clamp(11px,.9vw,14px);margin-bottom:12px;text-align:center}
-    .side p{font-size:clamp(12px,1vw,15px);line-height:1.5;margin:.65rem 0}
-    .archive-icon{
-      font-size:34px;
-      text-align:center;
-      margin:6px 0 10px;
-      filter:grayscale(1);
-    }
-    .side .mini-data{
-      border-top:1px dashed var(--ink);
-      padding-top:12px;
-      margin-top:12px;
-      font-size:clamp(12px,1vw,15px);
-      line-height:1.55;
-    }
-    .side .mini-data strong{color:var(--brick)}
-    .side-action{
-      border:2px solid var(--ink);
-      color:var(--brick);
-      font-weight:700;
-      padding:10px 8px;
-      width:100%;
-      margin-top:12px;
-    }
-    .side-action:hover{background:var(--ink);color:var(--paper)}
-
-    .voices{margin-top:10px;display:grid;gap:11px;max-height:48vh;overflow:auto;padding-right:6px}
-    .voice{font-size:clamp(12px,.95vw,14px);line-height:1.45;border-bottom:1px dashed rgba(23,23,23,.35);padding-bottom:9px}
-    .time{color:var(--brick);font-weight:700;display:block;margin-bottom:2px}
-
-    .main-stage{
-      min-width:0;
-      min-height:0;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      text-align:center;
-      padding:0 clamp(4px,1vw,16px);
-    }
-    .manifesto{
-      display:inline-block;
-      align-self:center;
-      font-family:"Lucida Console","Consolas","Courier New",monospace;
-      font-size:clamp(10px,.78vw,13px);
-      margin:0 auto clamp(12px,2vh,22px);
-      padding:6px 10px;
-      letter-spacing:.14em;
-      line-height:1.25;
-      color:var(--paper)!important;
-      background:var(--ink);
-      border:1px solid var(--ink);
-      text-transform:none!important;
-      box-shadow:0 0 0 1px rgba(23,23,23,.15);
-    }
-    .cassetta-stage{
-      width:min(820px,100%);
-      margin:0 auto clamp(12px,1.8vh,20px);
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      pointer-events:none;
-    }
-    .cassetta{
-      width:clamp(86px,9vw,128px);
-      height:auto;
-      color:var(--ink);
-      opacity:.96;
-      filter:drop-shadow(0 2px 0 rgba(23,23,23,.08));
-    }
-    .cassetta .wood{fill:rgba(155,63,46,.08);stroke:var(--ink);stroke-width:2.2;stroke-linejoin:round}
-    .cassetta .card{fill:rgba(244,239,230,.94);stroke:var(--ink);stroke-width:1.7;stroke-linejoin:round}
-    .cassetta .label{fill:rgba(244,239,230,.66);stroke:var(--ink);stroke-width:1.5}
-    .cassetta .fine-line{stroke:rgba(23,23,23,.72);stroke-width:1.1;stroke-linecap:round}
-    .portal{
-      width:min(820px,100%);
-      margin:0 auto;
-      border:2px dashed var(--ink);
-      background:rgba(244,239,230,.64);
-      padding:clamp(20px,3vw,42px);
-    }
-    .big-question{
-      font-size:clamp(24px,3.4vw,48px);
-      line-height:1.12;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.04em;
-      margin-bottom:clamp(14px,2vh,24px);
-    }
-    .door-label{
-      color:var(--brick);
-      font-weight:700;
-      letter-spacing:.22em;
-      text-transform:uppercase;
-      font-size:clamp(11px,.9vw,14px);
-      margin-bottom:12px;
-    }
-    .door-question{
-      font-family:"Lucida Console","Consolas","Courier New",monospace;
-      font-size:clamp(16px,1.85vw,28px);
-      line-height:1.18;
-      font-weight:700;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      max-width:680px;
-      margin:0 auto clamp(12px,1.8vh,20px);
-      text-shadow:0 0 1px rgba(23,23,23,.16);
-    }
-    .shown-label{
-      color:var(--brick);
-      font-weight:700;
-      letter-spacing:.22em;
-      text-transform:uppercase;
-      font-size:clamp(11px,.9vw,14px);
-      margin-bottom:10px;
-    }
-    .mirror-question{
-      border-top:2px dashed var(--ink);
-      border-bottom:2px dashed var(--ink);
-      padding:clamp(16px,2.4vh,28px) 0;
-      margin:clamp(14px,2vh,22px) 0;
-    }
-    .featured{
-      font-size:clamp(20px,2.7vw,40px);
-      line-height:1.12;
-      font-weight:900;
-      text-transform:uppercase;
-      margin:10px 0 12px;
-    }
-    .recognition{
-      color:var(--brick);
-      font-weight:700;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      font-size:clamp(12px,1vw,15px);
-    }
-    .choice-row{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-      margin-top:clamp(16px,2.4vh,26px);
-    }
-    .choice{
-      border:2px solid var(--ink);
-      padding:13px 10px;
-      color:var(--brick);
-      font-weight:700;
-      min-height:50px;
-    }
-    .choice:hover{background:var(--ink);color:var(--paper)}
-    .quiet-note{
-      margin-top:clamp(12px,1.8vh,20px);
-      font-size:clamp(12px,1vw,15px);
-      line-height:1.5;
-    }
-    .question-form{display:none;margin-top:18px;text-align:left;border-top:2px dashed var(--ink);padding-top:18px}
-    .question-form.active{display:block}
-    textarea{
-      width:100%;
-      min-height:88px;
-      max-height:160px;
-      resize:vertical;
-      background:transparent;
-      border:2px dashed var(--ink);
-      color:var(--ink);
-      padding:14px;
-      outline:none;
-      line-height:1.45;
-    }
-    .submit-row{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
-    .submit-btn{border:2px solid var(--ink);padding:11px 14px;color:var(--brick);font-weight:700}
-    .submit-btn:hover{background:var(--ink);color:var(--paper)}
-    .hint{font-size:12px;opacity:.85;line-height:1.4}
-
-    .result{display:none;width:min(900px,100%);margin:0 auto;text-align:center}
-    .result.active{display:block}
-    .result-panel{border:2px dashed var(--ink);background:rgba(244,239,230,.64);padding:clamp(16px,2.4vw,30px)}
-    .user-question{font-size:clamp(18px,2vw,30px);font-weight:700;margin:8px 0 18px;line-height:1.25}
-    .status-line{font-size:clamp(14px,1.3vw,20px);font-weight:700;line-height:1.35;margin:10px 0;color:var(--brick);text-transform:uppercase;letter-spacing:.08em}
-    .theme{font-size:clamp(22px,3vw,42px);font-weight:900;text-transform:uppercase;line-height:1.12;margin:8px 0 18px}
-    .sisters{display:grid;gap:8px;margin:12px auto 18px;max-width:640px;text-align:left}
-    .sisters div{border-bottom:1px dashed rgba(23,23,23,.35);padding-bottom:7px;font-size:clamp(13px,1.05vw,16px)}
-    .mother{font-size:clamp(22px,3.1vw,44px);font-weight:900;text-transform:uppercase;line-height:1.13;margin:10px 0 12px}
-    .trace{font-size:clamp(17px,1.6vw,25px);line-height:1.35;font-weight:700;margin:10px auto 12px;max-width:760px}
-    .result-actions{display:flex;justify-content:center;gap:12px;margin-top:16px;flex-wrap:wrap}
-    .secondary{font-size:12px;text-decoration:underline;color:var(--brick);font-weight:700;margin-top:10px}
-
-    .footer{
-      display:grid;
-      grid-template-columns:1fr auto 1fr;
-      align-items:center;
-      border-top:2px dashed var(--ink);
-      padding-top:10px;
-      font-size:clamp(11px,.9vw,14px);
-      letter-spacing:.11em;
-      text-transform:uppercase;
-    }
-    .footer .center{text-align:center;color:var(--brick);font-weight:700}
-    .footer .right{text-align:right}
-
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:var(--veil);z-index:20;padding:22px}
-    .modal:target{display:flex}
-    .modal-panel{width:min(560px,92vw);max-height:84vh;overflow:auto;border:2px dashed var(--ink);background:var(--paper);padding:28px;text-align:center}
-    .modal-panel h2{color:var(--brick);letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px}
-    .modal-panel p{line-height:1.6;margin-bottom:16px}
-    .modal-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-    .modal-btn{border:2px solid var(--ink);padding:11px 14px;color:var(--brick);font-weight:700}
-    .modal-btn:hover{background:var(--ink);color:var(--paper)}
-    .archivist-form{text-align:left;margin:16px 0;display:grid;gap:10px}
-    .contact-input{width:100%;background:transparent;border:2px dashed var(--ink);color:var(--ink);padding:12px;outline:none}
-
-    .viandante-box{
-      border-top:1px dashed var(--ink);
-      padding-top:12px;
-      margin-top:12px;
-      font-size:clamp(12px,1vw,15px);
-      line-height:1.55;
-    }
-    .viandante-box strong,
-    .viandante-title{
-      color:var(--brick);
-      font-weight:700;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-    }
-    .viandante-box input{
-      width:100%;
-      background:transparent;
-      border:2px dashed var(--ink);
-      color:var(--ink);
-      padding:9px;
-      outline:none;
-      margin:8px 0;
-    }
-    .viandante-small{
-      font-size:12px;
-      opacity:.85;
-      line-height:1.45;
-      margin-top:6px;
-    }
-    .viandante-thread{
-      color:var(--brick);
-      font-weight:900;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      margin:6px 0;
-    }
-    .viandante-card{
-      border:1px dashed rgba(23,23,23,.6);
-      padding:10px;
-      background:rgba(244,239,230,.52);
-    }
-    .viandante-card strong{
-      color:var(--brick);
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-    .viandante-card-kicker{
-      color:var(--brick);
-      font-weight:900;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-      text-align:center;
-      font-size:10px;
-    }
-    .viandante-name-line{
-      font-size:clamp(15px,1.2vw,18px);
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      text-align:center;
-      border-top:1px dashed rgba(23,23,23,.35);
-      border-bottom:1px dashed rgba(23,23,23,.35);
-      padding:7px 0;
-      margin:6px 0!important;
-    }
-    .viandante-emergent-question{
-      border-top:1px dashed rgba(23,23,23,.35);
-      padding-top:7px;
-      margin-top:6px!important;
-      font-weight:900;
-      line-height:1.35;
-    }
-    .tag-list{
-      display:flex;
-      flex-wrap:wrap;
-      gap:5px;
-      margin-top:5px;
-    }
-    .tag{
-      display:inline-block;
-      border:1px dashed rgba(23,23,23,.55);
-      padding:3px 5px;
-      color:var(--brick);
-      font-weight:900;
-      font-size:10px;
-      line-height:1.1;
-    }
-    .tag-empty{
-      font-size:10px;
-      opacity:.78;
-      line-height:1.25;
-    }
-
-
-    .left.side{
-      overflow:hidden;
-      gap:14px;
-    }
-    .left .mini-data{
-      margin-top:0;
-    }
-    .left .viandante-box{
-      border-top:0;
-      padding-top:0;
-      margin-top:0;
-    }
-    .left .viandante-box p{
-      margin:.42rem 0;
-    }
-    .left .viandante-title{
-      font-size:clamp(11px,.9vw,13px);
-      margin-bottom:8px;
-    }
-    .left .viandante-small{
-      font-size:11px;
-      line-height:1.35;
-    }
-    .left .viandante-thread{
-      margin:4px 0;
-    }
-    .archivista-box{
-      padding-top:12px!important;
-    }
-    .archivista-box h2{
-      margin-bottom:8px;
-    }
-    .archivista-box .archive-icon{
-      font-size:26px;
-      margin:2px 0 8px;
-    }
-    .archivista-box p{
-      margin:.42rem 0;
-    }
-
-
-    /* CONTROLLO 25-06: box Viandante a sinistra, Archivista compatto, destra solo Voci */
-    .left.side{
-      overflow:hidden;
-      justify-content:space-between;
-      gap:12px;
-    }
-    .left .viandante-box{
-      border-top:0;
-      padding-top:0;
-      margin-top:0;
-      font-size:clamp(11px,.88vw,13px);
-      line-height:1.35;
-    }
-    .left .viandante-box p{
-      margin:.32rem 0;
-    }
-    .left .viandante-title{
-      color:var(--brick);
-      font-weight:700;
-      letter-spacing:.17em;
-      text-transform:uppercase;
-      font-size:clamp(10px,.82vw,12px);
-      margin-bottom:6px;
-    }
-    .left .viandante-thread{
-      color:var(--brick);
-      font-weight:900;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      margin:3px 0;
-    }
-    .left .viandante-small{
-      font-size:10px;
-      line-height:1.25;
-      opacity:.88;
-      margin-top:4px;
-    }
-    .left .viandante-box input{
-      width:100%;
-      background:transparent;
-      border:1px dashed var(--ink);
-      color:var(--ink);
-      padding:7px;
-      outline:none;
-      margin:5px 0;
-      font-size:12px;
-    }
-    .left .viandante-box .side-action{
-      padding:7px 6px;
-      min-height:auto;
-      margin-top:6px;
-      font-size:10px;
-    }
-    .archivista-box{
-      padding-top:10px!important;
-      margin-top:8px!important;
-      font-size:clamp(11px,.88vw,13px)!important;
-      line-height:1.35!important;
-    }
-    .archivista-box h2{
-      margin-bottom:6px!important;
-    }
-    .archivista-box .archive-icon{
-      font-size:24px;
-      margin:2px 0 6px;
-    }
-    .archivista-box p{
-      margin:.34rem 0!important;
-    }
-    .archivista-box .side-action{
-      padding:8px 6px;
-      margin-top:8px;
-      font-size:11px;
-    }
-    .right.side{
-      overflow:hidden;
-    }
-
-
-    /* Rifiniture 25-06: titoli, centrature, Archivista */
-    .left .viandante-title{
-      text-align:center;
-      font-weight:900!important;
-    }
-    .archivista-box h2{
-      font-weight:900!important;
-      text-align:center;
-    }
-    .archivista-box{
-      text-align:center;
-    }
-    .archivista-box p{
-      text-align:left;
-    }
-    .archivista-box .side-action{
-      display:block;
-      text-align:center;
-      width:100%;
-      margin-left:auto;
-      margin-right:auto;
-    }
-    .right h2,
-    .right .mini-data strong{
-      font-weight:900!important;
-    }
-
-    @media (max-width:920px){
-      body{overflow:auto}
-      .screen{height:auto;min-height:100vh;grid-template-rows:auto auto auto;padding:14px;}
-      .topbar,.footer{grid-template-columns:1fr;gap:6px;text-align:center}
-      .topbar .right,.footer .right{text-align:center}
-      .room{grid-template-columns:1fr;gap:12px}
-      .main-stage{order:1;padding:0}.left{order:2}.right{order:3}.side{max-height:none}
-      .choice-row{grid-template-columns:1fr}
-      .door-question{font-size:clamp(18px,5.5vw,28px);line-height:1.18;letter-spacing:.07em;}
-      .featured{font-size:clamp(18px,6vw,30px);line-height:1.3;}
-    }
-    @media (max-height:760px) and (min-width:921px){
-      .screen{padding:10px 22px;gap:8px}.portal{padding:18px}.featured{font-size:clamp(24px,3vw,42px)}.big-question{font-size:clamp(22px,2.8vw,36px)}.mirror-question{padding:12px 0;margin:12px 0}.side{padding:12px}.voices{max-height:36vh}.manifesto{margin-bottom:8px}.footer{padding-top:8px}
-    }
+    .page{position:relative;z-index:1;min-height:100vh;padding:clamp(14px,2vw,30px);display:flex;flex-direction:column;gap:18px}
+    .topbar,.footer{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;border-bottom:2px dashed var(--ink);padding-bottom:10px;font-size:clamp(11px,1vw,14px);letter-spacing:.13em;text-transform:uppercase;font-weight:700}
+    .topbar .center,.footer .center{color:var(--brick);text-align:center}.topbar .right,.footer .right{text-align:right;font-weight:400}
+    .footer{border-bottom:0;border-top:2px dashed var(--ink);padding-bottom:0;padding-top:10px;margin-top:auto}
+    .hero{width:min(860px,100%);margin:0 auto;text-align:center;padding:clamp(8px,2vh,22px) 0 0}
+    .cassetta{width:112px;height:78px;margin:8px auto 18px;position:relative;opacity:.95}
+    .cassetta .box{position:absolute;left:7px;right:7px;bottom:0;height:48px;border:3px solid var(--ink);border-radius:3px;background:rgba(244,239,230,.8);box-shadow:7px 7px 0 rgba(23,23,23,.08)}
+    .cassetta .box::after{content:"";position:absolute;left:35px;right:35px;top:15px;height:12px;border:2px solid var(--ink)}
+    .card{position:absolute;bottom:38px;width:18px;height:35px;border:2px solid var(--ink);background:var(--paper)}
+    .card:nth-child(1){left:18px;height:28px}.card:nth-child(2){left:39px;height:32px}.card:nth-child(3){left:60px;height:42px}.card:nth-child(4){left:81px;height:30px}
+    .eyebrow{color:var(--brick);font-weight:700;letter-spacing:.22em;text-transform:uppercase;font-size:clamp(11px,.9vw,14px);margin:10px 0}
+    h1{font-size:clamp(28px,5vw,62px);line-height:1.03;text-transform:uppercase;letter-spacing:.02em;margin:10px auto 22px;max-width:900px}
+    .intro{font-size:clamp(14px,1.4vw,19px);line-height:1.5;max-width:680px;margin:0 auto 20px}
+    .stream{width:min(840px,100%);margin:0 auto;display:grid;gap:18px}
+    .question-card{border:2px dashed var(--ink);background:rgba(244,239,230,.68);padding:clamp(20px,4vw,42px);text-align:center}
+    .question{font-size:clamp(25px,4.1vw,52px);line-height:1.08;text-transform:uppercase;font-weight:900;margin:12px auto 18px;max-width:760px}
+    .trace-label{margin-top:20px}.trace{font-size:clamp(18px,2vw,28px);line-height:1.28;font-weight:700;max-width:720px;margin:8px auto 18px}
+    .count{color:var(--brick);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:clamp(12px,1vw,15px);min-height:22px}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}.btn{border:2px solid var(--ink);padding:14px 12px;color:var(--brick);font-weight:900;min-height:52px}.btn:hover,.btn.active{background:var(--ink);color:var(--paper)}
+    .after{display:none;margin-top:18px;font-size:clamp(14px,1.3vw,18px);font-weight:700;line-height:1.4}.after.active{display:block}.after strong{color:var(--brick)}
+    .form{display:none;border:2px dashed var(--ink);background:rgba(244,239,230,.68);padding:clamp(18px,3vw,32px);text-align:left}.form.active{display:block}.form h2{text-align:center;color:var(--brick);letter-spacing:.16em;text-transform:uppercase;font-size:clamp(13px,1.2vw,18px);margin-bottom:12px}.form p{text-align:center;line-height:1.5;margin-bottom:16px}
+    textarea,input{width:100%;background:transparent;border:2px dashed var(--ink);color:var(--ink);padding:14px;outline:none;line-height:1.45}textarea{min-height:120px;resize:vertical}.contact{margin-top:10px}.submit-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:12px}.hint{font-size:12px;opacity:.85;line-height:1.4}.status{margin-top:12px;text-align:center;color:var(--brick);font-weight:700}
+    .archive-note{width:min(760px,100%);margin:4px auto 0;text-align:center;border-top:1px dashed rgba(23,23,23,.4);padding-top:16px;font-size:clamp(13px,1.1vw,16px);line-height:1.55}.archive-note strong{color:var(--brick)}
+    @media(max-width:760px){.topbar,.footer{grid-template-columns:1fr;gap:6px;text-align:center}.topbar .right,.footer .right{text-align:center}.actions{grid-template-columns:1fr}.page{padding:14px}.cassetta{transform:scale(.9);margin-bottom:10px}.question-card{padding:20px 15px}}
   </style>
 </head>
 <body>
-  <div class="screen">
+  <div class="page">
     <header class="topbar">
       <div>LE DOMANDE CHE TORNANO</div>
       <div class="center">ARCHIVIO VIVENTE</div>
       <div class="right" id="clock">--/--/---- --:--:--</div>
     </header>
 
-    <main class="room">
-      <aside class="side left">
-        <div>
+    <section class="hero">
+      <div class="cassetta" aria-label="La Cassetta dell'Archivio">
+        <div class="card"></div><div class="card"></div><div class="card"></div><div class="card"></div><div class="box"></div>
+      </div>
+      <div class="eyebrow">La domanda che, in questo momento, ha deciso di mostrarsi</div>
+      <h1>C'è una domanda che continua a tornare?</h1>
+      <p class="intro">Forse non cerca subito una risposta. Forse cerca prima un luogo dove essere riconosciuta.</p>
+    </section>
 
-          <div class="viandante-box" id="viandanteBox">
-            <p class="viandante-title" id="viandanteCardTitle">LA TUA SCHEDA</p>
-
-            <div id="viandanteNamePrompt">
-              <p>Ogni Viandante può aprire una Scheda nell'Archivio.</p>
-              <p>Come desideri essere conosciuto qui?</p>
-              <input id="viandanteNameInput" type="text" placeholder="Il tuo Nome d'Archivio" autocomplete="nickname" />
-              <button class="side-action" id="saveViandanteName" type="button">APRI LA TUA SCHEDA</button>
-              <p class="viandante-small">Scegli un nome o un alias: sarà il modo in cui l'Archivio custodirà il tuo passaggio.</p>
-              <p class="viandante-small" id="viandanteNameStatus" aria-live="polite"></p>
-            </div>
-
-            <div id="viandantePresence" class="viandante-card">
-              <p><strong>Nome d'Archivio:</strong> <span id="viandanteArchiveName">Viandante</span></p>
-              <p><strong>Scheda aperta:</strong> <span id="viandanteOpened">—</span></p>
-              <p><strong>Visite:</strong> <span id="viandanteVisits">1</span></p>
-              <p><strong>Domande affidate:</strong> <span id="viandanteQuestions">0</span></p>
-
-              <p class="viandante-title" style="margin-top:8px;">LA TUA DOMANDA</p>
-              <p class="viandante-emergent-question" id="viandanteEmergentQuestion">L'Archivio la mostrerà quando avrà riconosciuto il tuo passaggio.</p>
-            </div>
-          </div>
-
+    <main class="stream">
+      <article class="question-card">
+        <div class="eyebrow">Domanda dall'Archivio</div>
+        <div class="question" id="featuredQuestion">È troppo tardi?</div>
+        <div class="trace-label eyebrow">Traccia</div>
+        <div class="trace" id="featuredTrace">Cosa è arrivato il momento di vedere?</div>
+        <div class="count"><span id="featuredCount">618</span> persone si sono riconosciute.</div>
+        <div class="actions">
+          <button class="btn" id="recognizeBtn" type="button">Mi riconosco</button>
+          <button class="btn" id="anotherBtn" type="button">Mostrami un'altra domanda</button>
         </div>
+        <div class="after" id="afterRecognize"><strong>Non era solo tua.</strong><br>Questa domanda custodisce anche il tuo passaggio.</div>
+      </article>
 
-        <div class="mini-data archivista-box">
-          <h2>L'ARCHIVISTA</h2>
-          <div class="archive-icon" aria-hidden="true">▣</div>
-          <p>Custodisce domande.</p>
-          <p>Aiuta a trovare il filo.</p>
-          <p><strong>Oggi accolte:</strong> <span id="todayCount">17</span></p>
-          <p><strong>In archivio:</strong> <span id="archiveTotalLeft">12.483</span></p>
-          <a class="side-action" href="#archivista">SCRIVI ALL'ARCHIVISTA</a>
+      <section class="form" id="questionForm">
+        <h2>Affida una domanda</h2>
+        <p>Scrivi la domanda che continua a tornare. L'Archivio la custodirà in forma anonima.</p>
+        <textarea id="questionInput" placeholder="Scrivi qui la tua domanda..."></textarea>
+        <input id="contactInput" class="contact" type="text" placeholder="Email o WhatsApp, solo se desideri essere ricontattato" />
+        <div class="submit-row">
+          <button class="btn" id="submitQuestion" type="button">Invia all'Archivista</button>
+          <span class="hint">Il contatto è facoltativo. La domanda è il centro.</span>
         </div>
-      </aside>
-
-      <section class="main-stage" aria-live="polite">
-        <div class="manifesto">L'anima si fa domande per riconoscere se stessa.</div>
-
-        <div class="cassetta-stage" aria-label="La Cassetta dell'Archivio">
-          <svg class="cassetta" viewBox="0 0 160 118" role="img" aria-labelledby="cassettaTitle cassettaDesc">
-            <title id="cassettaTitle">La Cassetta</title>
-            <desc id="cassettaDesc">Una cassetta d'archivio vintage con schede interne e una scheda leggermente più alta, come una domanda che ha deciso di mostrarsi.</desc>
-            <path class="card" d="M42 20h54v54H42z"/>
-            <path class="card" d="M62 12h54v62H62z"/>
-            <path class="card" d="M24 29h54v45H24z"/>
-            <path class="wood" d="M18 54h112l14 18v30H30L18 86z"/>
-            <path class="wood" d="M18 54l12 18h114l-14-18z"/>
-            <path class="label" d="M61 78h46v15H61z"/>
-            <path class="fine-line" d="M67 84h34"/>
-            <path class="fine-line" d="M31 72h112"/>
-            <path class="fine-line" d="M30 102h114"/>
-          </svg>
-        </div>
-
-        <div class="portal" id="portal">
-          <div class="door-label">LA DOMANDA CHE APRE</div>
-          <div class="door-question">Quale parte di te continua a farsi la stessa domanda?</div>
-          <p class="quiet-note">Forse la tua domanda è già passata di qui.</p>
-
-          <div class="mirror-question">
-            <div class="shown-label">UNA DOMANDA DELL'ARCHIVIO</div>
-            <div class="featured" id="featuredQuestion">Dove mi sento a casa?</div>
-            <div class="recognition"><span id="featuredCount">618</span> persone si sono riconosciute.</div>
-          </div>
-
-          <div class="choice-row">
-            <button class="choice" id="recognizeBtn" type="button">MI RICONOSCO</button>
-            <button class="choice" id="openFormBtn" type="button">HO UNA DOMANDA DA AFFIDARE</button>
-          </div>
-
-          <div class="question-form" id="questionForm">
-            <textarea id="questionInput" placeholder="Scrivi qui la domanda che continua a tornare..."></textarea>
-            <div class="submit-row">
-              <button class="submit-btn" id="submitQuestion" type="button">AFFIDA LA DOMANDA ALL'ARCHIVIO</button>
-              <span class="hint">Invio per affidare. Shift+Invio per andare a capo.</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="result" id="result">
-          <div class="result-panel">
-            <div class="small-label">TU HAI AFFIDATO</div>
-            <div class="user-question" id="userQuestionText">—</div>
-
-            <div class="status-line" id="ritualStatus">L'Archivista sta cercando...</div>
-            <div id="resultBody" style="display:none">
-              <div class="small-label">L'ARCHIVIO HA RICONOSCIUTO</div>
-              <div class="theme" id="themeText">DIREZIONE</div>
-
-              <div class="status-line">Non è sola. Sono state trovate <span id="nearCount">37</span> domande vicine.</div>
-              <div class="sisters" id="sisterList"></div>
-
-              <div class="small-label">DOMANDA MADRE</div>
-              <div class="mother" id="motherQuestion">Sto andando nella direzione giusta?</div>
-
-              <div class="small-label">LA TRACCIA</div>
-              <div class="trace" id="traceText">Quale passo continua a tornare nei tuoi pensieri?</div>
-
-              <div class="result-actions">
-                <button class="choice" id="resultRecognize" type="button">MI RICONOSCO ANCH'IO</button>
-                <a class="choice" id="meetArchivist" href="#archivista">SCRIVI ALL'ARCHIVISTA</a>
-              </div>
-              <button class="secondary" id="newQuestion" type="button">AFFIDA UN'ALTRA DOMANDA</button>
-            </div>
-          </div>
-        </div>
+        <div class="status" id="formStatus" aria-live="polite"></div>
       </section>
 
-      <aside class="side right">
-        <div>
-          <h2>VOCI DELL'ARCHIVIO</h2>
-          <p><strong>ANCH'IO</strong></p>
-          <p><span id="rightCount">618</span> persone si sono fermate davanti a questa domanda.</p>
-        </div>
-        <div class="mini-data">
-          <p><strong>ULTIME DOMANDE AFFIDATE</strong></p>
-          <div class="voices" id="latestQuestions">
-            <div class="voice"><span class="time">09:21</span>Sto vivendo questo adesso.</div>
-            <div class="voice"><span class="time">08:47</span>Mi riguarda più di quanto pensassi.</div>
-            <div class="voice"><span class="time">08:13</span>Non l'avevo mai detto.</div>
-            <div class="voice"><span class="time">07:38</span>Pensavo fosse solo mia.</div>
-          </div>
+      <div class="actions">
+        <button class="btn" id="openFormBtn" type="button">Ho una domanda da affidare</button>
+        <a class="btn" href="mailto:ciao@domandechetornano.it">Scrivi all'Archivista</a>
+      </div>
 
-          
-        </div>
-      </aside>
+      <div class="archive-note">
+        <p><strong>Custodisce domande.</strong><br>Aiuta a trovare il filo.</p>
+      </div>
     </main>
 
     <footer class="footer">
-      <div><span id="archiveTotal">12.483</span> DOMANDE RACCOLTE</div>
+      <div><span id="archiveTotal">12.483</span> domande custodite</div>
       <div class="center">Questo luogo cresce una domanda alla volta.</div>
-      <div class="right">Scrivi. Riconosciti. Affida.</div>
+      <div class="right">Leggi. Riconosciti. Affida.</div>
     </footer>
   </div>
 
-  <div id="archivista" class="modal" role="dialog" aria-modal="true">
-    <div class="modal-panel">
-      <h2>Scrivi all'Archivista</h2>
-      <p>Una domanda può chiedere uno spazio più ampio.</p>
-      <p>L'incontro con l'Archivista non cerca risposte. Aiuta una domanda a trovare forma, direzione e Traccia.</p>
-
-      <div class="archivist-form">
-        <label class="small-label" for="archivistQuestion">La domanda che vuoi affidare</label>
-        <textarea id="archivistQuestion" placeholder="Scrivi qui la tua domanda..."></textarea>
-
-        <label class="small-label" for="archivistContact">COME PUÒ RICONTATTARTI L'ARCHIVISTA?</label>
-        <input id="archivistContact" class="contact-input" type="text" placeholder="Email o WhatsApp" />
-
-        <p class="hint">La tua domanda verrà custodita nell'Archivio. Se lasci un contatto, l'Archivista potrà ricontattarti.</p>
-      </div>
-
-      <div class="modal-actions">
-        <button class="modal-btn" id="sendArchivist" type="button">INVIA ALL'ARCHIVISTA</button>
-        <a class="modal-btn" href="#">CHIUDI</a>
-      </div>
-      <p id="archivistStatus" class="hint" aria-live="polite"></p>
-    </div>
-  </div>
-
-
 <script>
-/* COSTANTE DI RICONTROLLO MODIFICHE - 25/06
-   - Home random a ogni refresh
-   - La Cassetta presente come oggetto reale
-   - Box Viandante presente nella colonna sinistra
-   - Apertura Scheda del Viandante attiva
-   - Nome d'Archivio attivo
-   - La tua domanda algoritmica attiva
-   - Box Archivista compatto
-*/
-
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbzdOXoPPSkjzjkW9-1StCls4_nE1-6aplSynCy3JU55LibC7GunTZjVTY6YrhmZfMatkg/exec";
 
-const archiveQuestions = [{"territorio": "Direzione", "domanda": "Sto andando nella direzione giusta?"}, {"territorio": "Direzione", "domanda": "E se stessi sbagliando strada?"}, {"territorio": "Direzione", "domanda": "Quanto tempo posso restare dove non mi sento più vivo?"}, {"territorio": "Direzione", "domanda": "Quale passo continuo a rimandare?"}, {"territorio": "Direzione", "domanda": "Cosa mi trattiene dal procedere?"}, {"territorio": "Direzione", "domanda": "Sto aspettando un segnale che non arriverà?"}, {"territorio": "Direzione", "domanda": "Quale strada continua a chiamarmi?"}, {"territorio": "Direzione", "domanda": "Dove sto consumando energia senza avanzare?"}, {"territorio": "Direzione", "domanda": "Cosa accadrebbe se scegliessi?"}, {"territorio": "Direzione", "domanda": "Quale bivio continua a tornare?"}, {"territorio": "Amore", "domanda": "Amo questa persona o ciò che rappresenta?"}, {"territorio": "Amore", "domanda": "Perché continuo a tornare qui?"}, {"territorio": "Amore", "domanda": "Sto aspettando qualcuno che non arriverà?"}, {"territorio": "Amore", "domanda": "Cosa non riesco a lasciare andare?"}, {"territorio": "Amore", "domanda": "Mi sento amato o necessario?"}, {"territorio": "Amore", "domanda": "Sto vedendo questa persona o il mio desiderio?"}, {"territorio": "Amore", "domanda": "Cosa sto cercando attraverso l'altro?"}, {"territorio": "Amore", "domanda": "Cosa continuo a sperare?"}, {"territorio": "Amore", "domanda": "Quale assenza continua a parlare?"}, {"territorio": "Amore", "domanda": "Cosa mi lega davvero?"}, {"territorio": "Identità", "domanda": "Chi sarei senza questa storia?"}, {"territorio": "Identità", "domanda": "Cosa sto cercando di dimostrare?"}, {"territorio": "Identità", "domanda": "Quale ruolo mi sta diventando stretto?"}, {"territorio": "Identità", "domanda": "Chi sono quando nessuno guarda?"}, {"territorio": "Identità", "domanda": "Quale immagine di me sto difendendo?"}, {"territorio": "Identità", "domanda": "Cosa non sto più riuscendo a fingere?"}, {"territorio": "Identità", "domanda": "Dove mi tradisco?"}, {"territorio": "Identità", "domanda": "Quale parte di me sta chiedendo spazio?"}, {"territorio": "Identità", "domanda": "Chi sto diventando?"}, {"territorio": "Identità", "domanda": "Cosa non mi rappresenta più?"}, {"territorio": "Tempo", "domanda": "È troppo tardi?"}, {"territorio": "Tempo", "domanda": "Cosa sto rimandando da anni?"}, {"territorio": "Tempo", "domanda": "Se non fosse adesso, quando?"}, {"territorio": "Tempo", "domanda": "Cosa continua ad aspettarmi?"}, {"territorio": "Tempo", "domanda": "Quale stagione della mia vita sto vivendo?"}, {"territorio": "Tempo", "domanda": "Cosa non può più essere rinviato?"}, {"territorio": "Tempo", "domanda": "Quanto tempo voglio ancora aspettare?"}, {"territorio": "Tempo", "domanda": "Cosa è arrivato il momento di vedere?"}, {"territorio": "Tempo", "domanda": "Cosa sto lasciando passare?"}, {"territorio": "Tempo", "domanda": "Quale tempo è maturo?"}, {"territorio": "Cambiamento", "domanda": "Cosa deve finire?"}, {"territorio": "Cambiamento", "domanda": "Cosa sta cercando di nascere?"}, {"territorio": "Cambiamento", "domanda": "Sto lasciando andare o sto perdendo?"}, {"territorio": "Cambiamento", "domanda": "Quale porta continua ad aprirsi?"}, {"territorio": "Cambiamento", "domanda": "Cosa non può accompagnarmi oltre?"}, {"territorio": "Cambiamento", "domanda": "Dove sto resistendo?"}, {"territorio": "Cambiamento", "domanda": "Cosa sta cambiando anche se non lo voglio?"}, {"territorio": "Cambiamento", "domanda": "Quale passaggio sto attraversando?"}, {"territorio": "Cambiamento", "domanda": "Cosa chiede di essere trasformato?"}, {"territorio": "Cambiamento", "domanda": "Quale pelle non mi appartiene più?"}, {"territorio": "Paura", "domanda": "Cosa temo davvero?"}, {"territorio": "Paura", "domanda": "Cosa sto proteggendo?"}, {"territorio": "Paura", "domanda": "Quale rischio non voglio correre?"}, {"territorio": "Paura", "domanda": "Cosa potrebbe accadere se smettessi di controllare?"}, {"territorio": "Paura", "domanda": "Quale verità evito?"}, {"territorio": "Paura", "domanda": "Cosa mi spaventa perché conta?"}, {"territorio": "Paura", "domanda": "Di cosa ho paura di perdere il controllo?"}, {"territorio": "Paura", "domanda": "Cosa continuo a evitare?"}, {"territorio": "Paura", "domanda": "Quale paura si traveste da prudenza?"}, {"territorio": "Paura", "domanda": "Cosa accadrebbe se andasse bene?"}, {"territorio": "Libertà", "domanda": "Dove mi sento prigioniero?"}, {"territorio": "Libertà", "domanda": "Chi ha deciso che deve essere così?"}, {"territorio": "Libertà", "domanda": "Cosa mi impedisco?"}, {"territorio": "Libertà", "domanda": "Quale permesso sto aspettando?"}, {"territorio": "Libertà", "domanda": "A chi appartiene questa scelta?"}, {"territorio": "Libertà", "domanda": "Dove rinuncio a me stesso?"}, {"territorio": "Libertà", "domanda": "Cosa farei se non avessi paura del giudizio?"}, {"territorio": "Libertà", "domanda": "Quale catena tengo stretta da solo?"}, {"territorio": "Libertà", "domanda": "Dove potrei respirare di più?"}, {"territorio": "Libertà", "domanda": "Cosa significa libertà per me?"}, {"territorio": "Appartenenza", "domanda": "Dove mi sento a casa?"}, {"territorio": "Appartenenza", "domanda": "Dove mi sento fuori posto?"}, {"territorio": "Appartenenza", "domanda": "Chi mi vede davvero?"}, {"territorio": "Appartenenza", "domanda": "Quale luogo continua a chiamarmi?"}, {"territorio": "Appartenenza", "domanda": "A chi sto cercando di appartenere?"}, {"territorio": "Appartenenza", "domanda": "Dove posso essere me stesso?"}, {"territorio": "Appartenenza", "domanda": "Chi riconosce la mia lingua?"}, {"territorio": "Appartenenza", "domanda": "Dove smetto di difendermi?"}, {"territorio": "Appartenenza", "domanda": "Quale comunità sto cercando?"}, {"territorio": "Appartenenza", "domanda": "Dove posso riposare?"}, {"territorio": "Desiderio", "domanda": "Cosa desidero davvero?"}, {"territorio": "Desiderio", "domanda": "Quale desiderio continuo a rimandare?"}, {"territorio": "Desiderio", "domanda": "Cosa continua a bussare?"}, {"territorio": "Desiderio", "domanda": "Cosa sto sacrificando per restare uguale?"}, {"territorio": "Desiderio", "domanda": "Quale sogno non mi ha lasciato?"}, {"territorio": "Desiderio", "domanda": "Cosa mi accende?"}, {"territorio": "Desiderio", "domanda": "Cosa mi manca veramente?"}, {"territorio": "Desiderio", "domanda": "Cosa sto soffocando?"}, {"territorio": "Desiderio", "domanda": "Cosa chiede di essere vissuto?"}, {"territorio": "Desiderio", "domanda": "Quale fuoco sto custodendo?"}, {"territorio": "Significato", "domanda": "Perché questa esperienza continua a tornare?"}, {"territorio": "Significato", "domanda": "Cosa sta cercando di insegnarmi la vita?"}, {"territorio": "Significato", "domanda": "Cosa non ho ancora compreso?"}, {"territorio": "Significato", "domanda": "Quale filo collega questi eventi?"}, {"territorio": "Significato", "domanda": "Cosa continua a ripetersi?"}, {"territorio": "Significato", "domanda": "Cosa sto chiamando destino?"}, {"territorio": "Significato", "domanda": "Quale domanda sta cercando me?"}, {"territorio": "Significato", "domanda": "Cosa vuole essere visto?"}, {"territorio": "Significato", "domanda": "Quale storia sto raccontando?"}, {"territorio": "Significato", "domanda": "Cosa mi sta ricordando chi sono?"}];
-
-const themes = [
-  {keys:['dove','direzione','strada','vado','andare','sbagliando','scelta','scegliere','bivio','passo'], theme:'Direzione', mother:'Sto andando nella direzione giusta?', count:451, near:37, trace:'Quale passo continua a tornare nei tuoi pensieri?', sisters:['Sto andando nella direzione giusta?','E se stessi sbagliando strada?','Quale passo continuo a rimandare?','Dove sto consumando energia senza avanzare?']},
-  {keys:['tardi','tempo','anni','quando','aspettare','rinviato','maturo'], theme:'Tempo', mother:'È troppo tardi?', count:618, near:42, trace:'Cosa è arrivato il momento di vedere?', sisters:['È troppo tardi?','Cosa sto rimandando da anni?','Se non fosse adesso, quando?','Quanto tempo voglio ancora aspettare?']},
-  {keys:['cambiare','ricominciare','vita','iniziare','ripartire','nascere','finire','pelle','trasformato'], theme:'Cambiamento', mother:'Cosa sta cercando di nascere?', count:521, near:39, trace:'Quale parte di te merita di essere portata nel prossimo capitolo?', sisters:['Cosa deve finire?','Cosa sta cercando di nascere?','Sto lasciando andare o sto perdendo?','Quale pelle non mi appartiene più?']},
-  {keys:['amore','relazione','restare','lasciare','lui','lei','coppia','persona','assenza'], theme:'Amore', mother:'Amo questa persona o ciò che rappresenta?', count:597, near:31, trace:'Cosa sai già ma non stai ancora dicendo ad alta voce?', sisters:['Amo questa persona o ciò che rappresenta?','Perché continuo a tornare qui?','Cosa non riesco a lasciare andare?','Quale assenza continua a parlare?']},
-  {keys:['paura','sbagliare','ansia','blocco','fallire','controllo','rischio','prudenza','temo'], theme:'Paura', mother:'Cosa temo davvero?', count:402, near:33, trace:'Cosa accadrebbe se scegliessi senza dover essere perfetto?', sisters:['Cosa temo davvero?','Cosa sto proteggendo?','Quale paura si traveste da prudenza?','Cosa accadrebbe se andasse bene?']},
-  {keys:['chi sono','identità','me stesso','me stessa','storia','ruolo','fingere','diventando','rappresenta'], theme:'Identità', mother:'Chi sarei senza questa storia?', count:386, near:27, trace:'Quale versione di te ha terminato il proprio compito?', sisters:['Chi sarei senza questa storia?','Cosa sto cercando di dimostrare?','Cosa non sto più riuscendo a fingere?','Chi sto diventando?']},
-  {keys:['libertà','prigioniero','impedisco','permesso','giudizio','catena','respirare','rinuncio'], theme:'Libertà', mother:'Dove mi sento prigioniero?', count:332, near:24, trace:'Quale permesso stai ancora aspettando?', sisters:['Dove mi sento prigioniero?','Quale permesso sto aspettando?','A chi appartiene questa scelta?','Dove potrei respirare di più?']},
-  {keys:['casa','appartenere','appartenenza','posto','vede','lingua','comunità','riposare','difendermi'], theme:'Appartenenza', mother:'Dove mi sento a casa?', count:489, near:34, trace:'Dove smetti di dover dimostrare qualcosa?', sisters:['Dove mi sento a casa?','Dove mi sento fuori posto?','Chi mi vede davvero?','Dove posso essere me stesso?']},
-  {keys:['desidero','desiderio','bussare','sogno','accende','manca','soffocando','fuoco'], theme:'Desiderio', mother:'Cosa desidero davvero?', count:427, near:28, trace:'Cosa continua a bussare anche quando fai finta di non sentire?', sisters:['Cosa desidero davvero?','Cosa continua a bussare?','Quale sogno non mi ha lasciato?','Quale fuoco sto custodendo?']},
-  {keys:['significato','esperienza','vita','compreso','filo','eventi','ripetersi','destino','storia'], theme:'Significato', mother:'Quale filo collega questi eventi?', count:466, near:30, trace:'Cosa vuole essere visto?', sisters:['Perché questa esperienza continua a tornare?','Quale filo collega questi eventi?','Cosa continua a ripetersi?','Cosa mi sta ricordando chi sono?']}
+const entries = [
+  {q:"È troppo tardi?", t:"Cosa è arrivato il momento di vedere?", c:618},
+  {q:"E se stessi sbagliando strada?", t:"Quale passo continua a tornare nei tuoi pensieri?", c:451},
+  {q:"Ho paura di ricominciare.", t:"Quale parte di te merita di essere portata nel prossimo capitolo?", c:521},
+  {q:"Sto aspettando un momento che non arriverà?", t:"Cosa sai già, ma non stai ancora dicendo ad alta voce?", c:597},
+  {q:"Dove mi sento a casa?", t:"Dove smetti di dover dimostrare qualcosa?", c:489},
+  {q:"Cosa desidero davvero?", t:"Cosa continua a bussare anche quando fai finta di non sentire?", c:427},
+  {q:"Chi sarei senza questa storia?", t:"Quale versione di te ha terminato il proprio compito?", c:386},
+  {q:"Cosa deve finire?", t:"Cosa sta cercando di nascere?", c:402},
+  {q:"Quale domanda sta cercando me?", t:"Cosa vuole essere visto?", c:466},
+  {q:"Dove potrei respirare di più?", t:"Quale permesso stai ancora aspettando?", c:332}
 ];
 
-const fallback = themes[0];
+let total = Number(localStorage.getItem('dct_min_total') || 12483);
+let current = 0;
 
-let total = Number(localStorage.getItem('dct_total') || 12483);
-let featuredCount = Number(localStorage.getItem('dct_featured_count') || 618);
-let todayCount = Number(localStorage.getItem('dct_today') || 17);
-let lastQuestion = "";
-
-function pad(n){return String(n).padStart(2,'0')}
 function byId(id){return document.getElementById(id)}
+function pad(n){return String(n).padStart(2,'0')}
+function updateClock(){const d=new Date(); byId('clock').textContent=`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`}
+function escapeHtml(str){return String(str).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function renderTotal(){byId('archiveTotal').textContent=total.toLocaleString('it-IT')}
 
-function updateClock(){
-  const d=new Date();
-  const el=byId('clock');
-  if(el) el.textContent=`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-}
-
-function renderTotals(){
-  const totalText = total.toLocaleString('it-IT');
-  if(byId('archiveTotal')) byId('archiveTotal').textContent=totalText;
-  if(byId('archiveTotalLeft')) byId('archiveTotalLeft').textContent=totalText;
-  if(byId('featuredCount')) byId('featuredCount').textContent=featuredCount.toLocaleString('it-IT');
-  if(byId('rightCount')) byId('rightCount').textContent=featuredCount.toLocaleString('it-IT');
-  if(byId('todayCount')) byId('todayCount').textContent=todayCount.toLocaleString('it-IT');
-}
-
-function pickHomeQuestion(){
-  const featured = byId('featuredQuestion');
-  if(!featured) return;
-
-  const last = localStorage.getItem('dct_home_last_question') || "";
-  let chosen = archiveQuestions[Math.floor(Math.random() * archiveQuestions.length)];
-  let guard = 0;
-
-  while(chosen.domanda === last && guard < 30){
-    chosen = archiveQuestions[Math.floor(Math.random() * archiveQuestions.length)];
-    guard++;
+function pickEntry(forceNext=false){
+  const last = Number(localStorage.getItem('dct_min_last') || -1);
+  if(forceNext){ current = (current + 1) % entries.length; }
+  else {
+    current = Math.floor(Math.random()*entries.length);
+    if(current === last) current = (current + 1) % entries.length;
   }
-
-  featured.textContent = chosen.domanda;
-  featured.dataset.territorio = chosen.territorio;
-  localStorage.setItem('dct_home_last_question', chosen.domanda);
-
-  featuredCount = Math.floor(180 + Math.random() * 720);
-  localStorage.setItem('dct_featured_count', featuredCount);
-  renderTotals();
+  localStorage.setItem('dct_min_last', current);
+  const e = entries[current];
+  byId('featuredQuestion').textContent = e.q;
+  byId('featuredTrace').textContent = e.t;
+  byId('featuredCount').textContent = Number(e.c + Math.floor(Math.random()*90)).toLocaleString('it-IT');
+  byId('recognizeBtn').classList.remove('active');
+  byId('recognizeBtn').textContent = 'Mi riconosco';
+  byId('afterRecognize').classList.remove('active');
 }
 
-function detectTheme(q){
-  const s=String(q || '').toLowerCase();
-  let best=null, score=0;
-  for(const t of themes){
-    let n=0;
-    t.keys.forEach(k=>{ if(s.includes(k)) n++; });
-    if(n>score){ score=n; best=t; }
-  }
-  return best || fallback;
-}
-
-function safeParseJSON(value, fallbackValue){
-  try{return JSON.parse(value || JSON.stringify(fallbackValue));}
-  catch(e){return fallbackValue;}
-}
-
-function todayArchivioDate(){
-  const d = new Date();
-  return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
-}
-
-function slugTag(value){
-  return String(value || '')
-    .toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-    .replace(/[^a-z0-9]+/g,'')
-    .trim();
-}
-
-const tagRules = [
-  {tag:'ricominciare', patterns:['ricominc','ripart','iniziar']},
-  {tag:'scelta', patterns:['scegl','scelta','bivio','strada']},
-  {tag:'tempo', patterns:['tempo','tardi','anni','quando','aspett']},
-  {tag:'cambiamento', patterns:['cambiar','trasform','nascere','finire','pelle']},
-  {tag:'amore', patterns:['amore','relazione','persona','coppia','lui','lei']},
-  {tag:'paura', patterns:['paura','ansia','temo','rischio','controllo']},
-  {tag:'casa', patterns:['casa','apparten','posto','comunit','riposare']},
-  {tag:'desiderio', patterns:['desider','sogno','fuoco','manca','accende']},
-  {tag:'liberta', patterns:['liberta','prigion','permesso','giudizio','catena']},
-  {tag:'identita', patterns:['chi sono','identita','ruolo','fingere','diventando']},
-  {tag:'significato', patterns:['significato','filo','destino','ripetersi','storia']},
-  {tag:'direzione', patterns:['direzione','vado','andare','passo','avanzare']}
-];
-
-function extractTagsFrom(text, territory){
-  const s = String(text || '').toLowerCase();
-  const tags = [];
-  const territoryTag = slugTag(territory);
-  if(territoryTag && territoryTag !== 'inascolto' && territoryTag !== 'archivista') tags.push(territoryTag);
-
-  tagRules.forEach(rule=>{
-    if(rule.patterns.some(pattern=>s.includes(pattern)) && !tags.includes(rule.tag)) tags.push(rule.tag);
-  });
-
-  return tags.slice(0,6);
-}
-
-function getViandanteData(){
-  return {
-    name: localStorage.getItem('dct_viandante_name') || '',
-    opened: localStorage.getItem('dct_viandante_opened') || '',
-    visits: Number(localStorage.getItem('dct_viandante_visits') || 0),
-    questions: Number(localStorage.getItem('dct_viandante_questions') || 0),
-    recognitions: Number(localStorage.getItem('dct_viandante_recognitions') || 0),
-    territories: safeParseJSON(localStorage.getItem('dct_viandante_territories'), {}),
-    words: safeParseJSON(localStorage.getItem('dct_viandante_words'), {})
-  };
-}
-
-function saveViandanteData(data){
-  if(data.name && data.name !== 'Viandante') localStorage.setItem('dct_viandante_name', data.name);
-  else localStorage.removeItem('dct_viandante_name');
-  if(data.opened) localStorage.setItem('dct_viandante_opened', data.opened);
-  localStorage.setItem('dct_viandante_visits', String(data.visits || 0));
-  localStorage.setItem('dct_viandante_questions', String(data.questions || 0));
-  localStorage.setItem('dct_viandante_recognitions', String(data.recognitions || 0));
-  localStorage.setItem('dct_viandante_territories', JSON.stringify(data.territories || {}));
-  localStorage.setItem('dct_viandante_words', JSON.stringify(data.words || {}));
-}
-
-function calculateViandanteThread(data){
-  const entries = Object.entries(data.territories || {}).filter(([k,v]) => k && k !== 'IN ASCOLTO' && k !== 'ARCHIVISTA');
-  if(!entries.length) return 'IN ASCOLTO';
-  entries.sort((a,b)=>b[1]-a[1]);
-  return entries[0][0];
-}
-
-const tagToTheme = {
-  ricominciare:'Cambiamento',
-  cambiamento:'Cambiamento',
-  scelta:'Direzione',
-  direzione:'Direzione',
-  tempo:'Tempo',
-  amore:'Amore',
-  paura:'Paura',
-  casa:'Appartenenza',
-  desiderio:'Desiderio',
-  liberta:'Libertà',
-  identita:'Identità',
-  significato:'Significato'
-};
-
-function calculateViandanteQuestion(data){
-  const scores = {};
-
-  Object.entries(data.territories || {}).forEach(([territory,value])=>{
-    if(!territory || territory === 'IN ASCOLTO' || territory === 'ARCHIVISTA') return;
-    scores[territory] = (scores[territory] || 0) + (Number(value) || 0) * 3;
-  });
-
-  Object.entries(data.words || {}).forEach(([tag,value])=>{
-    const theme = tagToTheme[tag];
-    if(!theme) return;
-    scores[theme] = (scores[theme] || 0) + (Number(value) || 0);
-  });
-
-  const ranked = Object.entries(scores).filter(([theme,value])=>value > 0).sort((a,b)=>b[1]-a[1] || a[0].localeCompare(b[0]));
-
-  if(!ranked.length){
-    return "L'Archivio la mostrerà quando avrà riconosciuto il tuo passaggio.";
-  }
-
-  const theme = ranked[0][0];
-  const found = themes.find(t=>t.theme === theme) || fallback;
-  return found.mother;
-}
-
-function renderViandanteTags(data){
-  const el = byId('viandanteTags');
-  if(!el) return;
-
-  const entries = Object.entries(data.words || {}).filter(([k,v]) => k && v > 0);
-  entries.sort((a,b)=>b[1]-a[1] || a[0].localeCompare(b[0]));
-
-  if(!entries.length){
-    el.innerHTML = '<span class="tag-empty">Le parole appariranno quando l\'Archivio inizierà a riconoscere il tuo passaggio.</span>';
-    return;
-  }
-
-  el.innerHTML = entries.slice(0,6).map(([tag])=>`<span class="tag">#${escapeHtml(tag)}</span>`).join('');
-}
-
-function renderViandanteBox(){
-  const data = getViandanteData();
-  const savedName = localStorage.getItem('dct_viandante_name') || '';
-  const hasScheda = Boolean(savedName && savedName !== 'Viandante');
-
-  if(byId('viandanteArchiveName')) byId('viandanteArchiveName').textContent = data.name || '—';
-  if(byId('viandanteCardTitle')) byId('viandanteCardTitle').textContent = hasScheda && data.name ? `LA SCHEDA DI ${data.name}` : 'LA TUA SCHEDA';
-  if(byId('viandanteOpened')) byId('viandanteOpened').textContent = data.opened || '—';
-  if(byId('viandanteVisits')) byId('viandanteVisits').textContent = data.visits;
-  if(byId('viandanteQuestions')) byId('viandanteQuestions').textContent = data.questions;
-
-  if(byId('viandanteNamePrompt')) byId('viandanteNamePrompt').style.display = hasScheda ? 'none' : 'block';
-  if(byId('viandantePresence')) byId('viandantePresence').style.display = hasScheda ? 'block' : 'none';
-
-  if(byId('viandanteEmergentQuestion')) byId('viandanteEmergentQuestion').textContent = calculateViandanteQuestion(data);
-}
-
-function initViandante(){
-  const data = getViandanteData();
-  const savedName = localStorage.getItem('dct_viandante_name') || '';
-  const hasScheda = Boolean(savedName && savedName !== 'Viandante');
-
-  if(hasScheda && !data.opened) data.opened = todayArchivioDate();
-  data.visits += 1;
-  saveViandanteData(data);
-  renderViandanteBox();
-
-  const saveBtn = byId('saveViandanteName');
-  const nameInput = byId('viandanteNameInput');
-  if(saveBtn){
-    saveBtn.addEventListener('click', function(){
-      const input = byId('viandanteNameInput');
-      const value = input ? input.value.trim() : '';
-      const data = getViandanteData();
-      if(!value){
-        const status = byId('viandanteNameStatus');
-        if(status) status.textContent = 'Scegli prima il tuo Nome d\'Archivio.';
-        if(input) input.focus();
-        return;
-      }
-      data.name = value;
-      if(!data.opened) data.opened = todayArchivioDate();
-      saveViandanteData(data);
-      renderViandanteBox();
-    });
-  }
-  if(nameInput){
-    nameInput.addEventListener('keydown', function(e){
-      if(e.key === 'Enter'){
-        e.preventDefault();
-        if(saveBtn) saveBtn.click();
-      }
-    });
-  }
-}
-
-function addViandanteWords(text, territory){
-  const data = getViandanteData();
-  const tags = extractTagsFrom(text, territory);
-  tags.forEach(tag=>{ data.words[tag] = (data.words[tag] || 0) + 1; });
-  saveViandanteData(data);
-  renderViandanteBox();
-}
-
-function addViandanteTerritory(territory){
-  const data = getViandanteData();
-  const key = territory || 'IN ASCOLTO';
-  data.territories[key] = (data.territories[key] || 0) + 1;
-  saveViandanteData(data);
-  renderViandanteBox();
-}
-
-function currentFeaturedTerritory(){
-  const featured = byId('featuredQuestion');
-  if(featured && featured.dataset && featured.dataset.territorio) return featured.dataset.territorio;
-  const matched = detectTheme(featured ? featured.textContent : '');
-  return matched ? matched.theme : 'IN ASCOLTO';
-}
-
-function escapeHtml(str){
-  return String(str).replace(/[&<>'"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-}
-
-function addLatest(q){
-  const feed=byId('latestQuestions');
-  if(!feed) return;
-  const d=new Date();
-  const time=`${pad(d.getHours())}:${pad(d.getMinutes())}`;
-  const div=document.createElement('div');
-  div.className='voice';
-  div.innerHTML=`<span class="time">${time}</span>${escapeHtml(q)}`;
-  feed.prepend(div);
-  while(feed.children.length>7) feed.removeChild(feed.lastChild);
-}
-
-async function saveQuestion(q,theme){
+async function postToSheets(payload){
   try{
-    await fetch(SHEETS_URL,{
-      method:'POST',
-      mode:'no-cors',
-      headers:{'Content-Type':'text/plain'},
-      body:JSON.stringify({domanda:q,tema:theme,data:new Date().toISOString(),tipo:'domanda'})
-    });
-  }catch(e){}
+    await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)});
+    return true;
+  }catch(e){return false;}
 }
 
-function resetToPortal(){
-  if(byId('result')) byId('result').classList.remove('active');
-  if(byId('portal')) byId('portal').style.display='block';
-  if(byId('questionInput')){
-    byId('questionInput').value='';
-    byId('questionInput').focus();
-  }
-  if(byId('questionForm')) byId('questionForm').classList.add('active');
-}
+byId('recognizeBtn').addEventListener('click', async ()=>{
+  const countEl = byId('featuredCount');
+  const n = Number(String(countEl.textContent).replace(/\D/g,'')) + 1;
+  countEl.textContent = n.toLocaleString('it-IT');
+  byId('recognizeBtn').classList.add('active');
+  byId('recognizeBtn').textContent = 'Mi sono riconosciuto';
+  byId('afterRecognize').classList.add('active');
+  await postToSheets({tipo:'riconoscimento',domanda:byId('featuredQuestion').textContent,traccia:byId('featuredTrace').textContent,data:new Date().toISOString(),pagina:location.href});
+});
 
-function submitQuestion(){
-  const input=byId('questionInput');
-  const q=input ? input.value.trim() : '';
-  if(!q){ if(input) input.focus(); return; }
+byId('anotherBtn').addEventListener('click',()=>pickEntry(true));
+byId('openFormBtn').addEventListener('click',()=>{byId('questionForm').classList.add('active'); byId('questionInput').focus(); byId('questionForm').scrollIntoView({behavior:'smooth',block:'center'});});
+byId('submitQuestion').addEventListener('click', async ()=>{
+  const domanda = byId('questionInput').value.trim();
+  const contatto = byId('contactInput').value.trim();
+  const status = byId('formStatus');
+  if(!domanda){status.textContent='Scrivi prima la domanda da affidare.'; byId('questionInput').focus(); return;}
+  status.textContent="L'Archivista sta ricevendo la domanda...";
+  const ok = await postToSheets({tipo:'domanda',domanda:domanda,contatto:contatto,tema:'HOME_MINIMA',data:new Date().toISOString(),pagina:location.href});
+  total++; localStorage.setItem('dct_min_total', total); renderTotal();
+  byId('questionInput').value=''; byId('contactInput').value='';
+  status.textContent = ok ? "La domanda è stata affidata all'Archivio." : "Domanda accolta qui. Se l'invio non arriva, riprova tra poco.";
+});
+byId('questionInput').addEventListener('keydown',e=>{if(e.key==='Enter' && (e.ctrlKey||e.metaKey)){e.preventDefault(); byId('submitQuestion').click();}});
 
-  const t=detectTheme(q);
-  lastQuestion=q;
-
-  total++;
-  todayCount++;
-  localStorage.setItem('dct_total',total);
-  localStorage.setItem('dct_today',todayCount);
-
-  const vd=getViandanteData();
-  vd.questions += 1;
-  saveViandanteData(vd);
-  addViandanteTerritory(t.theme);
-  addViandanteWords(q,t.theme);
-
-  renderTotals();
-  renderViandanteBox();
-  addLatest(q);
-  saveQuestion(q,t.theme);
-
-  if(byId('portal')) byId('portal').style.display='none';
-  if(byId('result')) byId('result').classList.add('active');
-  if(byId('userQuestionText')) byId('userQuestionText').textContent='“'+q+'”';
-  if(byId('ritualStatus')) byId('ritualStatus').textContent="L'Archivista sta cercando...";
-  if(byId('resultBody')) byId('resultBody').style.display='none';
-
-  setTimeout(()=>{ if(byId('ritualStatus')) byId('ritualStatus').textContent=`L'Archivio ha riconosciuto il tema: ${t.theme}.`; },800);
-  setTimeout(()=>{ if(byId('ritualStatus')) byId('ritualStatus').textContent=`Non è sola. Sono state trovate ${t.near} domande vicine.`; },1600);
-  setTimeout(()=>{
-    if(byId('ritualStatus')) byId('ritualStatus').textContent="L'Archivista ha trovato una parentela.";
-    if(byId('themeText')) byId('themeText').textContent=t.theme;
-    if(byId('nearCount')) byId('nearCount').textContent=t.near;
-    if(byId('motherQuestion')) byId('motherQuestion').textContent=t.mother;
-    if(byId('traceText')) byId('traceText').textContent=t.trace;
-    if(byId('sisterList')) byId('sisterList').innerHTML=t.sisters.map(x=>`<div>${escapeHtml(x)}</div>`).join('');
-    if(byId('resultRecognize')) byId('resultRecognize').textContent=`MI RICONOSCO ANCH'IO (${t.count})`;
-    if(byId('archivistQuestion')) byId('archivistQuestion').value=q;
-    if(byId('resultBody')) byId('resultBody').style.display='block';
-  },2500);
-}
-
-async function sendArchivistRequest(){
-  const domanda = byId('archivistQuestion') ? byId('archivistQuestion').value.trim() : '';
-  const contatto = byId('archivistContact') ? byId('archivistContact').value.trim() : '';
-  const status = byId('archivistStatus');
-
-  if(!domanda){
-    if(status) status.textContent = 'Scrivi prima la domanda da affidare.';
-    if(byId('archivistQuestion')) byId('archivistQuestion').focus();
-    return;
-  }
-
-  if(status) status.textContent = "L'Archivista sta ricevendo la domanda...";
-
-  try{
-    await fetch(SHEETS_URL,{
-      method:'POST',
-      mode:'no-cors',
-      headers:{'Content-Type':'text/plain'},
-      body:JSON.stringify({
-        domanda: domanda + (contatto ? ' | Contatto: ' + contatto : ''),
-        tema:'ARCHIVISTA',
-        tipo:'richiesta_archivista',
-        pagina:location.href,
-        data:new Date().toISOString()
-      })
-    });
-
-    total++;
-    todayCount++;
-    localStorage.setItem('dct_total',total);
-    localStorage.setItem('dct_today',todayCount);
-
-    const vd=getViandanteData();
-    vd.questions += 1;
-    saveViandanteData(vd);
-    addViandanteWords(domanda,'ARCHIVISTA');
-
-    renderTotals();
-    renderViandanteBox();
-    addLatest(domanda);
-
-    const panel = document.querySelector('#archivista .modal-panel');
-    if(panel){
-      panel.innerHTML = `
-        <h2>Messaggio inviato</h2>
-        <p>La tua domanda è stata affidata all'Archivista.</p>
-        <p class="hint">Tra pochi secondi tornerai alla Home.</p>
-        <div class="modal-actions">
-          <a class="modal-btn" href="/">TORNA ALLA HOME</a>
-        </div>
-      `;
-    }
-
-    setTimeout(function(){ window.location.href = '/'; }, 2500);
-  }catch(e){
-    if(status) status.textContent = 'Non riesco a inviare ora. Riprova tra poco.';
-  }
-}
-
-function wireEvents(){
-  if(byId('openFormBtn')) byId('openFormBtn').addEventListener('click',()=>{
-    if(byId('questionForm')) byId('questionForm').classList.toggle('active');
-    if(byId('questionInput')) byId('questionInput').focus();
-  });
-
-  if(byId('submitQuestion')) byId('submitQuestion').addEventListener('click',submitQuestion);
-
-  if(byId('questionInput')) byId('questionInput').addEventListener('keydown',e=>{
-    if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); submitQuestion(); }
-  });
-
-  if(byId('recognizeBtn')) byId('recognizeBtn').addEventListener('click',()=>{
-    featuredCount++;
-    localStorage.setItem('dct_featured_count',featuredCount);
-    const data = getViandanteData();
-    data.recognitions += 1;
-    saveViandanteData(data);
-    const territory = currentFeaturedTerritory();
-    addViandanteTerritory(territory);
-    addViandanteWords(byId('featuredQuestion') ? byId('featuredQuestion').textContent : '', territory);
-    renderTotals();
-    addLatest('Mi riconosco in questa domanda.');
-  });
-
-  if(byId('resultRecognize')) byId('resultRecognize').addEventListener('click',()=>{
-    const data = getViandanteData();
-    data.recognitions += 1;
-    saveViandanteData(data);
-    const territory = byId('themeText') ? byId('themeText').textContent.trim() : 'IN ASCOLTO';
-    addViandanteTerritory(territory);
-    addViandanteWords(lastQuestion, territory);
-    addLatest('Mi riconosco anch\'io.');
-    renderViandanteBox();
-    byId('resultRecognize').textContent='RICONOSCIMENTO ACCOLTO';
-  });
-
-  if(byId('newQuestion')) byId('newQuestion').addEventListener('click',resetToPortal);
-  if(byId('sendArchivist')) byId('sendArchivist').addEventListener('click',sendArchivistRequest);
-
-  if(byId('archivistQuestion')) byId('archivistQuestion').addEventListener('keydown',e=>{
-    if(e.key==='Enter' && (e.ctrlKey||e.metaKey)){ e.preventDefault(); sendArchivistRequest(); }
-  });
-}
-
-function initApp(){
-  updateClock();
-  setInterval(updateClock,1000);
-  pickHomeQuestion();
-  initViandante();
-  renderTotals();
-  wireEvents();
-}
-
-initApp();
+updateClock(); setInterval(updateClock,1000); renderTotal(); pickEntry(false);
 </script>
-
 </body>
 </html>
