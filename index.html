@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le Domande che Tornano | Archivio Vivente</title>
-  <!-- versione 25-06-ripristino-viandante-random-controllato -->
+  <!-- versione 25-06-titoli-box-logo-riflessione-controllata -->
   <style>
     :root{
       --paper:#f4efe6;
@@ -434,6 +434,34 @@
       overflow:hidden;
     }
 
+
+    /* Rifiniture 25-06: titoli, centrature, Archivista */
+    .left .viandante-title{
+      text-align:center;
+      font-weight:900!important;
+    }
+    .archivista-box h2{
+      font-weight:900!important;
+      text-align:center;
+    }
+    .archivista-box{
+      text-align:center;
+    }
+    .archivista-box p{
+      text-align:left;
+    }
+    .archivista-box .side-action{
+      display:block;
+      text-align:center;
+      width:100%;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    .right h2,
+    .right .mini-data strong{
+      font-weight:900!important;
+    }
+
     @media (max-width:920px){
       body{overflow:auto}
       .screen{height:auto;min-height:100vh;grid-template-rows:auto auto auto;padding:14px;}
@@ -478,10 +506,9 @@
               <p>Domande: <span id="viandanteQuestions">0</span></p>
               <p>Riconoscimenti: <span id="viandanteRecognitions">0</span></p>
 
-              <p class="viandante-title" style="margin-top:8px;">IL FILO</p>
+              <p class="viandante-title" style="margin-top:8px;">IL TUO FILO</p>
               <p>Le tue domande tornano attorno a:</p>
-              <p class="viandante-thread" id="viandanteThread">IN ASCOLTO</p>
-              <p class="viandante-small" id="viandanteThreadNote">Affida una domanda. Il filo inizierà a mostrarsi.</p>
+              <p class="viandante-thread" id="viandanteThread"></p>
             </div>
           </div>
 
@@ -490,12 +517,11 @@
         <div class="mini-data archivista-box">
           <h2>L'ARCHIVISTA</h2>
           <div class="archive-icon" aria-hidden="true">▣</div>
-          <p>Custodisce le domande.</p>
-          <p>Non offre risposte.</p>
-          <p>Aiuta una domanda a trovare forma.</p>
+          <p>Custodisce le domande e</p>
+          <p>aiuta una domanda a trovare forma.</p>
           <p><strong>Oggi accolte:</strong> <span id="todayCount">17</span></p>
           <p><strong>In archivio:</strong> <span id="archiveTotalLeft">12.483</span></p>
-          <a class="side-action" href="#archivista">INCONTRA L'ARCHIVISTA</a>
+          <a class="side-action" href="#archivista">SCRIVI ALL'ARCHIVISTA</a>
         </div>
       </aside>
 
@@ -548,7 +574,7 @@
 
               <div class="result-actions">
                 <button class="choice" id="resultRecognize" type="button">MI RICONOSCO ANCH'IO</button>
-                <a class="choice" id="meetArchivist" href="#archivista">INCONTRA L'ARCHIVISTA</a>
+                <a class="choice" id="meetArchivist" href="#archivista">SCRIVI ALL'ARCHIVISTA</a>
               </div>
               <button class="secondary" id="newQuestion" type="button">AFFIDA UN'ALTRA DOMANDA</button>
             </div>
@@ -731,11 +757,8 @@ function renderViandanteBox(){
   const thread = calculateViandanteThread(data);
   if(byId('viandanteThread')) byId('viandanteThread').textContent = thread;
 
-  if(byId('viandanteThreadNote')){
-    byId('viandanteThreadNote').textContent =
-      thread === 'IN ASCOLTO'
-      ? 'Affida una domanda. Il filo inizierà a mostrarsi.'
-      : 'Non è un profilo. È il filo che emerge.';
+  if(byId('viandanteThread')){
+    byId('viandanteThread').style.display = thread === 'IN ASCOLTO' ? 'none' : 'block';
   }
 }
 
