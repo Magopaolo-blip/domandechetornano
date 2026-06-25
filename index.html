@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le Domande che Tornano | Archivio Vivente</title>
-  <!-- versione 25-06-cassetta-archivista-coerenza-controllata -->
+  <!-- versione 25-06-scheda-viandante-cassetta-coerenza-controllata -->
   <style>
     :root{
       --paper:#f4efe6;
@@ -332,6 +332,56 @@
       text-transform:uppercase;
       margin:6px 0;
     }
+    .viandante-card{
+      border:1px dashed rgba(23,23,23,.6);
+      padding:10px;
+      background:rgba(244,239,230,.52);
+    }
+    .viandante-card strong{
+      color:var(--brick);
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .viandante-card-kicker{
+      color:var(--brick);
+      font-weight:900;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      text-align:center;
+      font-size:10px;
+    }
+    .viandante-name-line{
+      font-size:clamp(15px,1.2vw,18px);
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      text-align:center;
+      border-top:1px dashed rgba(23,23,23,.35);
+      border-bottom:1px dashed rgba(23,23,23,.35);
+      padding:7px 0;
+      margin:6px 0!important;
+    }
+    .tag-list{
+      display:flex;
+      flex-wrap:wrap;
+      gap:5px;
+      margin-top:5px;
+    }
+    .tag{
+      display:inline-block;
+      border:1px dashed rgba(23,23,23,.55);
+      padding:3px 5px;
+      color:var(--brick);
+      font-weight:900;
+      font-size:10px;
+      line-height:1.1;
+    }
+    .tag-empty{
+      font-size:10px;
+      opacity:.78;
+      line-height:1.25;
+    }
 
 
     .left.side{
@@ -510,24 +560,30 @@
         <div>
 
           <div class="viandante-box" id="viandanteBox">
-            <p class="viandante-title">IL TUO PASSAGGIO</p>
+            <p class="viandante-title">LA TUA SCHEDA</p>
 
             <div id="viandanteNamePrompt">
-              <p>L'Archivio si ricorda del tuo passaggio.</p>
-              <p>Come desideri essere chiamato?</p>
-              <input id="viandanteNameInput" type="text" placeholder="Viandante" />
-              <button class="side-action" id="saveViandanteName" type="button">CUSTODISCI IL NOME</button>
+              <p>Ogni Viandante può aprire una Scheda nell'Archivio.</p>
+              <p>Come desideri essere conosciuto qui?</p>
+              <input id="viandanteNameInput" type="text" placeholder="Nome d'Archivio" />
+              <button class="side-action" id="saveViandanteName" type="button">APRI LA TUA SCHEDA</button>
+              <p class="viandante-small">È il modo in cui l'Archivio custodisce il tuo passaggio.</p>
             </div>
 
-            <div id="viandantePresence">
-              <p>Bentornato, <span id="viandanteName">Viandante</span>.</p>
-              <p>Visite: <span id="viandanteVisits">1</span></p>
-              <p>Domande: <span id="viandanteQuestions">0</span></p>
-              <p>Riconoscimenti: <span id="viandanteRecognitions">0</span></p>
+            <div id="viandantePresence" class="viandante-card">
+              <p class="viandante-card-kicker">SCHEDA ESTRATTA</p>
+              <p class="viandante-name-line" id="viandanteName">Viandante</p>
+              <p><strong>Nome d'Archivio:</strong> <span id="viandanteArchiveName">Viandante</span></p>
+              <p><strong>Scheda aperta:</strong> <span id="viandanteOpened">—</span></p>
+              <p><strong>Visite:</strong> <span id="viandanteVisits">1</span></p>
+              <p><strong>Domande affidate:</strong> <span id="viandanteQuestions">0</span></p>
 
               <p class="viandante-title" style="margin-top:8px;">IL TUO FILO</p>
               <p>Le tue domande tornano attorno a:</p>
               <p class="viandante-thread" id="viandanteThread"></p>
+
+              <p class="viandante-title" style="margin-top:8px;">PAROLE CHE TORNANO</p>
+              <div class="tag-list" id="viandanteTags"></div>
             </div>
           </div>
 
@@ -582,7 +638,7 @@
           <div class="question-form" id="questionForm">
             <textarea id="questionInput" placeholder="Scrivi qui la domanda che continua a tornare..."></textarea>
             <div class="submit-row">
-              <button class="submit-btn" id="submitQuestion" type="button">SCRIVI LA TUA DOMANDA ALL'ARCHIVISTA</button>
+              <button class="submit-btn" id="submitQuestion" type="button">AFFIDA LA DOMANDA ALL'ARCHIVIO</button>
               <span class="hint">Invio per affidare. Shift+Invio per andare a capo.</span>
             </div>
           </div>
@@ -672,9 +728,12 @@
 <script>
 /* COSTANTE DI RICONTROLLO MODIFICHE - 25/06
    - Home random a ogni refresh
+   - La Cassetta presente come oggetto reale
    - Box Viandante presente nella colonna sinistra
-   - Nome Viandante richiesto da subito
+   - Apertura Scheda del Viandante attiva
+   - Nome d'Archivio attivo
    - Filo del Viandante attivo
+   - Parole che tornano attive
    - Box Archivista compatto
 */
 
@@ -753,22 +812,72 @@ function detectTheme(q){
   return best || fallback;
 }
 
+function safeParseJSON(value, fallbackValue){
+  try{return JSON.parse(value || JSON.stringify(fallbackValue));}
+  catch(e){return fallbackValue;}
+}
+
+function todayArchivioDate(){
+  const d = new Date();
+  return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
+}
+
+function slugTag(value){
+  return String(value || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'')
+    .trim();
+}
+
+const tagRules = [
+  {tag:'ricominciare', patterns:['ricominc','ripart','iniziar']},
+  {tag:'scelta', patterns:['scegl','scelta','bivio','strada']},
+  {tag:'tempo', patterns:['tempo','tardi','anni','quando','aspett']},
+  {tag:'cambiamento', patterns:['cambiar','trasform','nascere','finire','pelle']},
+  {tag:'amore', patterns:['amore','relazione','persona','coppia','lui','lei']},
+  {tag:'paura', patterns:['paura','ansia','temo','rischio','controllo']},
+  {tag:'casa', patterns:['casa','apparten','posto','comunit','riposare']},
+  {tag:'desiderio', patterns:['desider','sogno','fuoco','manca','accende']},
+  {tag:'liberta', patterns:['liberta','prigion','permesso','giudizio','catena']},
+  {tag:'identita', patterns:['chi sono','identita','ruolo','fingere','diventando']},
+  {tag:'significato', patterns:['significato','filo','destino','ripetersi','storia']},
+  {tag:'direzione', patterns:['direzione','vado','andare','passo','avanzare']}
+];
+
+function extractTagsFrom(text, territory){
+  const s = String(text || '').toLowerCase();
+  const tags = [];
+  const territoryTag = slugTag(territory);
+  if(territoryTag && territoryTag !== 'inascolto' && territoryTag !== 'archivista') tags.push(territoryTag);
+
+  tagRules.forEach(rule=>{
+    if(rule.patterns.some(pattern=>s.includes(pattern)) && !tags.includes(rule.tag)) tags.push(rule.tag);
+  });
+
+  return tags.slice(0,6);
+}
+
 function getViandanteData(){
   return {
     name: localStorage.getItem('dct_viandante_name') || 'Viandante',
+    opened: localStorage.getItem('dct_viandante_opened') || '',
     visits: Number(localStorage.getItem('dct_viandante_visits') || 0),
     questions: Number(localStorage.getItem('dct_viandante_questions') || 0),
     recognitions: Number(localStorage.getItem('dct_viandante_recognitions') || 0),
-    territories: JSON.parse(localStorage.getItem('dct_viandante_territories') || '{}')
+    territories: safeParseJSON(localStorage.getItem('dct_viandante_territories'), {}),
+    words: safeParseJSON(localStorage.getItem('dct_viandante_words'), {})
   };
 }
 
 function saveViandanteData(data){
   localStorage.setItem('dct_viandante_name', data.name || 'Viandante');
+  if(data.opened) localStorage.setItem('dct_viandante_opened', data.opened);
   localStorage.setItem('dct_viandante_visits', String(data.visits || 0));
   localStorage.setItem('dct_viandante_questions', String(data.questions || 0));
   localStorage.setItem('dct_viandante_recognitions', String(data.recognitions || 0));
   localStorage.setItem('dct_viandante_territories', JSON.stringify(data.territories || {}));
+  localStorage.setItem('dct_viandante_words', JSON.stringify(data.words || {}));
 }
 
 function calculateViandanteThread(data){
@@ -778,16 +887,34 @@ function calculateViandanteThread(data){
   return entries[0][0];
 }
 
+function renderViandanteTags(data){
+  const el = byId('viandanteTags');
+  if(!el) return;
+
+  const entries = Object.entries(data.words || {}).filter(([k,v]) => k && v > 0);
+  entries.sort((a,b)=>b[1]-a[1] || a[0].localeCompare(b[0]));
+
+  if(!entries.length){
+    el.innerHTML = '<span class="tag-empty">Le parole appariranno quando l\'Archivio inizierà a riconoscere il tuo passaggio.</span>';
+    return;
+  }
+
+  el.innerHTML = entries.slice(0,6).map(([tag])=>`<span class="tag">#${escapeHtml(tag)}</span>`).join('');
+}
+
 function renderViandanteBox(){
   const data = getViandanteData();
+  const hasScheda = Boolean(localStorage.getItem('dct_viandante_name'));
 
   if(byId('viandanteName')) byId('viandanteName').textContent = data.name || 'Viandante';
+  if(byId('viandanteArchiveName')) byId('viandanteArchiveName').textContent = data.name || 'Viandante';
+  if(byId('viandanteOpened')) byId('viandanteOpened').textContent = data.opened || '—';
   if(byId('viandanteVisits')) byId('viandanteVisits').textContent = data.visits;
   if(byId('viandanteQuestions')) byId('viandanteQuestions').textContent = data.questions;
   if(byId('viandanteRecognitions')) byId('viandanteRecognitions').textContent = data.recognitions;
 
-  const hasName = Boolean(localStorage.getItem('dct_viandante_name'));
-  if(byId('viandanteNamePrompt')) byId('viandanteNamePrompt').style.display = hasName ? 'none' : 'block';
+  if(byId('viandanteNamePrompt')) byId('viandanteNamePrompt').style.display = hasScheda ? 'none' : 'block';
+  if(byId('viandantePresence')) byId('viandantePresence').style.display = hasScheda ? 'block' : 'none';
 
   const thread = calculateViandanteThread(data);
   if(byId('viandanteThread')) byId('viandanteThread').textContent = thread;
@@ -795,10 +922,15 @@ function renderViandanteBox(){
   if(byId('viandanteThread')){
     byId('viandanteThread').style.display = thread === 'IN ASCOLTO' ? 'none' : 'block';
   }
+
+  renderViandanteTags(data);
 }
 
 function initViandante(){
   const data = getViandanteData();
+  const hasScheda = Boolean(localStorage.getItem('dct_viandante_name'));
+
+  if(hasScheda && !data.opened) data.opened = todayArchivioDate();
   data.visits += 1;
   saveViandanteData(data);
   renderViandanteBox();
@@ -810,10 +942,19 @@ function initViandante(){
       const value = input ? input.value.trim() : '';
       const data = getViandanteData();
       data.name = value || 'Viandante';
+      if(!data.opened) data.opened = todayArchivioDate();
       saveViandanteData(data);
       renderViandanteBox();
     });
   }
+}
+
+function addViandanteWords(text, territory){
+  const data = getViandanteData();
+  const tags = extractTagsFrom(text, territory);
+  tags.forEach(tag=>{ data.words[tag] = (data.words[tag] || 0) + 1; });
+  saveViandanteData(data);
+  renderViandanteBox();
 }
 
 function addViandanteTerritory(territory){
@@ -885,6 +1026,7 @@ function submitQuestion(){
   vd.questions += 1;
   saveViandanteData(vd);
   addViandanteTerritory(t.theme);
+  addViandanteWords(q,t.theme);
 
   renderTotals();
   renderViandanteBox();
@@ -947,6 +1089,7 @@ async function sendArchivistRequest(){
     const vd=getViandanteData();
     vd.questions += 1;
     saveViandanteData(vd);
+    addViandanteWords(domanda,'ARCHIVISTA');
 
     renderTotals();
     renderViandanteBox();
@@ -988,7 +1131,9 @@ function wireEvents(){
     const data = getViandanteData();
     data.recognitions += 1;
     saveViandanteData(data);
-    addViandanteTerritory(currentFeaturedTerritory());
+    const territory = currentFeaturedTerritory();
+    addViandanteTerritory(territory);
+    addViandanteWords(byId('featuredQuestion') ? byId('featuredQuestion').textContent : '', territory);
     renderTotals();
     addLatest('Mi riconosco in questa domanda.');
   });
@@ -997,7 +1142,9 @@ function wireEvents(){
     const data = getViandanteData();
     data.recognitions += 1;
     saveViandanteData(data);
-    addViandanteTerritory(byId('themeText') ? byId('themeText').textContent.trim() : 'IN ASCOLTO');
+    const territory = byId('themeText') ? byId('themeText').textContent.trim() : 'IN ASCOLTO';
+    addViandanteTerritory(territory);
+    addViandanteWords(lastQuestion, territory);
     addLatest('Mi riconosco anch\'io.');
     renderViandanteBox();
     byId('resultRecognize').textContent='RICONOSCIMENTO ACCOLTO';
