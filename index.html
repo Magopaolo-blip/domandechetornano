@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le Domande che Tornano | Archivio Vivente</title>
-  <!-- versione 24-06-random-home-viandante-subito -->
+  <!-- versione 24-06-layout-viandante-sinistra -->
   <style>
     :root{
       --paper:#f4efe6;
@@ -302,6 +302,18 @@
       margin:6px 0;
     }
 
+    .left .viandante-box{
+      border-top:0;
+      padding-top:0;
+      margin-top:0;
+    }
+    .archivista-box h2{
+      margin-bottom:10px;
+    }
+    .archivista-box .archive-icon{
+      margin-top:0;
+    }
+
     @media (max-width:920px){
       body{overflow:auto}
       .screen{height:auto;min-height:100vh;grid-template-rows:auto auto auto;padding:14px;}
@@ -327,13 +339,36 @@
     <main class="room">
       <aside class="side left">
         <div>
+<div class="viandante-box" id="viandanteBox">
+            <p class="viandante-title">IL TUO PASSAGGIO</p>
+            <div id="viandanteNamePrompt" style="display:none">
+              <p>L'Archivio si ricorda del tuo passaggio.</p>
+              <p>Come desideri essere chiamato?</p>
+              <input id="viandanteNameInput" type="text" placeholder="Viandante" />
+              <button class="side-action" id="saveViandanteName" type="button">CUSTODISCI IL NOME</button>
+            </div>
+
+            <div id="viandantePresence">
+              <p>Bentornato, <span id="viandanteName">Viandante</span>.</p>
+              <p>Visite: <span id="viandanteVisits">1</span></p>
+              <p>Domande affidate: <span id="viandanteQuestions">0</span></p>
+              <p>Riconoscimenti: <span id="viandanteRecognitions">0</span></p>
+
+              <p class="viandante-title" style="margin-top:10px;">IL FILO DEL VIANDANTE</p>
+              <p>L'Archivio osserva che le tue domande tornano spesso attorno a:</p>
+              <p class="viandante-thread" id="viandanteThread">IN ASCOLTO</p>
+              <p class="viandante-small" id="viandanteThreadNote">Affida qualche domanda: il filo inizierà a mostrarsi.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mini-data archivista-box">
           <h2>L'ARCHIVISTA</h2>
           <div class="archive-icon" aria-hidden="true">▣</div>
           <p>Custodisce le domande.</p>
           <p>Non offre risposte.</p>
           <p>Aiuta una domanda a trovare forma, direzione e Traccia.</p>
-        </div>
-        <div class="mini-data">
+
           <p><strong>Oggi accolte:</strong> <span id="todayCount">17</span> domande</p>
           <p><strong>Sta custodendo:</strong> <span id="archiveTotalLeft">12.483</span> domande</p>
           <a class="side-action" href="#archivista">INCONTRA L'ARCHIVISTA</a>
@@ -412,27 +447,7 @@
             <div class="voice"><span class="time">07:38</span>Pensavo fosse solo mia.</div>
           </div>
 
-          <div class="viandante-box" id="viandanteBox">
-            <p class="viandante-title">IL TUO PASSAGGIO</p>
-            <div id="viandanteNamePrompt" style="display:none">
-              <p>L'Archivio si ricorda del tuo passaggio.</p>
-              <p>Come desideri essere chiamato?</p>
-              <input id="viandanteNameInput" type="text" placeholder="Viandante" />
-              <button class="side-action" id="saveViandanteName" type="button">CUSTODISCI IL NOME</button>
-            </div>
-
-            <div id="viandantePresence">
-              <p>Bentornato, <span id="viandanteName">Viandante</span>.</p>
-              <p>Visite: <span id="viandanteVisits">1</span></p>
-              <p>Domande affidate: <span id="viandanteQuestions">0</span></p>
-              <p>Riconoscimenti: <span id="viandanteRecognitions">0</span></p>
-
-              <p class="viandante-title" style="margin-top:10px;">IL FILO DEL VIANDANTE</p>
-              <p>L'Archivio osserva che le tue domande tornano spesso attorno a:</p>
-              <p class="viandante-thread" id="viandanteThread">IN ASCOLTO</p>
-              <p class="viandante-small" id="viandanteThreadNote">Affida qualche domanda: il filo inizierà a mostrarsi.</p>
-            </div>
-          </div>
+          
         </div>
       </aside>
     </main>
