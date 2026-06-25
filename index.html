@@ -567,14 +567,15 @@
         <div>
 
           <div class="viandante-box" id="viandanteBox">
-            <p class="viandante-title">LA TUA SCHEDA</p>
+            <p class="viandante-title" id="viandanteCardTitle">LA TUA SCHEDA</p>
 
             <div id="viandanteNamePrompt">
               <p>Ogni Viandante può aprire una Scheda nell'Archivio.</p>
               <p>Come desideri essere conosciuto qui?</p>
-              <input id="viandanteNameInput" type="text" placeholder="Nome d'Archivio" />
+              <input id="viandanteNameInput" type="text" placeholder="Il tuo Nome d'Archivio" autocomplete="nickname" />
               <button class="side-action" id="saveViandanteName" type="button">APRI LA TUA SCHEDA</button>
-              <p class="viandante-small">È il modo in cui l'Archivio custodisce il tuo passaggio.</p>
+              <p class="viandante-small">Scegli un nome o un alias: sarà il modo in cui l'Archivio custodirà il tuo passaggio.</p>
+              <p class="viandante-small" id="viandanteNameStatus" aria-live="polite"></p>
             </div>
 
             <div id="viandantePresence" class="viandante-card">
@@ -946,7 +947,8 @@ function renderViandanteBox(){
   const data = getViandanteData();
   const hasScheda = Boolean(localStorage.getItem('dct_viandante_name'));
 
-  if(byId('viandanteArchiveName')) byId('viandanteArchiveName').textContent = data.name || 'Viandante';
+  if(byId('viandanteArchiveName')) byId('viandanteArchiveName').textContent = data.name || '—';
+  if(byId('viandanteCardTitle')) byId('viandanteCardTitle').textContent = hasScheda && data.name ? `LA SCHEDA DI ${data.name}` : 'LA TUA SCHEDA';
   if(byId('viandanteOpened')) byId('viandanteOpened').textContent = data.opened || '—';
   if(byId('viandanteVisits')) byId('viandanteVisits').textContent = data.visits;
   if(byId('viandanteQuestions')) byId('viandanteQuestions').textContent = data.questions;
@@ -967,15 +969,30 @@ function initViandante(){
   renderViandanteBox();
 
   const saveBtn = byId('saveViandanteName');
+  const nameInput = byId('viandanteNameInput');
   if(saveBtn){
     saveBtn.addEventListener('click', function(){
       const input = byId('viandanteNameInput');
       const value = input ? input.value.trim() : '';
       const data = getViandanteData();
-      data.name = value || 'Viandante';
+      if(!value){
+        const status = byId('viandanteNameStatus');
+        if(status) status.textContent = 'Scegli prima il tuo Nome d\'Archivio.';
+        if(input) input.focus();
+        return;
+      }
+      data.name = value;
       if(!data.opened) data.opened = todayArchivioDate();
       saveViandanteData(data);
       renderViandanteBox();
+    });
+  }
+  if(nameInput){
+    nameInput.addEventListener('keydown', function(e){
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        if(saveBtn) saveBtn.click();
+      }
     });
   }
 }
