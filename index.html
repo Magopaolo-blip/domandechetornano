@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le Domande che Tornano | Archivio Vivente</title>
-  <!-- versione 25-06-home-minima-contatore-archivio -->
+  <!-- versione 25-06-home-minima-mission-domanda-bilanciata -->
   <style>
     :root{
       --paper:#f4efe6;
@@ -43,6 +43,7 @@
     .cassetta{width:112px;height:78px;margin:8px auto 18px;position:relative;opacity:.95}
     .archive-counter{display:inline-block;margin:0 auto 14px;padding:7px 12px;border-top:1px dashed rgba(23,23,23,.45);border-bottom:1px dashed rgba(23,23,23,.45);color:var(--brick);font-weight:900;letter-spacing:.13em;text-transform:uppercase;font-size:clamp(12px,1vw,15px)}
     .archive-counter span{color:var(--ink)}
+    .mission{display:inline-block;margin:0 auto 16px;padding:7px 12px;background:var(--ink);color:var(--paper);font-family:"Lucida Console","Consolas","Courier New",monospace;font-size:clamp(11px,1vw,15px);line-height:1.25;letter-spacing:.13em;font-weight:700}
     .cassetta .box{position:absolute;left:7px;right:7px;bottom:0;height:48px;border:3px solid var(--ink);border-radius:3px;background:rgba(244,239,230,.8);box-shadow:7px 7px 0 rgba(23,23,23,.08)}
     .cassetta .box::after{content:"";position:absolute;left:35px;right:35px;top:15px;height:12px;border:2px solid var(--ink)}
     .card{position:absolute;bottom:38px;width:18px;height:35px;border:2px solid var(--ink);background:var(--paper)}
@@ -52,16 +53,16 @@
     .intro{font-size:clamp(14px,1.4vw,19px);line-height:1.5;max-width:680px;margin:0 auto 20px}
     .stream{width:min(840px,100%);margin:0 auto;display:grid;gap:18px}
     .question-card{border:2px dashed var(--ink);background:rgba(244,239,230,.68);padding:clamp(20px,4vw,42px);text-align:center}
-    .question{font-size:clamp(25px,4.1vw,52px);line-height:1.08;text-transform:uppercase;font-weight:900;margin:12px auto 18px;max-width:760px}
+    .question{font-size:clamp(25px,4.1vw,52px);line-height:.98;text-transform:uppercase;font-weight:900;margin:12px auto 18px;max-width:760px;text-align:center;text-wrap:balance}
+    .question .qline{display:block}
     .trace-label{margin-top:20px}.trace{font-size:clamp(18px,2vw,28px);line-height:1.28;font-weight:700;max-width:720px;margin:8px auto 18px}
     .count{color:var(--brick);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:clamp(12px,1vw,15px);min-height:22px}
     .actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}.btn{border:2px solid var(--ink);padding:14px 12px;color:var(--brick);font-weight:900;min-height:52px}.btn:hover,.btn.active{background:var(--ink);color:var(--paper)}
     .after{display:none;margin-top:18px;font-size:clamp(14px,1.3vw,18px);font-weight:700;line-height:1.4}.after.active{display:block}.after strong{color:var(--brick)}
     .form{display:none;border:2px dashed var(--ink);background:rgba(244,239,230,.68);padding:clamp(18px,3vw,32px);text-align:left}.form.active{display:block}.form h2{text-align:center;color:var(--brick);letter-spacing:.16em;text-transform:uppercase;font-size:clamp(13px,1.2vw,18px);margin-bottom:12px}.form p{text-align:center;line-height:1.5;margin-bottom:16px}
     textarea,input{width:100%;background:transparent;border:2px dashed var(--ink);color:var(--ink);padding:14px;outline:none;line-height:1.45}textarea{min-height:120px;resize:vertical}.contact{margin-top:10px}.submit-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:12px}.hint{font-size:12px;opacity:.85;line-height:1.4}.status{margin-top:12px;text-align:center;color:var(--brick);font-weight:700}
-    .archive-note{width:min(760px,100%);margin:4px auto 0;text-align:center;border-top:1px dashed rgba(23,23,23,.4);padding-top:16px;font-size:clamp(13px,1.1vw,16px);line-height:1.55}.archive-note strong{color:var(--brick)}
     .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:var(--veil);z-index:20;padding:20px}.modal.active{display:flex}.modal-panel{width:min(580px,94vw);max-height:86vh;overflow:auto;border:2px dashed var(--ink);background:var(--paper);padding:clamp(20px,4vw,34px);text-align:center}.modal-panel h2{color:var(--brick);letter-spacing:.16em;text-transform:uppercase;font-size:clamp(15px,1.5vw,22px);margin-bottom:14px}.modal-panel p{line-height:1.55;margin-bottom:14px}.modal-form{display:grid;gap:12px;text-align:left;margin-top:14px}.modal-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:14px}.close-x{position:absolute;top:14px;right:18px;font-size:26px;line-height:1;color:var(--ink);background:transparent;border:0;letter-spacing:0}.close-x:hover{color:var(--brick)}
-    @media(max-width:760px){.topbar,.footer{grid-template-columns:1fr;gap:6px;text-align:center}.topbar .right,.footer .right{text-align:center}.actions{grid-template-columns:1fr}.page{padding:14px}.cassetta{transform:scale(.9);margin-bottom:10px}.question-card{padding:20px 15px}}
+    @media(max-width:760px){.topbar,.footer{grid-template-columns:1fr;gap:6px;text-align:center}.topbar .right,.footer .right{text-align:center}.actions{grid-template-columns:1fr}.page{padding:14px}.cassetta{transform:scale(.9);margin-bottom:10px}.question-card{padding:20px 15px}.question{line-height:1.04}}
   </style>
 </head>
 <body>
@@ -77,6 +78,7 @@
         <div class="card"></div><div class="card"></div><div class="card"></div><div class="card"></div><div class="box"></div>
       </div>
       <div class="archive-counter"><span id="archiveTotalTop">12.483</span> domande custodite</div>
+      <div class="mission">L'anima si fa domande per riconoscere se stessa.</div>
       <div class="eyebrow">La domanda che, in questo momento, ha deciso di mostrarsi</div>
       <h1>C'è una domanda che continua a tornare?</h1>
       <p class="intro">Forse non cerca subito una risposta. Forse cerca prima un luogo dove essere riconosciuta.</p>
@@ -112,9 +114,6 @@
         <button class="btn" id="openArchivistBtn" type="button">Scrivi all'Archivista</button>
       </div>
 
-      <div class="archive-note">
-        <p><strong>Custodisce domande.</strong><br>Aiuta a trovare il filo.</p>
-      </div>
     </main>
 
     <footer class="footer">
@@ -182,6 +181,23 @@ function openModal(id){const el=byId(id); if(el) el.classList.add('active')}
 function closeModal(id){const el=byId(id); if(el) el.classList.remove('active')}
 function showSent(title,message){byId('sentTitle').textContent=title; byId('sentMessage').textContent=message; openModal('sentModal')}
 
+function balanceQuestionText(text){
+  const words = String(text || '').trim().split(/\s+/).filter(Boolean);
+  if(words.length < 4 || text.length < 22) return escapeHtml(text);
+  const target = text.length / 2;
+  let best = 1;
+  let bestDiff = Infinity;
+  for(let i=1;i<words.length;i++){
+    const left = words.slice(0,i).join(' ');
+    const right = words.slice(i).join(' ');
+    const diff = Math.abs(left.length - right.length) + Math.abs(left.length - target) * .35;
+    if(diff < bestDiff){ bestDiff = diff; best = i; }
+  }
+  const left = escapeHtml(words.slice(0,best).join(' '));
+  const right = escapeHtml(words.slice(best).join(' '));
+  return `<span class="qline">${left}</span><span class="qline">${right}</span>`;
+}
+
 function pickEntry(forceNext=false){
   const last = Number(localStorage.getItem('dct_min_last') || -1);
   if(forceNext){ current = (current + 1) % entries.length; }
@@ -191,7 +207,9 @@ function pickEntry(forceNext=false){
   }
   localStorage.setItem('dct_min_last', current);
   const e = entries[current];
-  byId('featuredQuestion').textContent = e.q;
+  const questionEl = byId('featuredQuestion');
+  questionEl.dataset.question = e.q;
+  questionEl.innerHTML = balanceQuestionText(e.q);
   byId('featuredTrace').textContent = e.t;
   byId('featuredCount').textContent = Number(e.c + Math.floor(Math.random()*90)).toLocaleString('it-IT');
   byId('recognizeBtn').classList.remove('active');
@@ -213,7 +231,7 @@ byId('recognizeBtn').addEventListener('click', async ()=>{
   byId('recognizeBtn').classList.add('active');
   byId('recognizeBtn').textContent = 'Mi sono riconosciuto';
   byId('afterRecognize').classList.add('active');
-  await postToSheets({tipo:'riconoscimento',domanda:byId('featuredQuestion').textContent,traccia:byId('featuredTrace').textContent,data:new Date().toISOString(),pagina:location.href});
+  await postToSheets({tipo:'riconoscimento',domanda:(byId('featuredQuestion').dataset.question || byId('featuredQuestion').textContent),traccia:byId('featuredTrace').textContent,data:new Date().toISOString(),pagina:location.href});
 });
 
 byId('anotherBtn').addEventListener('click',()=>pickEntry(true));
