@@ -58,6 +58,7 @@
     .form{display:none;border:2px dashed var(--ink);background:rgba(244,239,230,.68);padding:clamp(18px,3vw,32px);text-align:left}.form.active{display:block}.form h2{text-align:center;color:var(--brick);letter-spacing:.16em;text-transform:uppercase;font-size:clamp(13px,1.2vw,18px);margin-bottom:12px}.form p{text-align:center;line-height:1.5;margin-bottom:16px}
     textarea,input{width:100%;background:transparent;border:2px dashed var(--ink);color:var(--ink);padding:14px;outline:none;line-height:1.45}textarea{min-height:120px;resize:vertical}.contact{margin-top:10px}.submit-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:12px}.hint{font-size:12px;opacity:.85;line-height:1.4}.status{margin-top:12px;text-align:center;color:var(--brick);font-weight:700}
     .archive-note{width:min(760px,100%);margin:4px auto 0;text-align:center;border-top:1px dashed rgba(23,23,23,.4);padding-top:16px;font-size:clamp(13px,1.1vw,16px);line-height:1.55}.archive-note strong{color:var(--brick)}
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:var(--veil);z-index:20;padding:20px}.modal.active{display:flex}.modal-panel{width:min(580px,94vw);max-height:86vh;overflow:auto;border:2px dashed var(--ink);background:var(--paper);padding:clamp(20px,4vw,34px);text-align:center}.modal-panel h2{color:var(--brick);letter-spacing:.16em;text-transform:uppercase;font-size:clamp(15px,1.5vw,22px);margin-bottom:14px}.modal-panel p{line-height:1.55;margin-bottom:14px}.modal-form{display:grid;gap:12px;text-align:left;margin-top:14px}.modal-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:14px}.close-x{position:absolute;top:14px;right:18px;font-size:26px;line-height:1;color:var(--ink);background:transparent;border:0;letter-spacing:0}.close-x:hover{color:var(--brick)}
     @media(max-width:760px){.topbar,.footer{grid-template-columns:1fr;gap:6px;text-align:center}.topbar .right,.footer .right{text-align:center}.actions{grid-template-columns:1fr}.page{padding:14px}.cassetta{transform:scale(.9);margin-bottom:10px}.question-card{padding:20px 15px}}
   </style>
 </head>
@@ -96,17 +97,16 @@
         <h2>Affida una domanda</h2>
         <p>Scrivi la domanda che continua a tornare. L'Archivio la custodirà in forma anonima.</p>
         <textarea id="questionInput" placeholder="Scrivi qui la tua domanda..."></textarea>
-        <input id="contactInput" class="contact" type="text" placeholder="Email o WhatsApp, solo se desideri essere ricontattato" />
         <div class="submit-row">
-          <button class="btn" id="submitQuestion" type="button">Invia all'Archivista</button>
-          <span class="hint">Il contatto è facoltativo. La domanda è il centro.</span>
+          <button class="btn" id="submitQuestion" type="button">Affida all'Archivio</button>
+          <span class="hint">Qui non serve contatto. La domanda entra nell'Archivio.</span>
         </div>
         <div class="status" id="formStatus" aria-live="polite"></div>
       </section>
 
       <div class="actions">
         <button class="btn" id="openFormBtn" type="button">Ho una domanda da affidare</button>
-        <a class="btn" href="mailto:ciao@domandechetornano.it">Scrivi all'Archivista</a>
+        <button class="btn" id="openArchivistBtn" type="button">Scrivi all'Archivista</button>
       </div>
 
       <div class="archive-note">
@@ -119,6 +119,36 @@
       <div class="center">Questo luogo cresce una domanda alla volta.</div>
       <div class="right">Leggi. Riconosciti. Affida.</div>
     </footer>
+  </div>
+
+
+
+  <div class="modal" id="sentModal" role="dialog" aria-modal="true" aria-labelledby="sentTitle">
+    <div class="modal-panel">
+      <button class="close-x" id="closeSentModal" type="button" aria-label="Chiudi">×</button>
+      <h2 id="sentTitle">Domanda affidata</h2>
+      <p id="sentMessage">La tua domanda è stata custodita nell'Archivio.</p>
+      <div class="modal-actions">
+        <button class="btn" id="sentOkBtn" type="button">Torna all'Archivio</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="archivistModal" role="dialog" aria-modal="true" aria-labelledby="archivistTitle">
+    <div class="modal-panel">
+      <button class="close-x" id="closeArchivistModal" type="button" aria-label="Chiudi">×</button>
+      <h2 id="archivistTitle">Scrivi all'Archivista</h2>
+      <p>Questo spazio è per una domanda che chiede più attenzione, un contatto diretto o un possibile incontro.</p>
+      <div class="modal-form">
+        <textarea id="archivistQuestion" placeholder="Scrivi qui la tua domanda o il motivo del contatto..."></textarea>
+        <input id="archivistName" type="text" placeholder="Nome o Nome d'Archivio" />
+        <input id="archivistContact" type="text" placeholder="Email o WhatsApp per essere ricontattato" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn" id="sendArchivistBtn" type="button">Invia all'Archivista</button>
+      </div>
+      <div class="status" id="archivistStatus" aria-live="polite"></div>
+    </div>
   </div>
 
 <script>
@@ -145,6 +175,9 @@ function pad(n){return String(n).padStart(2,'0')}
 function updateClock(){const d=new Date(); byId('clock').textContent=`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`}
 function escapeHtml(str){return String(str).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function renderTotal(){byId('archiveTotal').textContent=total.toLocaleString('it-IT')}
+function openModal(id){const el=byId(id); if(el) el.classList.add('active')}
+function closeModal(id){const el=byId(id); if(el) el.classList.remove('active')}
+function showSent(title,message){byId('sentTitle').textContent=title; byId('sentMessage').textContent=message; openModal('sentModal')}
 
 function pickEntry(forceNext=false){
   const last = Number(localStorage.getItem('dct_min_last') || -1);
@@ -182,18 +215,41 @@ byId('recognizeBtn').addEventListener('click', async ()=>{
 
 byId('anotherBtn').addEventListener('click',()=>pickEntry(true));
 byId('openFormBtn').addEventListener('click',()=>{byId('questionForm').classList.add('active'); byId('questionInput').focus(); byId('questionForm').scrollIntoView({behavior:'smooth',block:'center'});});
+byId('openArchivistBtn').addEventListener('click',()=>openModal('archivistModal'));
+byId('closeArchivistModal').addEventListener('click',()=>closeModal('archivistModal'));
+byId('closeSentModal').addEventListener('click',()=>closeModal('sentModal'));
+byId('sentOkBtn').addEventListener('click',()=>closeModal('sentModal'));
+
 byId('submitQuestion').addEventListener('click', async ()=>{
   const domanda = byId('questionInput').value.trim();
-  const contatto = byId('contactInput').value.trim();
   const status = byId('formStatus');
   if(!domanda){status.textContent='Scrivi prima la domanda da affidare.'; byId('questionInput').focus(); return;}
-  status.textContent="L'Archivista sta ricevendo la domanda...";
-  const ok = await postToSheets({tipo:'domanda',domanda:domanda,contatto:contatto,tema:'HOME_MINIMA',data:new Date().toISOString(),pagina:location.href});
+  status.textContent="L'Archivio sta custodendo la domanda...";
+  await postToSheets({tipo:'domanda_archivio',domanda:domanda,tema:'HOME_MINIMA',data:new Date().toISOString(),pagina:location.href});
   total++; localStorage.setItem('dct_min_total', total); renderTotal();
-  byId('questionInput').value=''; byId('contactInput').value='';
-  status.textContent = ok ? "La domanda è stata affidata all'Archivio." : "Domanda accolta qui. Se l'invio non arriva, riprova tra poco.";
+  byId('questionInput').value='';
+  status.textContent = '';
+  showSent('Domanda affidata', "La tua domanda è stata affidata all'Archivio in forma anonima.");
 });
+
+byId('sendArchivistBtn').addEventListener('click', async ()=>{
+  const domanda = byId('archivistQuestion').value.trim();
+  const nome = byId('archivistName').value.trim();
+  const contatto = byId('archivistContact').value.trim();
+  const status = byId('archivistStatus');
+  if(!domanda){status.textContent='Scrivi prima la domanda o il motivo del contatto.'; byId('archivistQuestion').focus(); return;}
+  if(!contatto){status.textContent="Lascia un contatto se desideri una risposta dall'Archivista."; byId('archivistContact').focus(); return;}
+  status.textContent="L'Archivista sta ricevendo il messaggio...";
+  await postToSheets({tipo:'richiesta_archivista',domanda:domanda,nome:nome,contatto:contatto,tema:'CONTATTO_ARCHIVISTA',data:new Date().toISOString(),pagina:location.href});
+  byId('archivistQuestion').value=''; byId('archivistName').value=''; byId('archivistContact').value='';
+  status.textContent='';
+  closeModal('archivistModal');
+  showSent('Messaggio inviato', "Il messaggio è arrivato all'Archivista. Se hai lasciato un contatto, potrà ricontattarti.");
+});
+
 byId('questionInput').addEventListener('keydown',e=>{if(e.key==='Enter' && (e.ctrlKey||e.metaKey)){e.preventDefault(); byId('submitQuestion').click();}});
+byId('archivistQuestion').addEventListener('keydown',e=>{if(e.key==='Enter' && (e.ctrlKey||e.metaKey)){e.preventDefault(); byId('sendArchivistBtn').click();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal('archivistModal'); closeModal('sentModal');}});
 
 updateClock(); setInterval(updateClock,1000); renderTotal(); pickEntry(false);
 </script>
