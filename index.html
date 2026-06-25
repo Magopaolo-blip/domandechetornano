@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Le Domande che Tornano | Archivio Vivente</title>
-  <!-- versione 25-06-home-minima-riconoscimento -->
+  <!-- versione 25-06-home-minima-contatore-archivio -->
   <style>
     :root{
       --paper:#f4efe6;
@@ -41,6 +41,8 @@
     .footer{border-bottom:0;border-top:2px dashed var(--ink);padding-bottom:0;padding-top:10px;margin-top:auto}
     .hero{width:min(860px,100%);margin:0 auto;text-align:center;padding:clamp(8px,2vh,22px) 0 0}
     .cassetta{width:112px;height:78px;margin:8px auto 18px;position:relative;opacity:.95}
+    .archive-counter{display:inline-block;margin:0 auto 14px;padding:7px 12px;border-top:1px dashed rgba(23,23,23,.45);border-bottom:1px dashed rgba(23,23,23,.45);color:var(--brick);font-weight:900;letter-spacing:.13em;text-transform:uppercase;font-size:clamp(12px,1vw,15px)}
+    .archive-counter span{color:var(--ink)}
     .cassetta .box{position:absolute;left:7px;right:7px;bottom:0;height:48px;border:3px solid var(--ink);border-radius:3px;background:rgba(244,239,230,.8);box-shadow:7px 7px 0 rgba(23,23,23,.08)}
     .cassetta .box::after{content:"";position:absolute;left:35px;right:35px;top:15px;height:12px;border:2px solid var(--ink)}
     .card{position:absolute;bottom:38px;width:18px;height:35px;border:2px solid var(--ink);background:var(--paper)}
@@ -74,6 +76,7 @@
       <div class="cassetta" aria-label="La Cassetta dell'Archivio">
         <div class="card"></div><div class="card"></div><div class="card"></div><div class="card"></div><div class="box"></div>
       </div>
+      <div class="archive-counter"><span id="archiveTotalTop">12.483</span> domande custodite</div>
       <div class="eyebrow">La domanda che, in questo momento, ha deciso di mostrarsi</div>
       <h1>C'è una domanda che continua a tornare?</h1>
       <p class="intro">Forse non cerca subito una risposta. Forse cerca prima un luogo dove essere riconosciuta.</p>
@@ -174,7 +177,7 @@ function byId(id){return document.getElementById(id)}
 function pad(n){return String(n).padStart(2,'0')}
 function updateClock(){const d=new Date(); byId('clock').textContent=`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`}
 function escapeHtml(str){return String(str).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-function renderTotal(){byId('archiveTotal').textContent=total.toLocaleString('it-IT')}
+function renderTotal(){const totalText=total.toLocaleString('it-IT'); byId('archiveTotal').textContent=totalText; if(byId('archiveTotalTop')) byId('archiveTotalTop').textContent=totalText;}
 function openModal(id){const el=byId(id); if(el) el.classList.add('active')}
 function closeModal(id){const el=byId(id); if(el) el.classList.remove('active')}
 function showSent(title,message){byId('sentTitle').textContent=title; byId('sentMessage').textContent=message; openModal('sentModal')}
